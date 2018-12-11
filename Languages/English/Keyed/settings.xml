@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+  <RoadsOfTheRim>Roads of the Rim</RoadsOfTheRim>
+  <RoadsOfTheRimAddConstructionSite>Construct</RoadsOfTheRimAddConstructionSite>
+  <RoadsOfTheRimAddConstructionSiteDescription>Create road construction site</RoadsOfTheRimAddConstructionSiteDescription>
+  <RoadsOfTheRimRemoveConstructionSite>Cancel construction</RoadsOfTheRimRemoveConstructionSite>
+  <RoadsOfTheRimRemoveConstructionSiteDescription>Remove road construction site</RoadsOfTheRimRemoveConstructionSiteDescription>
+  <RoadsOfTheRimSettingsCategoryLabel>Roads of the Rim</RoadsOfTheRimSettingsCategoryLabel>
+  <RoadsOfTheRimSettingsBaseEffort>Base multiplier to road building costs</RoadsOfTheRimSettingsBaseEffort>
+  <RoadsOfTheRimSettingsOverrideCosts>Override standard movement multipliers [NOT IMPLEMENTED]</RoadsOfTheRimSettingsOverrideCosts>
+  <RoadsOfTheRimBuildConstructionSiteAlreadyHere>There is already a construction site here</RoadsOfTheRimBuildConstructionSiteAlreadyHere>
+  <RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>There is no construction site here</RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>
+</LanguageData>

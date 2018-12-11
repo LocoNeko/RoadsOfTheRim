@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <RoadsOfTheRim.RoadBuildableDef>
+        <defName>RoadsOfTheRim_DirtPath</defName>
+        <label>Dirt path</label>
+        <movementCostMultiplier>0.75</movementCostMultiplier>
+        <workNeeded>60000</workNeeded>
+    </RoadsOfTheRim.RoadBuildableDef>
+    
+    <RoadsOfTheRim.RoadBuildableDef>
+        <defName>RoadsOfTheRim_DirtRoad</defName>
+        <label>Dirt road</label>
+        <movementCostMultiplier>0.6</movementCostMultiplier>
+        <workNeeded>120000</workNeeded>
+    </RoadsOfTheRim.RoadBuildableDef>
+
+    <RoadsOfTheRim.RoadBuildableDef>
+        <defName>RoadsOfTheRim_StoneRoad</defName>
+        <label>Stone road</label>
+        <movementCostMultiplier>0.5</movementCostMultiplier>
+        <workNeeded>180000</workNeeded>
+    </RoadsOfTheRim.RoadBuildableDef>
+
+    <RoadsOfTheRim.RoadBuildableDef>
+        <defName>RoadsOfTheRim_AsphaltRoad</defName>
+        <label>Asphalt road</label>
+        <movementCostMultiplier>0.4</movementCostMultiplier>
+        <workNeeded>360000</workNeeded>
+    </RoadsOfTheRim.RoadBuildableDef>
+
+</Defs>

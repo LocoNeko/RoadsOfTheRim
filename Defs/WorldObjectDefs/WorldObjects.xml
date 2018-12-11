@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <WorldObjectDef>
+    <defName>RoadConstructionSite</defName>
+    <label>road construction site</label>
+    <description>The site of a road under construction</description>
+    <worldObjectClass>RoadsOfTheRim.RoadConstructionSite</worldObjectClass>
+    <texture>World/WorldObjects/ConstructionSite</texture>
+    <useDynamicDrawer>true</useDynamicDrawer>
+    <expandingIcon>true</expandingIcon>
+    <expandingIconTexture>World/WorldObjects/Expanding/ConstructionSite</expandingIconTexture>
+    <expandingIconPriority>200</expandingIconPriority>
+    <!--
+    <comps>
+        <li Class="RoadsOfTheRim.CompProperties_RoadsOfTheRimConstructionSite" />
+    </comps>
+    -->
+    <!--
+    <inspectorTabs>
+      <li>RoadsOfTheRim.WITab_RoadConstructionSite</li>
+    </inspectorTabs>
+    -->
+</WorldObjectDef>
+</Defs>

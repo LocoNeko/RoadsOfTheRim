@@ -6,7 +6,7 @@ A Rimworld mod allowing road construction on the world map
 
 ## Introduction
 
-I decided to try implementing something similar to Jecrell's amazing [RimRoads mod since - as of this writing - it has not been ported to Rimworld 1.0.
+I decided to try implementing something similar to Jecrell's amazing [RimRoads](https://github.com/jecrell/RimRoads) mod since - as of this writing - it has not been ported to Rimworld 1.0.
 
 ## Disclaimer
 
@@ -58,26 +58,28 @@ The total amount of work a caravan can provide for every time unit (or "ticks") 
 In Rimworld, there are no differences between roads in terms of movement cost multiplier. They all simply make movement twice as fast (cost is 50%).
 
 In Roads of the Rim, this has been tweaked and will impact not only roads newly built, _but also existing roads_. Paradoxically, this makes existing dirt paths and dirt roads less attractive when the mod is installed. Stone roads wil be as good and asphalt roads & highways a little better as per the table below (the lower, the faster).
-Type 	Rimworld standard 	Roads of the Rim
-Dirt path 	50% 	75%
-Dirt road 	50% 	60%
-Stone road 	50% 	50%
-Asphalt road 	50% 	40%
-Ancient asphalt road 	50% 	40%
-Ancient asphalt highway 	50% 	40%
+
+|Type 	|Rimworld standard |	Roads of the Rim
+|-----|----|---|
+Dirt path|50%|75%
+Dirt road|50%|60%
+Stone road|50%|50%
+Asphalt road|50%|40%
+Ancient asphalt road|50%|40%
+Ancient asphalt highway|50%|40%
 
 Note : All roads movement cost multipliers can be reverted back to their flat 50% multiplier in the settings.
 
 ## Roadmap (almost no pun intended)
 
-    Proof of concept : On the world map, get a simple action to place a dirt path section, confirm it survives saving & loading. **DONE**
-    Add a caravan job to build dirt path **DONE**
-    Add types of roads : dirt road, stone road, asphalt road **DONE**
-    Add material & work costs **DONE**
-    Add terrain construction cost modifiers **DONE**
-    Add bridge construction cost modifiers
-    Add a com console menu to ask friendly factions to help on the construction of a road
-    optional / distant future : add railroads & trains
+- Proof of concept : On the world map, get a simple action to place a dirt path section, confirm it survives saving & loading. **DONE**
+- Add a caravan job to build dirt path **DONE**
+- Add types of roads : dirt road, stone road, asphalt road **DONE**
+- Add material & work costs **DONE**
+- Add terrain construction cost modifiers **DONE**
+- Add bridge construction cost modifiers
+- Add a com console menu to ask friendly factions to help on the construction of a road
+- optional / distant future : add railroads & trains
 
 ## Acknowledgments
 

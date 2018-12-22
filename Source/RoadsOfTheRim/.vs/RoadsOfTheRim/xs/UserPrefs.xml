@@ -1,0 +1,21 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workbench ActiveDocument="../../About/About.xml">
+    <Files>
+      <File FileName="../../About/About.xml" Line="1" Column="1" />
+      <File FileName="../../Patches/patches.xml" Line="1" Column="1" />
+      <File FileName="../../Languages/English/Keyed/settings.xml" Line="15" Column="48" />
+      <File FileName="RoadsOfTheRim/Properties/AssemblyInfo.cs" Line="1" Column="1" />
+      <File FileName="../../Defs/RoadBuildableDefs/RoadBuildableDefs.xml" Line="7" Column="20" />
+      <File FileName="RoadsOfTheRim/RoadBuildableDef.cs" Line="10" Column="22" />
+      <File FileName="../../Defs/WorldObjectDefs/WorldObjects.xml" Line="9" Column="46" />
+      <File FileName="RoadsOfTheRim/ModMain.cs" Line="46" Column="1" />
+      <File FileName="RoadsOfTheRim/RoadConstructionSite.cs" Line="71" Column="48" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

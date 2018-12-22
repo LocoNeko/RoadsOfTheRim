@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <RoadsOfTheRim.RoadBuildableDef>
+        <defName>RoadsOfTheRim_DirtPath</defName>
+        <label>Dirt path</label>
+        <movementCostMultiplier>0.75</movementCostMultiplier>
+        <roadDef>DirtPath</roadDef>
+        <work>600</work>
+        <wood>300</wood>
+        <stone>50</stone>
+        <steel>0</steel>
+        <chemfuel>0</chemfuel>
+    </RoadsOfTheRim.RoadBuildableDef>
+    
+    <RoadsOfTheRim.RoadBuildableDef>
+        <defName>RoadsOfTheRim_DirtRoad</defName>
+        <label>Dirt road</label>
+        <movementCostMultiplier>0.6</movementCostMultiplier>
+        <roadDef>DirtRoad</roadDef>
+        <work>1200</work>
+        <wood>600</wood>
+        <stone>100</stone>
+        <steel>0</steel>
+        <chemfuel>0</chemfuel>
+    </RoadsOfTheRim.RoadBuildableDef>
+
+    <RoadsOfTheRim.RoadBuildableDef>
+        <defName>RoadsOfTheRim_StoneRoad</defName>
+        <label>Stone road</label>
+        <movementCostMultiplier>0.5</movementCostMultiplier>
+        <roadDef>StoneRoad</roadDef>
+        <work>3600</work>
+        <wood>150</wood>
+        <stone>1800</stone>
+        <steel>300</steel>
+        <chemfuel>150</chemfuel>
+    </RoadsOfTheRim.RoadBuildableDef>
+
+    <RoadsOfTheRim.RoadBuildableDef>
+        <defName>RoadsOfTheRim_AsphaltRoad</defName>
+        <label>Asphalt road</label>
+        <movementCostMultiplier>0.4</movementCostMultiplier>
+        <roadDef>AncientAsphaltRoad</roadDef>
+        <work>5400</work>
+        <wood>300</wood>
+        <stone>3600</stone>
+        <steel>600</steel>
+        <chemfuel>300</chemfuel>
+    </RoadsOfTheRim.RoadBuildableDef>
+
+</Defs>

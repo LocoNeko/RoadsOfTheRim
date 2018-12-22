@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+	<Operation Class="PatchOperationReplace">
+		<xpath>*/RoadDef[defName = "DirtPath"]/movementCostMultiplier</xpath>
+		<value>
+			<movementCostMultiplier>0.75</movementCostMultiplier>
+		</value>
+	</Operation>
+
+	<Operation Class="PatchOperationReplace">
+		<xpath>*/RoadDef[defName = "DirtRoad"]/movementCostMultiplier</xpath>
+		<value>
+			<movementCostMultiplier>0.6</movementCostMultiplier>
+		</value>
+	</Operation>
+
+    <Operation Class="PatchOperationReplace">
+        <xpath>*/RoadDef[defName = "StoneRoad"]/movementCostMultiplier</xpath>
+        <value>
+            <movementCostMultiplier>0.5</movementCostMultiplier>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationReplace">
+        <xpath>*/RoadDef[defName = "AncientAsphaltRoad"]/movementCostMultiplier</xpath>
+        <value>
+            <movementCostMultiplier>0.4</movementCostMultiplier>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationReplace">
+        <xpath>*/RoadDef[defName = "AncientAsphaltHighway"]/movementCostMultiplier</xpath>
+        <value>
+            <movementCostMultiplier>0.4</movementCostMultiplier>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/WorldObjectDef[defName="Caravan"]</xpath>
+        <value>
+            <comps>
+                <li>
+                    <compClass>RoadsOfTheRim.WorldObjectComp_Caravan</compClass>
+                </li>
+            </comps>
+        </value>
+    </Operation>
+    
+</Patch>

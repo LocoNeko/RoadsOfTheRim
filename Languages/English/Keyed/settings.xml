@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <RoadsOfTheRim>Roads of the Rim</RoadsOfTheRim>
+  <RoadsOfTheRimAddConstructionSite>Construct</RoadsOfTheRimAddConstructionSite>
+  <RoadsOfTheRimAddConstructionSiteDescription>Create road construction site</RoadsOfTheRimAddConstructionSiteDescription>
+  <RoadsOfTheRimRemoveConstructionSite>Cancel construction</RoadsOfTheRimRemoveConstructionSite>
+  <RoadsOfTheRimRemoveConstructionSiteDescription>Remove road construction site</RoadsOfTheRimRemoveConstructionSiteDescription>
+  <RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>Can't remove the site : some resources already consumed</RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>
+  <RoadsOfTheRimWorkOnSite>Work</RoadsOfTheRimWorkOnSite>
+  <RoadsOfTheRimWorkOnSiteDescription>Work on road construction site</RoadsOfTheRimWorkOnSiteDescription>
+  <RoadsOfTheRimSettingsCategoryLabel>Roads of the Rim</RoadsOfTheRimSettingsCategoryLabel>
+  <RoadsOfTheRimSettingsBaseEffort>Base multiplier to road building costs</RoadsOfTheRimSettingsBaseEffort>
+  <RoadsOfTheRimSettingsOverrideCosts>Override standard movement multipliers [NOT IMPLEMENTED]</RoadsOfTheRimSettingsOverrideCosts>
+  <RoadsOfTheRimBuildConstructionSiteAlreadyHere>There is already a construction site here</RoadsOfTheRimBuildConstructionSiteAlreadyHere>
+  <RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>There is no construction site here</RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>
+  <RoadsOfTheRim_MustPickNeighbouringTile>Must choose a neighbouring tile</RoadsOfTheRim_MustPickNeighbouringTile>
+  <RoadsOfTheRim_SameRoadAlreadyExists>A similar road already exists between those two tiles</RoadsOfTheRim_SameRoadAlreadyExists>
+  <RoadsOfTheRim_BuildToHere>Build road to here</RoadsOfTheRim_BuildToHere>
+  <RoadsOfTheRimWorkOnSite>Work</RoadsOfTheRimWorkOnSite>
+  <RoadsOfTheRimWorkOnSiteDescription>Work on construction site</RoadsOfTheRimWorkOnSiteDescription>
+  <RoadsOfTheRimStopWorkingOnSite>Stop</RoadsOfTheRimStopWorkingOnSite>
+  <RoadsOfTheRimStopWorkingOnSiteDescription>Stop working on construction site</RoadsOfTheRimStopWorkingOnSiteDescription>
+  <RoadsOfTheRim_CaravanNoResource>{0} has ran out of resources to build {1}. Work stopped.</RoadsOfTheRim_CaravanNoResource>
+  <RoadsOfTheRim_RoadBuilt>Road built</RoadsOfTheRim_RoadBuilt>
+  <RoadsOfTheRim_RoadBuiltLetterText>{0} has been built by {1}</RoadsOfTheRim_RoadBuiltLetterText>
+</LanguageData>

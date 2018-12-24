@@ -225,6 +225,7 @@ namespace RoadsOfTheRim
                     elevationCostIncrease , hillinessCostIncrease , swampinessCostIncrease, bridgeCostIncrease, totalCostModifier
                 ));
 
+                totalCostModifier *= settings.BaseEffort;
                 this.work.setCost(roadToBuild.work * totalCostModifier) ;
                 this.wood.setCost((float)roadToBuild.wood * totalCostModifier) ;
                 this.stone.setCost((float)roadToBuild.stone * totalCostModifier) ;
@@ -244,12 +245,18 @@ namespace RoadsOfTheRim
         public bool doSomeWork(Caravan caravan)
         {
             WorldObjectComp_Caravan caravanComp = caravan.GetComponent<WorldObjectComp_Caravan>() ;
+            RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
+
+            if (DebugSettings.godMode)
+            {
+                return finishWork(caravan, parentSite);
+            }
+
             if (!caravanComp.CaravanCanWork())
             {
                 Log.Message("[Roads of the Rim] - DEBUG : doSomeWork() failed because the caravan can't work.");
-                return false ;
+                return false;
             }
-            RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
 
             // Percentage of total work that can be done in this batch
             float amountOfWork = (float)caravanComp.amountOfWork() ;
@@ -261,11 +268,7 @@ namespace RoadsOfTheRim
 
             //DEBUG -Log.Message("Amount of Work : " + amountOfWork + " = " + thisBatch*100 + "%. Caravan inventory : ");
 
-            /*
-             * TO DO : calculate material present in the caravan
-            */
-
-            // TO DO : Remove this once happy
+            // calculate material present in the caravan
             int available_wood = 0;
             int available_stone = 0;
             int available_steel = 0;
@@ -368,67 +371,71 @@ namespace RoadsOfTheRim
             // Work is done
             if (work.getLeft()<=0)
             {
-                /*
-                 * Build the road and remove the construction site
-                 * NOTE : using .parent here, because parent is a WorldObject, I then cast it as a RoadConstructionSite (otherwise it would be just a WorldObject)
-                 */
-                Tile fromTile = Find.WorldGrid[parentSite.Tile];
-                Tile toTile = Find.WorldGrid[parentSite.toTile];
-                RoadDef newRoadDef = DefDatabase<RoadDef>.GetNamed(parentSite.roadToBuild.getRoadDef());
-
-                // Remove lesser roads, they don't deserve to live
-                if (fromTile.potentialRoads != null)
-                {
-                    foreach (Tile.RoadLink aLink in fromTile.potentialRoads.ToArray())
-                    {
-                        if (aLink.neighbor ==parentSite.toTile & RoadsOfTheRim.isRoadBetter(newRoadDef , aLink.road))
-                        {
-                            fromTile.potentialRoads.Remove(aLink) ;
-                        }
-                    }
-                }
-                else
-                {
-                    fromTile.potentialRoads = new List<Tile.RoadLink>();
-                }
-
-                if (toTile.potentialRoads != null)
-                {
-                    foreach (Tile.RoadLink aLink in toTile.potentialRoads.ToArray())
-                    {
-                        if (aLink.neighbor == caravan.Tile  & RoadsOfTheRim.isRoadBetter(newRoadDef , aLink.road))
-                        {
-                            toTile.potentialRoads.Remove(aLink) ;
-                        }
-                    }
-                }
-                else
-                {
-                    toTile.potentialRoads = new List<Tile.RoadLink>();
-                }
-
-                // Add the road to fromTile & toTile
-                fromTile.potentialRoads.Add(new Tile.RoadLink { neighbor = parentSite.toTile , road = newRoadDef });
-                toTile.potentialRoads.Add(new Tile.RoadLink { neighbor = parentSite.Tile, road = newRoadDef });
-                Find.World.renderer.RegenerateAllLayersNow();
-
-                // Send letter
-                Find.LetterStack.ReceiveLetter(
-                    "RoadsOfTheRim_RoadBuilt".Translate() ,
-                    "RoadsOfTheRim_RoadBuiltLetterText".Translate(parentSite.roadToBuild.label , caravan.Label) ,
-                    LetterDefOf.PositiveEvent ,
-                    new GlobalTargetInfo(caravan)
-                ) ;
-
-                return true;
+                return finishWork(caravan, parentSite);
             }
             return false;
         }
 
+        public bool finishWork(Caravan caravan , RoadConstructionSite parentSite)
+        {
+            /*
+             * Build the road and remove the construction site
+             * NOTE : using .parent here, because parent is a WorldObject, I then cast it as a RoadConstructionSite (otherwise it would be just a WorldObject)
+             */
+            Tile fromTile = Find.WorldGrid[parentSite.Tile];
+            Tile toTile = Find.WorldGrid[parentSite.toTile];
+            RoadDef newRoadDef = DefDatabase<RoadDef>.GetNamed(parentSite.roadToBuild.getRoadDef());
+
+            // Remove lesser roads, they don't deserve to live
+            if (fromTile.potentialRoads != null)
+            {
+                foreach (Tile.RoadLink aLink in fromTile.potentialRoads.ToArray())
+                {
+                    if (aLink.neighbor == parentSite.toTile & RoadsOfTheRim.isRoadBetter(newRoadDef, aLink.road))
+                    {
+                        fromTile.potentialRoads.Remove(aLink);
+                    }
+                }
+            }
+            else
+            {
+                fromTile.potentialRoads = new List<Tile.RoadLink>();
+            }
+
+            if (toTile.potentialRoads != null)
+            {
+                foreach (Tile.RoadLink aLink in toTile.potentialRoads.ToArray())
+                {
+                    if (aLink.neighbor == caravan.Tile & RoadsOfTheRim.isRoadBetter(newRoadDef, aLink.road))
+                    {
+                        toTile.potentialRoads.Remove(aLink);
+                    }
+                }
+            }
+            else
+            {
+                toTile.potentialRoads = new List<Tile.RoadLink>();
+            }
+
+            // Add the road to fromTile & toTile
+            fromTile.potentialRoads.Add(new Tile.RoadLink { neighbor = parentSite.toTile, road = newRoadDef });
+            toTile.potentialRoads.Add(new Tile.RoadLink { neighbor = parentSite.Tile, road = newRoadDef });
+            Find.World.renderer.RegenerateAllLayersNow();
+
+            // Send letter
+            Find.LetterStack.ReceiveLetter(
+                "RoadsOfTheRim_RoadBuilt".Translate(),
+                "RoadsOfTheRim_RoadBuiltLetterText".Translate(parentSite.roadToBuild.label, caravan.Label),
+                LetterDefOf.PositiveEvent,
+                new GlobalTargetInfo(caravan)
+            );
+
+            return true;
+        }
 
         public string progressDescription() {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append("Needs: ");
+            stringBuilder.Append("[Mvmt difficulty="+ WorldPathGrid.CalculatedMovementDifficultyAt(parent.Tile , true) + "] - Needs: ");
             stringBuilder.AppendLine();
             stringBuilder.Append("Work    : " + (int)work.getLeft() + " / " + (int)work.getCost());
             stringBuilder.AppendLine();

@@ -48,6 +48,7 @@
     <Compile Include="WITab_RoadConstructionSite.cs" />
     <Compile Include="RoadBuildableDef.cs" />
     <Compile Include="WorldObjectComp_Caravan.cs" />
+    <Compile Include="HarmonyPatches.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

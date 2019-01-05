@@ -15,5 +15,10 @@
         Roads of the Rim changes the movement multipliers for existing roads as indicated in the "Terrain" tab under Movement difficulty. This can be switched off in the settings as well.
         
         Feedback welcome on Steam and in the Forum thread : https://ludeon.com/forums/index.php?topic=47205.0
+        
+        Changelog
+        
+        2019-01-05 : Added conditional patching of Caravan comp for other mod compatibility (thanks Mehni for the tip)
+        
     </description>
 </ModMetaData>

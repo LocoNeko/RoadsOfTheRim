@@ -1,9 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workbench ActiveDocument="../../../About/About.xml">
     <Files>
-      <File FileName="../../../../../../../../../rimworld/Mods/RoadsOfTheRim/About/About.xml" Line="17" Column="110" />
+      <File FileName="../../../../../../../../../rimworld/Mods/RoadsOfTheRim/About/About.xml" Line="21" Column="119" />
       <File FileName="../../../Languages/English/Keyed/settings.xml" Line="13" Column="93" />
-      <File FileName="../../../Patches/patches.xml" Line="4" Column="20" />
+      <File FileName="../../../Patches/patches.xml" Line="46" Column="1" />
       <File FileName="../../../Defs/WorldObjectDefs/WorldObjects.xml" Line="12" Column="1" />
       <File FileName="../../../Defs/RoadBuildableDefs/RoadBuildableDefs.xml" Line="44" Column="19" />
       <File FileName="RoadBuildableDef.cs" Line="5" Column="40" />

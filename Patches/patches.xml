@@ -35,15 +35,25 @@
         </value>
     </Operation>
     
-    <Operation Class="PatchOperationAdd">
-        <xpath>/Defs/WorldObjectDef[defName="Caravan"]</xpath>
-        <value>
-            <comps>
+    <Operation Class="PatchOperationConditional">
+        <xpath>/Defs/WorldObjectDef[defName="Caravan"]/comps</xpath>
+        <nomatch Class="PatchOperationAdd">
+            <xpath>/Defs/WorldObjectDef[defName="Caravan"]</xpath>
+            <value>
+                <comps>
+                    <li>
+                        <compClass>RoadsOfTheRim.WorldObjectComp_Caravan</compClass>
+                    </li>
+                </comps>
+            </value>
+        </nomatch>
+        <match Class="PatchOperationAdd">
+            <xpath>/Defs/WorldObjectDef[defName="Caravan"]</xpath>
+            <value>
                 <li>
                     <compClass>RoadsOfTheRim.WorldObjectComp_Caravan</compClass>
                 </li>
-            </comps>
-        </value>
+            </value>
+        </match>
     </Operation>
-    
 </Patch>

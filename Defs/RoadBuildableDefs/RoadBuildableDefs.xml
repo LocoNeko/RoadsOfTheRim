@@ -5,6 +5,7 @@
         <label>Dirt path</label>
         <movementCostMultiplier>0.75</movementCostMultiplier>
         <roadDef>DirtPath</roadDef>
+        <biomeMovementDifficultyEffect>0</biomeMovementDifficultyEffect>
         <work>600</work>
         <wood>300</wood>
         <stone>50</stone>
@@ -17,6 +18,7 @@
         <label>Dirt road</label>
         <movementCostMultiplier>0.6</movementCostMultiplier>
         <roadDef>DirtRoad</roadDef>
+        <biomeMovementDifficultyEffect>0.25</biomeMovementDifficultyEffect>
         <work>1200</work>
         <wood>600</wood>
         <stone>100</stone>
@@ -29,6 +31,7 @@
         <label>Stone road</label>
         <movementCostMultiplier>0.5</movementCostMultiplier>
         <roadDef>StoneRoad</roadDef>
+        <biomeMovementDifficultyEffect>0.75</biomeMovementDifficultyEffect>
         <work>3600</work>
         <wood>150</wood>
         <stone>1800</stone>
@@ -40,9 +43,10 @@
         <defName>RoadsOfTheRim_AsphaltRoad</defName>
         <label>Asphalt road</label>
         <movementCostMultiplier>0.4</movementCostMultiplier>
+        <biomeMovementDifficultyEffect>1</biomeMovementDifficultyEffect>
         <roadDef>AncientAsphaltRoad</roadDef>
         <work>5400</work>
-        <wood>300</wood>
+        <wood>0</wood>
         <stone>3600</stone>
         <steel>600</steel>
         <chemfuel>300</chemfuel>

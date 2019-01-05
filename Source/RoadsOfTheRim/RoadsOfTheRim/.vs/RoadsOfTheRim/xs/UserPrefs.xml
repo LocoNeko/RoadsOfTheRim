@@ -1,15 +1,15 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="../../../About/About.xml">
     <Files>
-      <File FileName="../../../../../../../../../rimworld/Mods/RoadsOfTheRim/About/About.xml" Line="15" Column="15" />
-      <File FileName="../../../Languages/English/Keyed/settings.xml" Line="22" Column="76" />
+      <File FileName="../../../../../../../../../rimworld/Mods/RoadsOfTheRim/About/About.xml" Line="17" Column="110" />
+      <File FileName="../../../Languages/English/Keyed/settings.xml" Line="13" Column="93" />
       <File FileName="../../../Patches/patches.xml" Line="4" Column="20" />
-      <File FileName="../../../Defs/WorldObjectDefs/WorldObjects.xml" Line="14" Column="78" />
+      <File FileName="../../../Defs/WorldObjectDefs/WorldObjects.xml" Line="12" Column="1" />
       <File FileName="../../../Defs/RoadBuildableDefs/RoadBuildableDefs.xml" Line="44" Column="19" />
-      <File FileName="RoadBuildableDef.cs" Line="13" Column="1" />
-      <File FileName="WorldObjectComp_Caravan.cs" Line="40" Column="105" />
-      <File FileName="RoadConstructionSite.cs" Line="251" Column="56" />
-      <File FileName="ModMain.cs" Line="130" Column="49" />
+      <File FileName="RoadBuildableDef.cs" Line="5" Column="40" />
+      <File FileName="WorldObjectComp_Caravan.cs" Line="69" Column="48" />
+      <File FileName="ModMain.cs" Line="75" Column="28" />
+      <File FileName="RoadConstructionSite.cs" Line="278" Column="51" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

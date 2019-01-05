@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using RimWorld;
-using RimWorld.Planet;
-using UnityEngine;
-using Verse;
+﻿using Verse;
 
 namespace RoadsOfTheRim
 {
     public class RoadBuildableDef : Def
     {
-        public float movementCostMultiplier = 1;
+        public float movementCostMultiplier = 1f;
+        public float biomeMovementDifficultyEffect = 0f;
         public string roadDef = "DirtPath" ;
         public int work = 0;
         public int wood = 0;

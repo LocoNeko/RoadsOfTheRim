@@ -14,7 +14,6 @@ namespace RoadsOfTheRim
 {
     public class RoadsOfTheRimSettings : ModSettings
     {
-        /* Mod setting : the basic effort needed to build a road must be between 1 and 10 */
         // Constants
         public const float MinBaseEffort = .1f;
         public const float DefaultBaseEffort = 1f;
@@ -55,31 +54,28 @@ namespace RoadsOfTheRim
                 Log.Message(method.Name);
             }
             */
-            /*
-             * Change how roads impact terrain movement cost multiplier. From dirt paths that don't help at all with terrain, to Asphalt roads that cancel them entirely
-             * Patching WorldPathGrid.CalculatedMovementDifficultyAt
-             * I actually have to patch WorldGrid.GetRoadMovementDifficultyMultiplier
-             * NO : I actually have to patch the multiplier of road defs based on the Tile's movement difficulty ! So the patch is on the Tile constructor !
-            */
-            //harmony.Patch(typeof(WorldPathGrid).GetMethod("CalculatedMovementDifficultyAt") , null , new HarmonyMethod(typeof(RoadsOfTheRim).GetMethod("GetWorldGridPostfix")), null) ;
-            /*
-             * I need to postfix the function that calls WorldObject.GetInspectString() to display whether or not the caravan is working on a road
-             */
         }
 
         public override string SettingsCategory() => "RoadsOfTheRimSettingsCategoryLabel".Translate();
 
         public override void DoSettingsWindowContents(Rect rect)
         {
+            bool CurrentOverOverrideCosts = settings.OverrideCosts;
             Listing_Standard listing_Standard = new Listing_Standard();
             listing_Standard.Begin(rect);
             listing_Standard.Label("RoadsOfTheRimSettingsBaseEffort".Translate() + ": " + string.Format("{0:0%}", settings.BaseEffort));
             listing_Standard.Gap();
             settings.BaseEffort = (float)listing_Standard.Slider(settings.BaseEffort, RoadsOfTheRimSettings.MinBaseEffort, RoadsOfTheRimSettings.MaxBaseEffort);
-            //listing_Standard.Gap();
-            //listing_Standard.CheckboxLabeled("RoadsOfTheRimSettingsOverrideCosts".Translate() + ": ", ref settings.OverrideCosts);
+            listing_Standard.Gap();
+            listing_Standard.CheckboxLabeled("RoadsOfTheRimSettingsOverrideCosts".Translate() + ": ", ref settings.OverrideCosts);
             listing_Standard.End();
             settings.Write();
+            if (CurrentOverOverrideCosts != settings.OverrideCosts)
+            {
+                // - DEBUG Log.Message("Path costs reclaculated");
+                Find.WorldPathGrid.RecalculateAllPerceivedPathCosts();
+                Find.World.renderer.RegenerateAllLayersNow();
+            }
         }
 
         public static void GetGizmosPostfix(ref IEnumerable<Gizmo> __result, Caravan __instance)
@@ -101,30 +97,25 @@ namespace RoadsOfTheRim
             }
         }
 
-        /* Proof of concept of patching movement cost       
-        public static void GetWorldGridPostfix(ref float __result , WorldPathGrid __instance , ref int tile)
-        {
-            Log.Message("Patching tile #" + tile);
-            __result = 0.01f;
-        }
-        */
         public static void get_RoadsPostifx(ref List<Tile.RoadLink> __result , Tile __instance)
         {
-            /* 
-             * TO DO :
-             * Take the type of road and movement cost multiplier of the tile to offset bad terrain on good roads
-             * Stone roads will cancel 50% of terrain , Asphalt roads will cancel 100% :  the multiplier is 1/(tile difficulty)            
-             */
-            Log.Message("Patch Tile get roads");
+            // DEBUG - Log.Message("Patch Tile get roads");
             if (__result!=null)
             {
+                bool overrideCosts = settings.OverrideCosts ;
                 List<Tile.RoadLink> patchedRoads = new List<Tile.RoadLink>();
                 foreach (Tile.RoadLink aLink in __result)
                 {
                     Tile.RoadLink aRoadLink = new Tile.RoadLink();
                     RoadDef aRoad = aLink.road;
+                    float biomeMovementDifficultyEffect = 0 ; // To be taken from road type : 1 (best) , 0.75 , 0.25 , 0 (worst)
                     // Roads cancel biome movement difficulty
-                    aRoad.movementCostMultiplier = aLink.road.movementCostMultiplier * (1 / __instance.biome.movementDifficulty);
+                    // e.g : Biome is at 3, effect is at 0.75 : we get a multiplier of .5, combined with the biome of 3, we'll only get 1.5 for biome
+                    // i.e. : effect is at 0, we always get a multiplier of 1 (no effect)
+                    // effect is at 1, we always get a multiplier of 1/biome, which effectively cancels biome effects
+                    float biomeMovementDifficultyCancellation = (1 + (__instance.biome.movementDifficulty - 1) * (1-biomeMovementDifficultyEffect)) / __instance.biome.movementDifficulty ;
+                    // If the settings are set to override default costs, apply them, otherwise use default (0.5) , multiply by how much the road cancels the biome movement difficulty
+                    aRoad.movementCostMultiplier = (settings.OverrideCosts ? aLink.road.movementCostMultiplier : 0.5f) * biomeMovementDifficultyCancellation ;
                     aRoadLink.neighbor = aLink.neighbor;
                     aRoadLink.road = aRoad;
                     patchedRoads.Add(aRoadLink);
@@ -348,13 +339,9 @@ namespace RoadsOfTheRim
         // Compares the movement cost multiplier of 2 roaddefs, returns TRUE if roadA is better or roadB is null. returns FALSE in all other cases
         public static bool isRoadBetter(RoadDef roadA , RoadDef roadB)
         {
-            if (roadA == null) 
+            if (roadA == null || roadB == null) 
             {
                 return false ;
-            }
-            else if (roadB == null) 
-            {
-                return true ;
             }
             return (roadA.movementCostMultiplier < roadB.movementCostMultiplier) ;
         }

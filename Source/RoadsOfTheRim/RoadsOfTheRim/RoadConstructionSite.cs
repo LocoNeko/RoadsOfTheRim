@@ -87,14 +87,12 @@ namespace RoadsOfTheRim
         {
             base.Draw();
             WorldGrid worldGrid = Find.WorldGrid;
-            float d = 0.05f;
             Vector3 fromPos = worldGrid.GetTileCenter(this.Tile);
             Vector3 toPos = worldGrid.GetTileCenter(this.toTile);
+            float d = 0.05f;
             fromPos += fromPos.normalized * d;
             toPos += toPos.normalized * d;
             GenDraw.DrawWorldLineBetween(fromPos, toPos);
-            //WorldRendererUtility.DrawQuadTangentialToPlanet(toPos, 0.35f * Find.WorldGrid.averageTileSize, 0.015f, Material, false, false, null);
-
             // TO DO : Progress bar
             //this.GetComponent<CompRoadsOfTheRimConstructionSite>().percentageDone() ;
         }
@@ -193,7 +191,7 @@ namespace RoadsOfTheRim
                 {
                     desc.Append(neighbor+",");
                 }
-                Log.Message("Neigbors of From tile :" + desc);
+                // DEBUG - Log.Message("Neigbors of From tile :" + desc);
 
                 List<int> toTileNeighbors = new List<int>();
                 RoadConstructionSite TheSite = (RoadConstructionSite) parent;
@@ -204,7 +202,7 @@ namespace RoadsOfTheRim
                 {
                     desc2.Append(neighbor + ",");
                 }
-                Log.Message("Neigbors of To tile :" + desc2);
+                // DEBUG - Log.Message("Neigbors of To tile :" + desc2);
 
                 /*
                 foreach (Tile.RiverLink aRiver in fromTile.Rivers )
@@ -216,21 +214,24 @@ namespace RoadsOfTheRim
                 // Total cost modifier
                 float totalCostModifier = 1 + elevationCostIncrease + hillinessCostIncrease + swampinessCostIncrease + bridgeCostIncrease ;
 
+                /*
+                 * DEBUG               
                 Log.Message( string.Format(
-                    "From Tile: {0}m , {1} hilliness , {2} swampiness. To Tile: {3}m , {4} hilliness , {5} swampiness. Average {6} hilliness, {7} swampiness" , 
+                "From Tile: {0}m , {1} hilliness , {2} swampiness. To Tile: {3}m , {4} hilliness , {5} swampiness. Average {6} hilliness, {7} swampiness" , 
                     fromTile.elevation , (float)fromTile.hilliness , fromTile.swampiness, toTile.elevation , (float)toTile.hilliness , toTile.swampiness , hilliness , swampiness
                 ));
                 Log.Message( string.Format(
-                    "Costs increases from elevation: {0:0.00%}, from hilliness {1:0.00%}, from swampiness {2:0.00%}, from bridge crossing {3:0.00%}. Total cost : {4:0.00%}" , 
+                "Work cost increase from elevation: {0:0.00%}, from hilliness {1:0.00%}, from swampiness {2:0.00%}, from bridge crossing {3:0.00%}. Total cost : {4:0.00%}" , 
                     elevationCostIncrease , hillinessCostIncrease , swampinessCostIncrease, bridgeCostIncrease, totalCostModifier
                 ));
+                */
 
                 totalCostModifier *= settings.BaseEffort;
                 this.work.setCost(roadToBuild.work * totalCostModifier) ;
-                this.wood.setCost((float)roadToBuild.wood * totalCostModifier) ;
-                this.stone.setCost((float)roadToBuild.stone * totalCostModifier) ;
-                this.steel.setCost((float)roadToBuild.steel * totalCostModifier) ;
-                this.chemfuel.setCost((float)roadToBuild.chemfuel * totalCostModifier) ;
+                this.wood.setCost((float)roadToBuild.wood) ;
+                this.stone.setCost((float)roadToBuild.stone) ;
+                this.steel.setCost((float)roadToBuild.steel) ;
+                this.chemfuel.setCost((float)roadToBuild.chemfuel) ;
             }
             catch
             {
@@ -254,7 +255,7 @@ namespace RoadsOfTheRim
 
             if (!caravanComp.CaravanCanWork())
             {
-                Log.Message("[Roads of the Rim] - DEBUG : doSomeWork() failed because the caravan can't work.");
+                Log.Message("[Roads of the Rim] : doSomeWork() failed because the caravan can't work.");
                 return false;
             }
 
@@ -435,7 +436,8 @@ namespace RoadsOfTheRim
 
         public string progressDescription() {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append("[Mvmt difficulty="+ WorldPathGrid.CalculatedMovementDifficultyAt(parent.Tile , true) + "] - Needs: ");
+            //DEBUG - stringBuilder.Append("[Mvmt difficulty="+ WorldPathGrid.CalculatedMovementDifficultyAt(parent.Tile , true) + "] - Needs: ");
+            stringBuilder.Append("Needs: ");
             stringBuilder.AppendLine();
             stringBuilder.Append("Work    : " + (int)work.getLeft() + " / " + (int)work.getCost());
             stringBuilder.AppendLine();

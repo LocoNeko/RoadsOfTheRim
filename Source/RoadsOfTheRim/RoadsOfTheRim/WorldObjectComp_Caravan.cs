@@ -66,7 +66,7 @@ namespace RoadsOfTheRim
             }
             else
             {
-                Log.Message("[Roads of the Rim] - DEBUG : Caravan was given the order to start working but can't work.");
+                Log.Message("[Roads of the Rim] : Caravan was given the order to start working but can't work.");
             }
         }
         

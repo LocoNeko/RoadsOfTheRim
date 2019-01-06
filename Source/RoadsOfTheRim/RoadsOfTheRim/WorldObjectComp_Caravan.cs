@@ -9,6 +9,7 @@ namespace RoadsOfTheRim
     {
         public bool currentlyWorkingOnSite = false;
         public int microTick = 0;
+        public bool workOnWakeUp = false;
 
         public Caravan GetCaravan()
         {
@@ -30,6 +31,12 @@ namespace RoadsOfTheRim
         {
             Caravan caravan = GetCaravan();
             microTick++;
+            // Wake up and work !
+            if (this.workOnWakeUp && !caravan.NightResting)
+            {
+                this.workOnWakeUp = false;
+                this.currentlyWorkingOnSite = true;
+            }
             if (microTick==100)
             {
                 microTick = 0;
@@ -51,8 +58,12 @@ namespace RoadsOfTheRim
                 if (this.currentlyWorkingOnSite & !CaravanCanWork())
                 {
                     this.currentlyWorkingOnSite = false ;
+                    // If the caravan is resting, stop working but remember to restart working on wake up
+                    if (caravan.NightResting)
+                    {
+                        this.workOnWakeUp = true;
+                    }
                 }
-
             }
         }
 
@@ -61,6 +72,8 @@ namespace RoadsOfTheRim
         {
             if (CaravanCanWork())
             {
+                Caravan caravan = GetCaravan();
+                caravan.pather.StopDead();
                 this.currentlyWorkingOnSite = true ;
                 this.microTick = 0 ;
             }
@@ -115,6 +128,7 @@ namespace RoadsOfTheRim
             base.PostExposeData();
             Scribe_Values.Look<bool>(ref this.currentlyWorkingOnSite, "RoadsOfTheRim_Caravan_currentlyWorkingOnSite" , false , true);
             Scribe_Values.Look<int>(ref this.microTick, "RoadsOfTheRim_Caravan_microTick", 0, true);
+            Scribe_Values.Look<bool>(ref this.workOnWakeUp, "RoadsOfTheRim_Caravan_workOnWakeUp", false, true);
         }
     }
 }

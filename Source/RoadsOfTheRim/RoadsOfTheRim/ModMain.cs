@@ -46,6 +46,7 @@ namespace RoadsOfTheRim
             HarmonyInstance harmony = HarmonyInstance.Create("Loconeko.Rimworld.RoadsOfTheRim");
             // Patching the Caravan's Gizmos to add "Add construction Site" , "Remove construction Site" , "Work", "Stop working"
             harmony.Patch(typeof(Caravan).GetMethod("GetGizmos") , null , new HarmonyMethod(typeof(RoadsOfTheRim).GetMethod("GetGizmosPostfix")) , null);
+            harmony.Patch(typeof(Caravan).GetMethod("GetInspectString"), null, new HarmonyMethod(typeof(RoadsOfTheRim).GetMethod("Caravan_GetInspectStringPostfix")), null);
             harmony.Patch(typeof(Tile).GetMethod("get_Roads"), null, new HarmonyMethod(typeof(RoadsOfTheRim).GetMethod("get_RoadsPostifx")), null);
             /* How I found the hidden methods :
             var methods = typeof(Tile).GetMethods();
@@ -72,9 +73,15 @@ namespace RoadsOfTheRim
             settings.Write();
             if (CurrentOverOverrideCosts != settings.OverrideCosts)
             {
-                // - DEBUG Log.Message("Path costs reclaculated");
-                Find.WorldPathGrid.RecalculateAllPerceivedPathCosts();
-                Find.World.renderer.RegenerateAllLayersNow();
+                try
+                {
+                    // - DEBUG Log.Message("Path costs reclaculated");
+                    Find.WorldPathGrid.RecalculateAllPerceivedPathCosts();
+                    Find.World.renderer.RegenerateAllLayersNow();
+                }
+                catch
+                {
+                }
             }
         }
 
@@ -94,6 +101,19 @@ namespace RoadsOfTheRim
             if (isTheCaravanWorkingOnASite)
             {
                 __result = __result.Concat(new Gizmo[] { StopWorkingOnSite(__instance) });
+            }
+        }
+
+        public static void Caravan_GetInspectStringPostfix(ref string __result, Caravan __instance)
+        {
+            bool isTheCaravanWorkingOnASite = __instance.GetComponent<WorldObjectComp_Caravan>().currentlyWorkingOnSite;
+            if (isTheCaravanWorkingOnASite)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append(__result);
+                stringBuilder.AppendLine();
+                stringBuilder.Append("Working on a site");
+                __result = stringBuilder.ToString();
             }
         }
 
@@ -269,6 +289,8 @@ namespace RoadsOfTheRim
                 SoundStarter.PlayOneShotOnCamera(SoundDefOf.Click, null);
                 caravan.GetComponent<WorldObjectComp_Caravan>().startWorking();
             };
+            // disable based on : __instance.GetComponent<WorldObjectComp_Caravan>().CaravanCanWork();
+
             return command_Action;
         }
 

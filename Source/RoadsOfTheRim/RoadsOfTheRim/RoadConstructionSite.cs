@@ -228,10 +228,10 @@ namespace RoadsOfTheRim
 
                 totalCostModifier *= settings.BaseEffort;
                 this.work.setCost(roadToBuild.work * totalCostModifier) ;
-                this.wood.setCost((float)roadToBuild.wood) ;
-                this.stone.setCost((float)roadToBuild.stone) ;
-                this.steel.setCost((float)roadToBuild.steel) ;
-                this.chemfuel.setCost((float)roadToBuild.chemfuel) ;
+                this.wood.setCost((float)roadToBuild.wood * settings.BaseEffort) ;
+                this.stone.setCost((float)roadToBuild.stone * settings.BaseEffort) ;
+                this.steel.setCost((float)roadToBuild.steel * settings.BaseEffort) ;
+                this.chemfuel.setCost((float)roadToBuild.chemfuel * settings.BaseEffort) ;
             }
             catch
             {

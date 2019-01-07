@@ -290,7 +290,10 @@ namespace RoadsOfTheRim
                 caravan.GetComponent<WorldObjectComp_Caravan>().startWorking();
             };
             // disable based on : __instance.GetComponent<WorldObjectComp_Caravan>().CaravanCanWork();
-
+            if (!caravan.GetComponent<WorldObjectComp_Caravan>().CaravanCanWork())
+            {
+                command_Action.Disable("RoadsOfTheRimBuildWorkOnSiteCantWork".Translate());
+            }
             return command_Action;
         }
 

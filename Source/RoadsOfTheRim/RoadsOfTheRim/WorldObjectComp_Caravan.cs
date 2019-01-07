@@ -31,7 +31,6 @@ namespace RoadsOfTheRim
         {
             Caravan caravan = GetCaravan();
             microTick++;
-            // Wake up and work !
             if (this.workOnWakeUp && !caravan.NightResting)
             {
                 this.workOnWakeUp = false;
@@ -40,12 +39,10 @@ namespace RoadsOfTheRim
             if (microTick==100)
             {
                 microTick = 0;
-
                 if (this.currentlyWorkingOnSite & isThereAConstructionSiteHere() & CaravanCanWork())
                 {
                     RoadConstructionSite TheSite = (RoadConstructionSite)Find.WorldObjects.WorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), caravan.Tile);
                     bool workDone = TheSite.GetComponent<CompRoadsOfTheRimConstructionSite>().doSomeWork(caravan);
-                    // DEBUG - Log.Message("Amount of work in one big tick :"+amountOfWork());
                     base.CompTick();
                     if (workDone)
                     {
@@ -53,7 +50,6 @@ namespace RoadsOfTheRim
                         Find.World.worldObjects.Remove(TheSite);
                     }
                 }
-
                 // Stop working as soon as the caravan moves
                 if (this.currentlyWorkingOnSite & !CaravanCanWork())
                 {

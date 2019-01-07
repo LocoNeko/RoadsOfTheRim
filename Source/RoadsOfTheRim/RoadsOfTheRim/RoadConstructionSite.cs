@@ -265,9 +265,6 @@ namespace RoadsOfTheRim
             {
                 amountOfWork = this.work.getLeft();
             }
-            float thisBatch = (amountOfWork / this.work.getCost());
-
-            //DEBUG -Log.Message("Amount of Work : " + amountOfWork + " = " + thisBatch*100 + "%. Caravan inventory : ");
 
             // calculate material present in the caravan
             int available_wood = 0;
@@ -282,7 +279,7 @@ namespace RoadsOfTheRim
                 {
                     available_wood += aThing.stackCount ;
                 }
-                else if (aThing.def.FirstThingCategory.ToString()=="StoneBlocks")
+                else if ((aThing.def.FirstThingCategory!=null) && (aThing.def.FirstThingCategory.ToString()=="StoneBlocks"))
                 {
                     available_stone += aThing.stackCount ;
                 }
@@ -340,7 +337,7 @@ namespace RoadsOfTheRim
                     needed_wood -= used_wood ;
                     wood.reduceLeft(used_wood);
                 }
-                else if ((aThing.def.FirstThingCategory.ToString() == "StoneBlocks") && needed_stone > 0 )
+                else if ((aThing.def.FirstThingCategory!=null) && (aThing.def.FirstThingCategory.ToString() == "StoneBlocks") && needed_stone > 0 )
                 {
                     int used_stone = (aThing.stackCount > needed_stone) ? needed_stone : aThing.stackCount ;
                     aThing.stackCount -= used_stone ;
@@ -366,6 +363,7 @@ namespace RoadsOfTheRim
                     aThing.Destroy();
                 }
             }
+
             // Finally reducing the work & resources left
             work.reduceLeft(amountOfWork);
 

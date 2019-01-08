@@ -114,7 +114,7 @@ namespace RoadsOfTheRim
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.Append(__result);
                     stringBuilder.AppendLine();
-                    stringBuilder.Append("Working on : " + CaravanComp.getSite().fullName());
+                    stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName()));
                     __result = stringBuilder.ToString();
                 }
             }
@@ -238,7 +238,6 @@ namespace RoadsOfTheRim
                     }
                 }
             }
-
             /* Go through all the RoadBuildableDefs and show them in a float menu when creating construction site*/
             List<FloatMenuOption> list = new List<FloatMenuOption>();
             foreach (RoadBuildableDef thisRoadBuildableDef in DefDatabase<RoadBuildableDef>.AllDefs)
@@ -247,7 +246,7 @@ namespace RoadsOfTheRim
                 if (bestExistingRoad == null || isRoadBetter(DefDatabase<RoadDef>.GetNamed(thisRoadBuildableDef.roadDef, true), bestExistingRoad))
                 {
                     list.Add(new FloatMenuOption(
-                        thisRoadBuildableDef.label + " (movement :" + thisRoadBuildableDef.movementCostMultiplier + ")",
+                        "RoadsOfTheRim_CreateConstructionSiteMenuOption".Translate(thisRoadBuildableDef.label , thisRoadBuildableDef.movementCostMultiplier),
                         delegate ()
                         {
                             SoundStarter.PlayOneShotOnCamera(SoundDefOf.Tick_High, null);
@@ -371,9 +370,13 @@ namespace RoadsOfTheRim
         // Compares the movement cost multiplier of 2 roaddefs, returns TRUE if roadA is better or roadB is null. returns FALSE in all other cases
         public static bool isRoadBetter(RoadDef roadA , RoadDef roadB)
         {
-            if (roadA == null || roadB == null) 
+            if (roadA == null) 
             {
                 return false ;
+            }
+            if (roadB == null)
+            {
+                return true ;
             }
             return (roadA.movementCostMultiplier < roadB.movementCostMultiplier) ;
         }

@@ -48,7 +48,7 @@
             </value>
         </nomatch>
         <match Class="PatchOperationAdd">
-            <xpath>/Defs/WorldObjectDef[defName="Caravan"]</xpath>
+            <xpath>/Defs/WorldObjectDef[defName="Caravan"]/comps</xpath>
             <value>
                 <li>
                     <compClass>RoadsOfTheRim.WorldObjectComp_Caravan</compClass>

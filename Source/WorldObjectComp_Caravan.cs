@@ -21,6 +21,18 @@ namespace RoadsOfTheRim
             return Find.WorldObjects.AnyWorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), GetCaravan().Tile);
         }
 
+        public RoadConstructionSite getSite()
+        {
+            try
+            {
+                return (RoadConstructionSite)Find.WorldObjects.WorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), ((Caravan)this.parent).Tile);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public bool CaravanCanWork()
         {
             Caravan caravan = GetCaravan() ;
@@ -41,7 +53,8 @@ namespace RoadsOfTheRim
                 microTick = 0;
                 if (this.currentlyWorkingOnSite & isThereAConstructionSiteHere() & CaravanCanWork())
                 {
-                    RoadConstructionSite TheSite = (RoadConstructionSite)Find.WorldObjects.WorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), caravan.Tile);
+                    RoadConstructionSite TheSite = getSite();
+                    //RoadConstructionSite TheSite = (RoadConstructionSite)Find.WorldObjects.WorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), caravan.Tile);
                     bool workDone = TheSite.GetComponent<CompRoadsOfTheRimConstructionSite>().doSomeWork(caravan);
                     base.CompTick();
                     if (workDone)

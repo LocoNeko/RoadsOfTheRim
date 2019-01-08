@@ -39,6 +39,16 @@ namespace RoadsOfTheRim
             */           
         }
 
+        public string fullName()
+        {
+            StringBuilder result = new StringBuilder();
+            result.Append(roadToBuild.label);
+            //Tile.
+            // Go through all settlement on the planet, calculate the distance to the construction Site tile.
+            // OR, go from the tile and find settlements until we reach maximum distance : that's like a heap search and god I hate them
+            return result.ToString();
+        }
+
         /*
         The construction site costs are set here
          */

@@ -106,14 +106,21 @@ namespace RoadsOfTheRim
 
         public static void Caravan_GetInspectStringPostfix(ref string __result, Caravan __instance)
         {
-            bool isTheCaravanWorkingOnASite = __instance.GetComponent<WorldObjectComp_Caravan>().currentlyWorkingOnSite;
-            if (isTheCaravanWorkingOnASite)
+            try
             {
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.Append(__result);
-                stringBuilder.AppendLine();
-                stringBuilder.Append("Working on a site");
-                __result = stringBuilder.ToString();
+                WorldObjectComp_Caravan CaravanComp = __instance.GetComponent<WorldObjectComp_Caravan>();
+                if (CaravanComp.currentlyWorkingOnSite)
+                {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.Append(__result);
+                    stringBuilder.AppendLine();
+                    stringBuilder.Append("Working on : " + CaravanComp.getSite().fullName());
+                    __result = stringBuilder.ToString();
+                }
+            }
+            catch
+            {
+                Log.Message("[Roads of the Rim] DEBUG : Error in Caravan_GetInspectStringPostfix");
             }
         }
 

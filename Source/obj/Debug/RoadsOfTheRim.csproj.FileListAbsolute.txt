@@ -1,0 +1,14 @@
+/home/gpetraud/.steam/steamapps/common/RimWorld/Mods/RoadsOfTheRim/Assemblies/RoadsOfTheRim.dll
+/home/gpetraud/.steam/steamapps/common/RimWorld/Mods/RoadsOfTheRim/Assemblies/RoadsOfTheRim.pdb
+/home/gpetraud/.steam/steamapps/common/RimWorld/Mods/RoadsOfTheRim/Source/RoadsOfTheRim/RoadsOfTheRim/obj/Debug/RoadsOfTheRim.csprojAssemblyReference.cache
+/home/gpetraud/.steam/steamapps/common/RimWorld/Mods/RoadsOfTheRim/Source/RoadsOfTheRim/RoadsOfTheRim/obj/Debug/RoadsOfTheRim.csproj.CoreCompileInputs.cache
+/home/gpetraud/.steam/steamapps/common/RimWorld/Mods/RoadsOfTheRim/Source/RoadsOfTheRim/RoadsOfTheRim/obj/Debug/RoadsOfTheRim.dll
+/home/gpetraud/.steam/steamapps/common/RimWorld/Mods/RoadsOfTheRim/Source/RoadsOfTheRim/RoadsOfTheRim/obj/Debug/RoadsOfTheRim.pdb
+/home/gpetraud/.steam/steamapps/common/RimWorld/Mods/RoadsOfTheRim/Source/RoadsOfTheRim/RoadsOfTheRim/obj/Debug/RoadsOfTheRim.csproj.CopyComplete
+/home/gpetraud/.steam/steamapps/common/RimWorld/Mods/RoadsOfTheRim/Source/obj/Debug/RoadsOfTheRim.csprojAssemblyReference.cache
+/home/gpetraud/.steam/steamapps/common/RimWorld/Mods/RoadsOfTheRim/Source/obj/Debug/RoadsOfTheRim.csproj.CoreCompileInputs.cache
+/home/gpetraud/.steam/steamapps/common/RimWorld/Mods/RoadsOfTheRim/Source/obj/Debug/RoadsOfTheRim.dll
+/home/gpetraud/.steam/steamapps/common/RimWorld/Mods/RoadsOfTheRim/Source/obj/Debug/RoadsOfTheRim.pdb
+/home/gpetraud/.steam/steamapps/common/RimWorld/Assemblies/RoadsOfTheRim.dll
+/home/gpetraud/.steam/steamapps/common/RimWorld/Assemblies/RoadsOfTheRim.pdb
+/home/gpetraud/.steam/steamapps/common/RimWorld/Mods/RoadsOfTheRim/Source/obj/Debug/RoadsOfTheRim.csproj.CopyComplete

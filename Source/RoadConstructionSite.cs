@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Reflection;
 using System;
+using System.Linq;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
@@ -15,7 +16,19 @@ namespace RoadsOfTheRim
     {
         public RoadBuildableDef roadToBuild;
 
+        public static int maxNeighbourDistance = 15 ;
+
         public int toTile;
+
+        public List<Settlement> listOfSettlements ;
+
+        private static readonly Color ColorTransparent = new Color(0.0f, 0.0f, 0.0f, 0f);
+
+        private static readonly Color ColorFilled = new Color(0.9f, 0.85f, 0.2f, 1f);
+
+        private static readonly Color ColorUnfilled = new Color(0.3f, 0.3f, 0.3f, 1f);
+
+        private Material ProgressBarMaterial;
 
         public override IEnumerable<Gizmo> GetGizmos()
         {
@@ -36,18 +49,128 @@ namespace RoadsOfTheRim
             HarmonyMethod prefix = null;
             HarmonyMethod postfix = new HarmonyMethod(typeof(RoadsOfTheRim).GetMethod("DrawPostfix")); ;
             harmony.Patch(method, prefix, postfix);
-            */           
+            */
         }
 
         public string fullName()
         {
             StringBuilder result = new StringBuilder();
-            result.Append(roadToBuild.label);
-            //Tile.
+            result.Append("RoadsOfTheRim_siteFullName".Translate(roadToBuild.label));
             // Go through all settlement on the planet, calculate the distance to the construction Site tile.
             // OR, go from the tile and find settlements until we reach maximum distance : that's like a heap search and god I hate them
+            // DEBUG of neighbouringSettlements()
+            if (listOfSettlements == null)
+            {
+                listOfSettlements = neighbouringSettlements();
+            }
+            if (listOfSettlements !=null)
+            {
+                result.Append(" near ");
+                foreach (Settlement settlement in listOfSettlements.Take(3))
+                {
+                    result.Append(settlement.Name + ", ");
+                }
+            }
             return result.ToString();
         }
+
+        public List<Settlement> neighbouringSettlements()
+        {
+            if (this.Tile!=-1)
+            {
+                List<Settlement> result = new List<Settlement>();
+                List<int> tileSearched = new List<int>();
+                //result.AddRange(searchForSettlements(this.Tile , result , ref tileSearched)) ;
+                int iterations = 0;
+                searchForSettlements(this.Tile, this.Tile, ref result, ref tileSearched, ref iterations);
+                return result;
+            }
+            return null;
+        }
+
+        /*
+        Exploding this method in multiple method to better debug
+         */
+        public void searchForSettlements(int startTile , int currentTile , ref List<Settlement> settlementsSearched, ref List<int> tileSearched, ref int iterations)
+        {
+            // Add currentTile to tileSearched
+            if (iterations++ <10000)
+            {
+                tileSearched.Add(currentTile) ;
+                goThroughAllNeighbours(startTile , currentTile , ref settlementsSearched, ref tileSearched, ref iterations) ;
+            }
+            else
+            {
+                Log.Message("[RofR] DEBUG neighbouringSettlements reached 10000 iterations") ;
+            }
+        }
+
+        public void goThroughAllNeighbours(int startTile , int currentTile , ref List<Settlement> settlementsSearched, ref List<int> tileSearched, ref int iterations) 
+        {
+            // Go through all currentTile neighbours
+            List<int> tileNeighbours = new List<int>();
+            Find.WorldGrid.GetTileNeighbors(currentTile , tileNeighbours) ;
+            mainNeighbourLoop(startTile , ref settlementsSearched, ref tileSearched, ref iterations , tileNeighbours) ;
+        }
+
+        public void mainNeighbourLoop(int startTile , ref List<Settlement> settlementsSearched, ref List<int> tileSearched, ref int iterations , List<int> tileNeighbours)
+        {
+            foreach (int neighbour in tileNeighbours)
+            {
+                // exclude tiles already searched
+                if (!tileSearched.Contains(neighbour))
+                {
+                    //exclude tiles that are farther away from startTile than a certain distance
+                    if (Find.WorldGrid.ApproxDistanceInTiles(neighbour , startTile)<=maxNeighbourDistance)
+                    {
+                        // Is there a settlement ? is it not already in the list of settlements searched ?
+                        Settlement settlement = Find.WorldObjects.SettlementAt(neighbour) ;
+                        if (settlement != null && !settlementsSearched.Contains(settlement))
+                        {
+                            // Then add it to the list of settlements searched
+                            settlementsSearched.Add(settlement) ;
+                        }
+                        // Then fire the algorithm on this tile, since it's still within acceptable distance
+                        searchForSettlements(startTile , neighbour , ref settlementsSearched , ref tileSearched, ref iterations) ;
+                    }
+                }
+            }
+        }
+
+        /*
+        public void searchForSettlements(int startTile , int currentTile , ref List<Settlement> settlementsSearched, ref List<int> tileSearched)
+        {
+            // Add currentTile to tileSearched
+            tileSearched.Add(currentTile) ;
+
+            // Go through all currentTile neighbours
+            List<int> tileNeighbours = new List<int>();
+            Find.WorldGrid.GetTileNeighbors(currentTile , tileNeighbours) ;
+            Caravan notionalCaravan = new Caravan() ;
+            foreach (int neighbour in tileNeighbours)
+            {
+                // exclude tiles already searched
+                if (!tileSearched.Contains(neighbour))
+                {
+                    WorldPathFinder pathFinderToThisTile = new WorldPathFinder() ;
+                    WorldPath pathToThisTile = pathFinderToThisTile.FindPath(startTile , neighbour , notionalCaravan) ;
+                    //exclude tiles that are farther away from startTile than a certain distance
+                    if (pathToThisTile.TotalCost<=maxNeighbourDistance)
+                    {
+                        // Is there a settlement ? is it not already in the list of settlements searched ?
+                        Settlement settlement = Find.WorldObjects.SettlementAt(neighbour) ;
+                        if (settlement != null && !settlementsSearched.Contains(settlement))
+                        {
+                            // Then add it to the list of settlements searched
+                            settlementsSearched.Add(settlement) ;
+                        }
+                        // Then fire the algorithm on this tile, since it's still within acceptable distance
+                        searchForSettlements(startTile , neighbour , ref settlementsSearched , ref tileSearched) ;
+                    }
+                }
+            }
+        }
+        */
 
         /*
         The construction site costs are set here
@@ -90,6 +213,36 @@ namespace RoadsOfTheRim
             Scribe_Values.Look<int>(ref this.toTile, "toTile", 0 , false);
         }
 
+        public void UpdateProgressBarMaterial()
+        {
+            float percentageDone = GetComponent<CompRoadsOfTheRimConstructionSite>().percentageDone();
+            ProgressBarMaterial = new Material(ShaderDatabase.MetaOverlay);
+            Texture2D texture = new Texture2D(100, 100);
+            ProgressBarMaterial.mainTexture = texture;
+            for (int y = 0; y < 100; y++)
+            {
+                for (int x = 0; x < 100; x++)
+                {
+                    if (x >= 80)
+                    {
+                        if (y < (int)(100 * percentageDone))
+                        {
+                            texture.SetPixel(x, y, ColorFilled);
+                        }
+                        else
+                        {
+                            texture.SetPixel(x, y, ColorUnfilled);
+                        }
+                    }
+                    else
+                    {
+                        texture.SetPixel(x, y, ColorTransparent);
+                    }
+                }
+            }
+            texture.Apply();
+        }
+
         /*
         Check WorldObject Draw method to find why the construction site icon is rotated strangely when expanded
          */
@@ -102,12 +255,15 @@ namespace RoadsOfTheRim
             float d = 0.05f;
             fromPos += fromPos.normalized * d;
             toPos += toPos.normalized * d;
-            GenDraw.DrawWorldLineBetween(fromPos, toPos);
-            // TO DO : Progress bar
-            //this.GetComponent<CompRoadsOfTheRimConstructionSite>().percentageDone() ;
+            GenDraw.DrawWorldLineBetween(fromPos, toPos) ;
+            float percentageDone = GetComponent<CompRoadsOfTheRimConstructionSite>().percentageDone();
+            if (!ProgressBarMaterial)
+            {
+                UpdateProgressBarMaterial();
+            }
+            WorldRendererUtility.DrawQuadTangentialToPlanet(fromPos, Find.WorldGrid.averageTileSize * .8f, 0.15f, ProgressBarMaterial);
         }
 
-        // Tile : caravan.Tile
         // IncidentWorker_QuestPeaceTalks : shows me a good way to create a worldObject
     }
 
@@ -265,7 +421,7 @@ namespace RoadsOfTheRim
 
             if (!caravanComp.CaravanCanWork())
             {
-                Log.Message("[Roads of the Rim] : doSomeWork() failed because the caravan can't work.");
+                Log.Message("[Roads of the Rim] DEBUG : doSomeWork() failed because the caravan can't work.");
                 return false;
             }
 
@@ -337,45 +493,56 @@ namespace RoadsOfTheRim
                 caravanComp.stopWorking() ;
             }
 
-            // Consume resources from the caravan 
-            foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
+            // No need to check anything if the final ratio reduced all resource needed to 0
+            if (needed_wood==0 && needed_stone==0 && needed_steel==0 && needed_chemfuel==0)
             {
-                if ((aThing.def.ToString() == "WoodLog") && needed_wood >0)
+                amountOfWork = 0;
+            }
+            else
+            {
+                // Consume resources from the caravan 
+                foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
                 {
-                    int used_wood = (aThing.stackCount > needed_wood) ? needed_wood : aThing.stackCount ;
-                    aThing.stackCount -= used_wood ;
-                    needed_wood -= used_wood ;
-                    wood.reduceLeft(used_wood);
-                }
-                else if ((aThing.def.FirstThingCategory!=null) && (aThing.def.FirstThingCategory.ToString() == "StoneBlocks") && needed_stone > 0 )
-                {
-                    int used_stone = (aThing.stackCount > needed_stone) ? needed_stone : aThing.stackCount ;
-                    aThing.stackCount -= used_stone ;
-                    needed_stone -= used_stone ;
-                    stone.reduceLeft(used_stone);
-                }
-                else if ((aThing.def.IsMetal) && needed_steel > 0 )
-                {
-                    int used_steel = (aThing.stackCount > needed_steel) ? needed_steel : aThing.stackCount ;
-                    aThing.stackCount -= used_steel ;
-                    needed_steel -= used_steel ;
-                    steel.reduceLeft(used_steel);
-                }
-                else if ((aThing.def.ToString() == "Chemfuel") && needed_chemfuel > 0 )
-                {
-                    int used_chemfuel = (aThing.stackCount > needed_chemfuel) ? needed_chemfuel : aThing.stackCount;
-                    aThing.stackCount -= used_chemfuel ;
-                    needed_chemfuel -= used_chemfuel ;
-                    chemfuel.reduceLeft(used_chemfuel);
-                }
-                if (aThing.stackCount==0)
-                {
-                    aThing.Destroy();
+                    if ((aThing.def.ToString() == "WoodLog") && needed_wood > 0)
+                    {
+                        int used_wood = (aThing.stackCount > needed_wood) ? needed_wood : aThing.stackCount;
+                        aThing.stackCount -= used_wood;
+                        needed_wood -= used_wood;
+                        wood.reduceLeft(used_wood);
+                    }
+                    else if ((aThing.def.FirstThingCategory != null) && (aThing.def.FirstThingCategory.ToString() == "StoneBlocks") && needed_stone > 0)
+                    {
+                        int used_stone = (aThing.stackCount > needed_stone) ? needed_stone : aThing.stackCount;
+                        aThing.stackCount -= used_stone;
+                        needed_stone -= used_stone;
+                        stone.reduceLeft(used_stone);
+                    }
+                    else if ((aThing.def.IsMetal) && needed_steel > 0)
+                    {
+                        int used_steel = (aThing.stackCount > needed_steel) ? needed_steel : aThing.stackCount;
+                        aThing.stackCount -= used_steel;
+                        needed_steel -= used_steel;
+                        steel.reduceLeft(used_steel);
+                    }
+                    else if ((aThing.def.ToString() == "Chemfuel") && needed_chemfuel > 0)
+                    {
+                        int used_chemfuel = (aThing.stackCount > needed_chemfuel) ? needed_chemfuel : aThing.stackCount;
+                        aThing.stackCount -= used_chemfuel;
+                        needed_chemfuel -= used_chemfuel;
+                        chemfuel.reduceLeft(used_chemfuel);
+                    }
+                    if (aThing.stackCount == 0)
+                    {
+                        aThing.Destroy();
+                    }
                 }
             }
 
-            // Finally reducing the work & resources left
+
+            // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
+            amountOfWork = ratio_final * amountOfWork;
             work.reduceLeft(amountOfWork);
+            parentSite.UpdateProgressBarMaterial();
 
             // Work is done
             if (work.getLeft()<=0)

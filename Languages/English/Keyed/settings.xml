@@ -6,6 +6,9 @@
   <RoadsOfTheRimRemoveConstructionSite>Cancel construction</RoadsOfTheRimRemoveConstructionSite>
   <RoadsOfTheRimRemoveConstructionSiteDescription>Remove road construction site</RoadsOfTheRimRemoveConstructionSiteDescription>
   <RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>Can't remove the site : some resources already consumed</RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>
+  <RoadsOfTheRim_commsAskHelp>Ask ally for help on road construction (cost: 10 goodwill)</RoadsOfTheRim_commsAskHelp>
+  <RoadsOfTheRim_commsNoSites>No construction sites found</RoadsOfTheRim_commsNoSites>
+  <RoadsOfTheRim_commsSitesList>Construction sites</RoadsOfTheRim_commsSitesList>
   <RoadsOfTheRimWorkOnSite>Work</RoadsOfTheRimWorkOnSite>
   <RoadsOfTheRimWorkOnSiteDescription>Work on road construction site</RoadsOfTheRimWorkOnSiteDescription>
   <RoadsOfTheRimSettingsCategoryLabel>Roads of the Rim</RoadsOfTheRimSettingsCategoryLabel>
@@ -24,6 +27,7 @@
   <RoadsOfTheRimStopWorkingOnSite>Stop</RoadsOfTheRimStopWorkingOnSite>
   <RoadsOfTheRimStopWorkingOnSiteDescription>Stop working on construction site</RoadsOfTheRimStopWorkingOnSiteDescription>
   <RoadsOfTheRimBuildWorkOnSiteCantWork>Caravan unable to work right now</RoadsOfTheRimBuildWorkOnSiteCantWork>
+  <RoadsOfTheRim_siteFullName>Site constructing {0}</RoadsOfTheRim_siteFullName>
   <RoadsOfTheRim_CaravanNoResource>{0} has ran out of resources to build {1}. Work stopped.</RoadsOfTheRim_CaravanNoResource>
   <RoadsOfTheRim_RoadBuilt>Road built</RoadsOfTheRim_RoadBuilt>
   <RoadsOfTheRim_RoadBuiltLetterText>{0} has been built by {1}</RoadsOfTheRim_RoadBuiltLetterText>

@@ -21,8 +21,6 @@ namespace RoadsOfTheRim
         public const float ElevationCostDouble = 2000f ;
         public const float HillinessCostDouble = 4f;
         public const float SwampinessCostDouble = 0.5f;
-
-
         public float BaseEffort = DefaultBaseEffort;
         public bool OverrideCosts = true;
         public float CostIncreaseElevationThreshold = 1000 ;
@@ -40,6 +38,10 @@ namespace RoadsOfTheRim
     {
         public static RoadsOfTheRimSettings settings;
 
+        /*
+        For construction help from ally , I will need a dictionary whenCanFactionHelp <Faction , int> that stores the ticks when that faction can help again 
+         */
+
         public RoadsOfTheRim(ModContentPack content) : base(content)
         {
             settings = GetSettings<RoadsOfTheRimSettings>();
@@ -48,6 +50,8 @@ namespace RoadsOfTheRim
             harmony.Patch(typeof(Caravan).GetMethod("GetGizmos") , null , new HarmonyMethod(typeof(RoadsOfTheRim).GetMethod("GetGizmosPostfix")) , null);
             harmony.Patch(typeof(Caravan).GetMethod("GetInspectString"), null, new HarmonyMethod(typeof(RoadsOfTheRim).GetMethod("Caravan_GetInspectStringPostfix")), null);
             harmony.Patch(typeof(Tile).GetMethod("get_Roads"), null, new HarmonyMethod(typeof(RoadsOfTheRim).GetMethod("get_RoadsPostifx")), null);
+            harmony.Patch(typeof(FactionDialogMaker).GetMethod("FactionDialogFor"), null, new HarmonyMethod(typeof(RoadsOfTheRim).GetMethod("FactionDialogForPostifx")), null);
+
             /* How I found the hidden methods :
             var methods = typeof(Tile).GetMethods();
             foreach (var method in methods)
@@ -75,7 +79,6 @@ namespace RoadsOfTheRim
             {
                 try
                 {
-                    // - DEBUG Log.Message("Path costs reclaculated");
                     Find.WorldPathGrid.RecalculateAllPerceivedPathCosts();
                     Find.World.renderer.RegenerateAllLayersNow();
                 }
@@ -106,27 +109,19 @@ namespace RoadsOfTheRim
 
         public static void Caravan_GetInspectStringPostfix(ref string __result, Caravan __instance)
         {
-            try
+            WorldObjectComp_Caravan CaravanComp = __instance.GetComponent<WorldObjectComp_Caravan>();
+            if (CaravanComp!=null && CaravanComp.currentlyWorkingOnSite)
             {
-                WorldObjectComp_Caravan CaravanComp = __instance.GetComponent<WorldObjectComp_Caravan>();
-                if (CaravanComp.currentlyWorkingOnSite)
-                {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.Append(__result);
-                    stringBuilder.AppendLine();
-                    stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName()));
-                    __result = stringBuilder.ToString();
-                }
-            }
-            catch
-            {
-                Log.Message("[Roads of the Rim] DEBUG : Error in Caravan_GetInspectStringPostfix");
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append(__result);
+                stringBuilder.AppendLine();
+                stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName()));
+                __result = stringBuilder.ToString();
             }
         }
 
         public static void get_RoadsPostifx(ref List<Tile.RoadLink> __result , Tile __instance)
         {
-            // DEBUG - Log.Message("Patch Tile get roads");
             if (__result!=null)
             {
                 bool overrideCosts = settings.OverrideCosts ;
@@ -151,6 +146,13 @@ namespace RoadsOfTheRim
             }
         }
 
+        public static void FactionDialogForPostifx(ref DiaNode __result, Pawn negotiator, Faction faction)
+        {
+            if (faction.PlayerRelationKind == FactionRelationKind.Ally)
+            {
+                __result.options.Insert(0, HelpRoadConstruction(faction, negotiator));
+            }
+        }
 
         /*
         Add a construction site :
@@ -238,6 +240,30 @@ namespace RoadsOfTheRim
                     }
                 }
             }
+
+            /*
+            TO DO : If I want to change this to a nice looking cartridge-style option picker, I can start by looking at DingoDjango/DeepOreIdentifier
+            this tells me quite a lot about how to draw on the UI
+            Layout : 1 vertical cartridge per type of buidalble road (no need to show anything if empty)
+            Each cartridge has :
+            - A square image at the top, representing the typoe of road
+            - The name of the road below
+            - A list of costs, one per line :
+            > Work
+            > Wood
+            > Stone
+            > Steel
+            > Chemfuel
+            Each cost could be represented by the icon of the resource (need to think of a work icon)
+            For resources with a cost of 0, don't display them
+
+            Upon hover, the cartridge should be highligthed
+            Upon clicking outside, the cartridge should disappear
+            Upon clicking on it, we cna finally call FinaliseConstructionSite(caravan.Tile, toTile_int, thisRoadBuildableDef);
+
+            Check, among others :
+            * Widgets many methods
+            */
             /* Go through all the RoadBuildableDefs and show them in a float menu when creating construction site*/
             List<FloatMenuOption> list = new List<FloatMenuOption>();
             foreach (RoadBuildableDef thisRoadBuildableDef in DefDatabase<RoadBuildableDef>.AllDefs)
@@ -258,6 +284,7 @@ namespace RoadsOfTheRim
 
             if (list.Count > 0)
             {
+                
                 FloatMenu floatMenu = new FloatMenu(list);
                 floatMenu.vanishIfMouseDistant = true;
                 Find.WindowStack.Add(floatMenu);
@@ -365,6 +392,41 @@ namespace RoadsOfTheRim
             {
                 Find.WorldObjects.Remove(ConstructionSite) ;
             }
+        }
+
+        private static DiaOption HelpRoadConstruction(Faction faction, Pawn negotiator)
+        {
+            // Find all construction sites on the world map
+            IEnumerable<WorldObject> constructionSites = Find.WorldObjects.AllWorldObjects.Cast<WorldObject>().Where(site => site.def == DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true)).ToArray() ;
+            DiaOption dialog = new DiaOption("RoadsOfTheRim_commsAskHelp".Translate());
+
+            // If none : option should be disabled
+            if (!constructionSites.Any()) dialog.Disable("RoadsOfTheRim_commsNoSites".Translate());
+            // TO DO : 
+            // If the Faction is currently in construction cooldown, this should be disabled
+            // Construction cooldown needs to be added to factions
+
+            DiaNode diaNode = new DiaNode("RoadsOfTheRim_commsSitesList".Translate());
+            foreach (RoadConstructionSite site in constructionSites)
+            {
+                DiaOption diaOption = new DiaOption(site.fullName())
+                {
+                    action = delegate
+                    {
+                        // TO DO
+                        // Here : test success or failure (maybe even partial success
+                        // Calculate how much a Faction can help based on nearby settlements
+                        // trigger an event that will help construction of that site, with a delay, and for a certain amount of time. This can be put in the construction site (tick from where help starts, + amount of help)
+                        // Make sure the faction has a cooldown for construction, to ensure proper MTB
+                        // Remember to lower goodwill by 10
+                        // Also, work should stop in the event the faction is not an ally any more : must patch faction.FactionTick()
+                    }
+                };
+                diaNode.options.Add(diaOption) ;
+                diaOption.resolveTree = true ;
+            }
+            dialog.link = diaNode ;
+            return dialog ;
         }
 
         // Compares the movement cost multiplier of 2 roaddefs, returns TRUE if roadA is better or roadB is null. returns FALSE in all other cases

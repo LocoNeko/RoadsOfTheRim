@@ -22,6 +22,8 @@ namespace RoadsOfTheRim
 
         public List<Settlement> listOfSettlements ;
 
+        public string NeighbouringSettlementsDescription ;
+
         private static readonly Color ColorTransparent = new Color(0.0f, 0.0f, 0.0f, 0f);
 
         private static readonly Color ColorFilled = new Color(0.9f, 0.85f, 0.2f, 1f);
@@ -52,24 +54,35 @@ namespace RoadsOfTheRim
             */
         }
 
-        public string fullName()
+        public void populateDescription()
         {
-            StringBuilder result = new StringBuilder();
-            result.Append("RoadsOfTheRim_siteFullName".Translate(roadToBuild.label));
-            // Go through all settlement on the planet, calculate the distance to the construction Site tile.
-            // OR, go from the tile and find settlements until we reach maximum distance : that's like a heap search and god I hate them
-            // DEBUG of neighbouringSettlements()
             if (listOfSettlements == null)
             {
                 listOfSettlements = neighbouringSettlements();
             }
-            if (listOfSettlements !=null)
+            StringBuilder s = new StringBuilder();
+            if ((listOfSettlements != null) && (listOfSettlements.Count > 0))
             {
-                result.Append(" near ");
                 foreach (Settlement settlement in listOfSettlements.Take(3))
                 {
-                    result.Append(settlement.Name + ", ");
+                    s.Append(settlement.Name + ", ");
                 }
+            }
+            NeighbouringSettlementsDescription = s.ToString();
+        }
+
+        public string fullName()
+        {
+            // The first time we ask for the site's full name, let's make sure everything is properly populated : neighbouringSettlements , NeighbouringSettlementsDescription
+            if (listOfSettlements == null)
+            {
+                populateDescription();
+            }
+            StringBuilder result = new StringBuilder();
+            result.Append("RoadsOfTheRim_siteFullName".Translate(roadToBuild.label));
+            if (NeighbouringSettlementsDescription.Length>0)
+            {
+                result.Append(" near " + NeighbouringSettlementsDescription);
             }
             return result.ToString();
         }
@@ -179,6 +192,7 @@ namespace RoadsOfTheRim
         {
             // TO DO : Set the real costs here. They must come from the RoadBuildableDef roadToBuild
             this.GetComponent<CompRoadsOfTheRimConstructionSite>().setCosts(Find.WorldGrid[Tile] , Find.WorldGrid[toTile] , roadToBuild);
+            populateDescription();
         }
 
         public void setDestination(int destination)
@@ -393,7 +407,7 @@ namespace RoadsOfTheRim
                 */
 
                 totalCostModifier *= settings.BaseEffort;
-                this.work.setCost(roadToBuild.work * totalCostModifier) ;
+                this.work.setCost((float)roadToBuild.work * totalCostModifier) ;
                 this.wood.setCost((float)roadToBuild.wood * settings.BaseEffort) ;
                 this.stone.setCost((float)roadToBuild.stone * settings.BaseEffort) ;
                 this.steel.setCost((float)roadToBuild.steel * settings.BaseEffort) ;
@@ -426,7 +440,8 @@ namespace RoadsOfTheRim
             }
 
             // Percentage of total work that can be done in this batch
-            float amountOfWork = (float)caravanComp.amountOfWork() ;
+            float amountOfWork = caravanComp.amountOfWork() ;
+
             if (amountOfWork> this.work.getLeft())
             {
                 amountOfWork = this.work.getLeft();
@@ -473,15 +488,20 @@ namespace RoadsOfTheRim
             int needed_chemfuel = (int)Math.Round(chemfuel.left - (percentOfWorkLeftToDoAfter * chemfuel.cost));
             // DEBUG - Log.Message("Needed: Wood=" + needed_wood + ", Stone=" + needed_stone + ", Metal=" + needed_steel + ", Chemfuel=" + needed_chemfuel);
 
-            // Check if there's enough material to go through this batch
-            float ratio_wood = Math.Min((float)available_wood / needed_wood, 1f);
-            float ratio_stone = Math.Min((float)available_stone / needed_stone, 1f);
-            float ratio_steel = Math.Min((float)available_steel / needed_steel, 1f);
-            float ratio_chemfuel = Math.Min((float)available_chemfuel / needed_chemfuel, 1f);
+            // Check if there's enough material to go through this batch. Materials with a cost of 0 are always OK
+            float ratio_wood = (needed_wood == 0 ? 1f : Math.Min((float)available_wood / (float)needed_wood, 1f));
+            float ratio_stone = (needed_stone == 0 ? 1f : Math.Min((float)available_stone / (float)needed_stone, 1f));
+            float ratio_steel = (needed_steel == 0 ? 1f : Math.Min((float)available_steel / (float)needed_steel, 1f));
+            float ratio_chemfuel = (needed_chemfuel == 0 ? 1f : Math.Min((float)available_chemfuel / (float)needed_chemfuel, 1f));
 
             //There's a shortage of materials
             float ratio_final = Math.Min(ratio_wood , Math.Min(ratio_stone , Math.Min(ratio_steel , ratio_chemfuel))) ;
-
+            /*
+            Log.Message("DEBUG amount of work = " + amountOfWork);
+            Log.Message("DEBUG need wood = " + needed_wood + ", stone = " + needed_stone + ", steel = " + needed_steel + ", chemfuel = " + needed_chemfuel);
+            Log.Message("DEBUG ratio wood = " + ratio_wood + ", stone = " + needed_stone + ", steel = " + needed_steel + ", chemfuel = " + ratio_chemfuel);
+            Log.Message("DEBUG ratio final = "+ratio_final);
+            */           
             // The caravan didn't have enough resources for a full batch of work. Use as much as we can then stop working
             if (ratio_final<1f)
             {
@@ -493,48 +513,40 @@ namespace RoadsOfTheRim
                 caravanComp.stopWorking() ;
             }
 
-            // No need to check anything if the final ratio reduced all resource needed to 0
-            if (needed_wood==0 && needed_stone==0 && needed_steel==0 && needed_chemfuel==0)
+            // Consume resources from the caravan 
+            foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
             {
-                amountOfWork = 0;
-            }
-            else
-            {
-                // Consume resources from the caravan 
-                foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
+                if ((aThing.def.ToString() == "WoodLog") && needed_wood > 0)
                 {
-                    if ((aThing.def.ToString() == "WoodLog") && needed_wood > 0)
-                    {
-                        int used_wood = (aThing.stackCount > needed_wood) ? needed_wood : aThing.stackCount;
-                        aThing.stackCount -= used_wood;
-                        needed_wood -= used_wood;
-                        wood.reduceLeft(used_wood);
-                    }
-                    else if ((aThing.def.FirstThingCategory != null) && (aThing.def.FirstThingCategory.ToString() == "StoneBlocks") && needed_stone > 0)
-                    {
-                        int used_stone = (aThing.stackCount > needed_stone) ? needed_stone : aThing.stackCount;
-                        aThing.stackCount -= used_stone;
-                        needed_stone -= used_stone;
-                        stone.reduceLeft(used_stone);
-                    }
-                    else if ((aThing.def.IsMetal) && needed_steel > 0)
-                    {
-                        int used_steel = (aThing.stackCount > needed_steel) ? needed_steel : aThing.stackCount;
-                        aThing.stackCount -= used_steel;
-                        needed_steel -= used_steel;
-                        steel.reduceLeft(used_steel);
-                    }
-                    else if ((aThing.def.ToString() == "Chemfuel") && needed_chemfuel > 0)
-                    {
-                        int used_chemfuel = (aThing.stackCount > needed_chemfuel) ? needed_chemfuel : aThing.stackCount;
-                        aThing.stackCount -= used_chemfuel;
-                        needed_chemfuel -= used_chemfuel;
-                        chemfuel.reduceLeft(used_chemfuel);
-                    }
-                    if (aThing.stackCount == 0)
-                    {
-                        aThing.Destroy();
-                    }
+                    int used_wood = (aThing.stackCount > needed_wood) ? needed_wood : aThing.stackCount;
+                    aThing.stackCount -= used_wood;
+                    needed_wood -= used_wood;
+                    wood.reduceLeft(used_wood);
+                }
+                else if ((aThing.def.FirstThingCategory != null) && (aThing.def.FirstThingCategory.ToString() == "StoneBlocks") && needed_stone > 0)
+                {
+                    int used_stone = (aThing.stackCount > needed_stone) ? needed_stone : aThing.stackCount;
+                    aThing.stackCount -= used_stone;
+                    needed_stone -= used_stone;
+                    stone.reduceLeft(used_stone);
+                }
+                else if ((aThing.def.IsMetal) && needed_steel > 0)
+                {
+                    int used_steel = (aThing.stackCount > needed_steel) ? needed_steel : aThing.stackCount;
+                    aThing.stackCount -= used_steel;
+                    needed_steel -= used_steel;
+                    steel.reduceLeft(used_steel);
+                }
+                else if ((aThing.def.ToString() == "Chemfuel") && needed_chemfuel > 0)
+                {
+                    int used_chemfuel = (aThing.stackCount > needed_chemfuel) ? needed_chemfuel : aThing.stackCount;
+                    aThing.stackCount -= used_chemfuel;
+                    needed_chemfuel -= used_chemfuel;
+                    chemfuel.reduceLeft(used_chemfuel);
+                }
+                if (aThing.stackCount == 0)
+                {
+                    aThing.Destroy();
                 }
             }
 

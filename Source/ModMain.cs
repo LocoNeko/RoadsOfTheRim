@@ -109,14 +109,21 @@ namespace RoadsOfTheRim
 
         public static void Caravan_GetInspectStringPostfix(ref string __result, Caravan __instance)
         {
-            WorldObjectComp_Caravan CaravanComp = __instance.GetComponent<WorldObjectComp_Caravan>();
-            if (CaravanComp!=null && CaravanComp.currentlyWorkingOnSite)
+            try
             {
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.Append(__result);
-                stringBuilder.AppendLine();
-                stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName()));
-                __result = stringBuilder.ToString();
+                WorldObjectComp_Caravan CaravanComp = __instance.GetComponent<WorldObjectComp_Caravan>();
+                if (CaravanComp != null && CaravanComp.currentlyWorkingOnSite)
+                {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.Append(__result);
+                    stringBuilder.AppendLine();
+                    stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName()));
+                    __result = stringBuilder.ToString();
+                }
+            }
+            catch
+            {
+                // lazy way out : the caravan can, on occasions (mainly debug teleport, though...), not have a site linked to the comp
             }
         }
 

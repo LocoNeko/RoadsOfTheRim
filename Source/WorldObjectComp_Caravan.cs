@@ -76,12 +76,17 @@ namespace RoadsOfTheRim
                 // Stop working as soon as the caravan moves, or rests, or is downed
                 if (this.currentlyWorkingOnSite & !CaravanCanWork())
                 {
-                    this.currentlyWorkingOnSite = false ;
+                    stopWorking();
                     // If the caravan is resting, stop working but remember to restart working on wake up
                     if (caravan.NightResting)
                     {
                         this.workOnWakeUp = true;
                     }
+                }
+
+                if (!isThereAConstructionSiteHere())
+                {
+                    stopWorking();
                 }
             }
         }
@@ -112,7 +117,7 @@ namespace RoadsOfTheRim
          * - Construction speed (0.5 + 0.15 per level) times the construct success chance (0.75 to 1.13 - lvl 8 is 1)
          * - Pack animals help as well (see below)
          */
-        public int amountOfWork()
+        public float amountOfWork()
         {
             Caravan caravan = (Caravan)this.parent;
             float totalConstruction = 0f;
@@ -137,7 +142,7 @@ namespace RoadsOfTheRim
             totalConstruction += animalConstruction;
             // TO DO : the pawns should learn construction a little
             // TO DO : animals should help
-            return (int)totalConstruction ;
+            return totalConstruction ;
         }
 
         public override void PostExposeData()

@@ -248,30 +248,20 @@ namespace RoadsOfTheRim
                 }
             }
 
+            // UPGRADING THE CODE : Make nice looking cartridge instead of ugly floatmenu
+            ConstructionMenu menu = new ConstructionMenu(caravan.Tile , toTile_int , bestExistingRoad) ;
+
+            if (menu.CountBuildableRoads()==0)
+            {
+                Messages.Message("RoadsOfTheRim_NoBetterRoadCouldBeBuilt".Translate(), MessageTypeDefOf.RejectInput);
+            }
+            else
+            {
+                menu.closeOnClickedOutside = true;
+                menu.forcePause = true;
+                Find.WindowStack.Add(menu);
+            }
             /*
-            TO DO : If I want to change this to a nice looking cartridge-style option picker, I can start by looking at DingoDjango/DeepOreIdentifier
-            this tells me quite a lot about how to draw on the UI
-            Layout : 1 vertical cartridge per type of buidalble road (no need to show anything if empty)
-            Each cartridge has :
-            - A square image at the top, representing the typoe of road
-            - The name of the road below
-            - A list of costs, one per line :
-            > Work
-            > Wood
-            > Stone
-            > Steel
-            > Chemfuel
-            Each cost could be represented by the icon of the resource (need to think of a work icon)
-            For resources with a cost of 0, don't display them
-
-            Upon hover, the cartridge should be highligthed
-            Upon clicking outside, the cartridge should disappear
-            Upon clicking on it, we cna finally call FinaliseConstructionSite(caravan.Tile, toTile_int, thisRoadBuildableDef);
-
-            Check, among others :
-            * Widgets many methods
-            */
-            /* Go through all the RoadBuildableDefs and show them in a float menu when creating construction site*/
             List<FloatMenuOption> list = new List<FloatMenuOption>();
             foreach (RoadBuildableDef thisRoadBuildableDef in DefDatabase<RoadBuildableDef>.AllDefs)
             {
@@ -300,6 +290,7 @@ namespace RoadsOfTheRim
             {
                 Messages.Message("RoadsOfTheRim_NoBetterRoadCouldBeBuilt".Translate(), MessageTypeDefOf.RejectInput);
             }
+            */
         }
 
         /*
@@ -416,12 +407,20 @@ namespace RoadsOfTheRim
             DiaNode diaNode = new DiaNode("RoadsOfTheRim_commsSitesList".Translate());
             foreach (RoadConstructionSite site in constructionSites)
             {
+                float amountOfHelp = 0;
+                foreach (Settlement settlement in site.neighbouringSettlements())
+                {
+                    if (settlement.Faction == faction)
+                    {
+                        amountOfHelp += WorldObjectComp_Caravan.CalculateConstruction(settlement.previouslyGeneratedInhabitants);
+                    }
+                }
                 DiaOption diaOption = new DiaOption(site.fullName())
                 {
                     action = delegate
                     {
                         // TO DO
-                        // Here : test success or failure (maybe even partial success
+                        // Here : test success or failure (maybe even partial success)
                         // Calculate how much a Faction can help based on nearby settlements
                         // trigger an event that will help construction of that site, with a delay, and for a certain amount of time. This can be put in the construction site (tick from where help starts, + amount of help)
                         // Make sure the faction has a cooldown for construction, to ensure proper MTB
@@ -429,7 +428,7 @@ namespace RoadsOfTheRim
                         // Also, work should stop in the event the faction is not an ally any more : must patch faction.FactionTick()
                     }
                 };
-                diaNode.options.Add(diaOption) ;
+                diaNode.options.Add(diaOption);
                 diaOption.resolveTree = true ;
             }
             dialog.link = diaNode ;

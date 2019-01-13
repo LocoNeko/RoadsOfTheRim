@@ -2,6 +2,7 @@
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
+using System.Text;
 
 namespace RoadsOfTheRim
 {
@@ -113,25 +114,26 @@ namespace RoadsOfTheRim
         }
 
         /*
-         * Amount of work :
-         * - Construction speed (0.5 + 0.15 per level) times the construct success chance (0.75 to 1.13 - lvl 8 is 1)
-         * - Pack animals help as well (see below)
-         */
-        public float amountOfWork()
+        * Amount of work :
+        * - Construction speed (0.5 + 0.15 per level) times the construct success chance (0.75 to 1.13 - lvl 8 is 1)
+        * - Pack animals help as well (see below)
+        */
+        public static float CalculateConstruction(List<Pawn> pawns)
         {
-            Caravan caravan = (Caravan)this.parent;
             float totalConstruction = 0f;
             float animalConstruction = 0f;
-            foreach (Pawn pawn in caravan.PawnsListForReading)
+            StringBuilder str = new StringBuilder();
+            foreach (Pawn pawn in pawns)
             {
                 if (pawn.IsColonist)
                 {
-                    // DEBUG - Log.Message("[DEBUG] - amount of work calculation for " + pawn.Name + ": construction speed = " + (float)pawn.GetStatValue(StatDefOf.ConstructionSpeed) + ", success chance = " + (float)pawn.GetStatValue(StatDefOf.ConstructSuccessChance));
-                    totalConstruction += (float)pawn.GetStatValue(StatDefOf.ConstructionSpeed) * (float)pawn.GetStatValue(StatDefOf.ConstructSuccessChance);
+                    totalConstruction += pawn.GetStatValue(StatDefOf.ConstructionSpeed) * pawn.GetStatValue(StatDefOf.ConstructSuccessChance);
+                    str.Append(pawn.Name+" (Hmn) : "+ pawn.GetStatValue(StatDefOf.ConstructionSpeed)+"*"+ pawn.GetStatValue(StatDefOf.ConstructSuccessChance)+", ");
                 }
                 else if (pawn.RaceProps.packAnimal)
                 {
-                    animalConstruction += (float)pawn.GetStatValue(StatDefOf.ConstructionSpeed) * (float)pawn.GetStatValue(StatDefOf.ConstructSuccessChance);
+                    animalConstruction += pawn.GetStatValue(StatDefOf.ConstructionSpeed) * pawn.GetStatValue(StatDefOf.ConstructSuccessChance);
+                    str.Append(pawn.Name + " (Ani) : " + pawn.GetStatValue(StatDefOf.ConstructionSpeed) + "*" + pawn.GetStatValue(StatDefOf.ConstructSuccessChance) + ", ");
                 }
             }
             // Pack animals can only add as much work as humans (i.e. : at best, pack animals double the amount of work)
@@ -140,9 +142,16 @@ namespace RoadsOfTheRim
                 animalConstruction = totalConstruction;
             }
             totalConstruction += animalConstruction;
-            // TO DO : the pawns should learn construction a little
-            // TO DO : animals should help
-            return totalConstruction ;
+            str.Append(" Total = "+totalConstruction);
+            Log.Message("[RofR] DEBUG : Calculate construction - "+str);
+            // TO DO : the pawns should learn construction a little when actual construction is done
+            return totalConstruction;
+        }
+
+        public float amountOfWork()
+        {
+            Caravan caravan = (Caravan)this.parent;
+            return CalculateConstruction(caravan.PawnsListForReading);
         }
 
         public override void PostExposeData()

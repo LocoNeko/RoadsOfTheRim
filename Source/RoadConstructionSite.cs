@@ -496,12 +496,7 @@ namespace RoadsOfTheRim
 
             //There's a shortage of materials
             float ratio_final = Math.Min(ratio_wood , Math.Min(ratio_stone , Math.Min(ratio_steel , ratio_chemfuel))) ;
-            /*
-            Log.Message("DEBUG amount of work = " + amountOfWork);
-            Log.Message("DEBUG need wood = " + needed_wood + ", stone = " + needed_stone + ", steel = " + needed_steel + ", chemfuel = " + needed_chemfuel);
-            Log.Message("DEBUG ratio wood = " + ratio_wood + ", stone = " + needed_stone + ", steel = " + needed_steel + ", chemfuel = " + ratio_chemfuel);
-            Log.Message("DEBUG ratio final = "+ratio_final);
-            */           
+
             // The caravan didn't have enough resources for a full batch of work. Use as much as we can then stop working
             if (ratio_final<1f)
             {

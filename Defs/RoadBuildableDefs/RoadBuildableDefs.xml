@@ -7,8 +7,8 @@
         <roadDef>DirtPath</roadDef>
         <biomeMovementDifficultyEffect>0</biomeMovementDifficultyEffect>
         <work>600</work>
-        <wood>300</wood>
-        <stone>50</stone>
+        <wood>0</wood>
+        <stone>0</stone>
         <steel>0</steel>
         <chemfuel>0</chemfuel>
     </RoadsOfTheRim.RoadBuildableDef>
@@ -20,8 +20,8 @@
         <roadDef>DirtRoad</roadDef>
         <biomeMovementDifficultyEffect>0.25</biomeMovementDifficultyEffect>
         <work>1200</work>
-        <wood>600</wood>
-        <stone>100</stone>
+        <wood>120</wood>
+        <stone>0</stone>
         <steel>0</steel>
         <chemfuel>0</chemfuel>
     </RoadsOfTheRim.RoadBuildableDef>
@@ -33,10 +33,10 @@
         <roadDef>StoneRoad</roadDef>
         <biomeMovementDifficultyEffect>0.75</biomeMovementDifficultyEffect>
         <work>3600</work>
-        <wood>150</wood>
+        <wood>240</wood>
         <stone>1800</stone>
         <steel>300</steel>
-        <chemfuel>150</chemfuel>
+        <chemfuel>0</chemfuel>
     </RoadsOfTheRim.RoadBuildableDef>
 
     <RoadsOfTheRim.RoadBuildableDef>

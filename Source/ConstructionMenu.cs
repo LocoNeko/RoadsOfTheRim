@@ -44,6 +44,10 @@ namespace RoadsOfTheRim
             this.toTile = toTile;
             this.bestExistingRoad = bestExistingRoad ;
             buildableRoads = new List<RoadBuildableDef>() ;
+        }
+
+        public int CountBuildableRoads()
+        {
             foreach (RoadBuildableDef thisRoadBuildableDef in DefDatabase<RoadBuildableDef>.AllDefs)
             {
                 if (bestExistingRoad == null || RoadsOfTheRim.isRoadBetter(DefDatabase<RoadDef>.GetNamed(thisRoadBuildableDef.roadDef, true), bestExistingRoad))
@@ -51,10 +55,6 @@ namespace RoadsOfTheRim
                     buildableRoads.Add(thisRoadBuildableDef);
                 }
             }
-        }
-
-        public int CountBuildableRoads()
-        {
             return (buildableRoads!=null ? buildableRoads.Count : 0);
         }
 

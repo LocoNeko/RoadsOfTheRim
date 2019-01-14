@@ -16,13 +16,15 @@ namespace RoadsOfTheRim
     {
         public RoadBuildableDef roadToBuild;
 
-        public static int maxNeighbourDistance = 15 ;
+        public static int maxTicksToNeighbour = 2 * GenDate.TicksPerDay ; // 2 days
 
         public int toTile;
 
         public List<Settlement> listOfSettlements ;
 
         public string NeighbouringSettlementsDescription ;
+
+        public static int MaxSettlementsInDescription = 5;
 
         private static readonly Color ColorTransparent = new Color(0.0f, 0.0f, 0.0f, 0f);
 
@@ -60,15 +62,20 @@ namespace RoadsOfTheRim
             {
                 listOfSettlements = neighbouringSettlements();
             }
-            StringBuilder s = new StringBuilder();
+            List<string> s = new List<string>();
             if ((listOfSettlements != null) && (listOfSettlements.Count > 0))
             {
-                foreach (Settlement settlement in listOfSettlements.Take(3))
+                foreach (Settlement settlement in listOfSettlements.Take(MaxSettlementsInDescription))
                 {
-                    s.Append(settlement.Name + ", ");
+                    float nbDays = (float)CaravanArrivalTimeEstimator.EstimatedTicksToArrive(Tile, settlement.Tile, null)/GenDate.TicksPerDay;
+                    s.Add(settlement.Name + " (" + string.Format("{0:0.00}",nbDays) + " days)");
                 }
             }
-            NeighbouringSettlementsDescription = s.ToString();
+            NeighbouringSettlementsDescription = String.Join(", ", s.ToArray());
+            if (listOfSettlements.Count > MaxSettlementsInDescription)
+            {
+                NeighbouringSettlementsDescription += String.Format(" and {0} more." , listOfSettlements.Count - MaxSettlementsInDescription);
+            }
         }
 
         public string fullName()
@@ -134,7 +141,7 @@ namespace RoadsOfTheRim
                 if (!tileSearched.Contains(neighbour))
                 {
                     //exclude tiles that are farther away from startTile than a certain distance
-                    if (Find.WorldGrid.ApproxDistanceInTiles(neighbour , startTile)<=maxNeighbourDistance)
+                    if (CaravanArrivalTimeEstimator.EstimatedTicksToArrive(startTile , neighbour , null)<=maxTicksToNeighbour)
                     {
                         // Is there a settlement ? is it not already in the list of settlements searched ?
                         Settlement settlement = Find.WorldObjects.SettlementAt(neighbour) ;

@@ -137,12 +137,23 @@ namespace RoadsOfTheRim
                 {
                     Tile.RoadLink aRoadLink = new Tile.RoadLink();
                     RoadDef aRoad = aLink.road;
-                    float biomeMovementDifficultyEffect = 0 ; // To be taken from road type : 1 (best) , 0.75 , 0.25 , 0 (worst)
+
+                    float biomeMovementDifficultyEffect = 0; // To be taken from road type : 1 (best) , 0.75 , 0.25 , 0 (worst)
+                    /*
+                    foreach (RoadBuildableDef thisRoadBuildableDef in DefDatabase<RoadBuildableDef>.AllDefs)
+                    {
+                        if (thisRoadBuildableDef.roadDef == aRoad.defName)
+                        {
+                            biomeMovementDifficultyEffect = thisRoadBuildableDef.biomeMovementDifficultyEffect;
+                            Log.Message("RotR DEBUG biomeMovementDifficultyEffect = "+biomeMovementDifficultyEffect);
+                        }
+                    }
+                    */
                     // Roads cancel biome movement difficulty
                     // e.g : Biome is at 3, effect is at 0.75 : we get a multiplier of .5, combined with the biome of 3, we'll only get 1.5 for biome
                     // i.e. : effect is at 0, we always get a multiplier of 1 (no effect)
                     // effect is at 1, we always get a multiplier of 1/biome, which effectively cancels biome effects
-                    float biomeMovementDifficultyCancellation = (1 + (__instance.biome.movementDifficulty - 1) * (1-biomeMovementDifficultyEffect)) / __instance.biome.movementDifficulty ;
+                    float biomeMovementDifficultyCancellation = (1 + (__instance.biome.movementDifficulty - 1) * (1 - biomeMovementDifficultyEffect)) / __instance.biome.movementDifficulty ;
                     // If the settings are set to override default costs, apply them, otherwise use default (0.5) , multiply by how much the road cancels the biome movement difficulty
                     aRoad.movementCostMultiplier = (settings.OverrideCosts ? aLink.road.movementCostMultiplier : 0.5f) * biomeMovementDifficultyCancellation ;
                     aRoadLink.neighbor = aLink.neighbor;
@@ -248,7 +259,6 @@ namespace RoadsOfTheRim
                 }
             }
 
-            // UPGRADING THE CODE : Make nice looking cartridge instead of ugly floatmenu
             ConstructionMenu menu = new ConstructionMenu(caravan.Tile , toTile_int , bestExistingRoad) ;
 
             if (menu.CountBuildableRoads()==0)
@@ -261,36 +271,6 @@ namespace RoadsOfTheRim
                 menu.forcePause = true;
                 Find.WindowStack.Add(menu);
             }
-            /*
-            List<FloatMenuOption> list = new List<FloatMenuOption>();
-            foreach (RoadBuildableDef thisRoadBuildableDef in DefDatabase<RoadBuildableDef>.AllDefs)
-            {
-
-                if (bestExistingRoad == null || isRoadBetter(DefDatabase<RoadDef>.GetNamed(thisRoadBuildableDef.roadDef, true), bestExistingRoad))
-                {
-                    list.Add(new FloatMenuOption(
-                        "RoadsOfTheRim_CreateConstructionSiteMenuOption".Translate(thisRoadBuildableDef.label , thisRoadBuildableDef.movementCostMultiplier),
-                        delegate ()
-                        {
-                            SoundStarter.PlayOneShotOnCamera(SoundDefOf.Tick_High, null);
-                            FinaliseConstructionSite(caravan.Tile, toTile_int, thisRoadBuildableDef);
-                        }
-                    ));
-                }
-            }
-
-            if (list.Count > 0)
-            {
-                
-                FloatMenu floatMenu = new FloatMenu(list);
-                floatMenu.vanishIfMouseDistant = true;
-                Find.WindowStack.Add(floatMenu);
-            }
-            else
-            {
-                Messages.Message("RoadsOfTheRim_NoBetterRoadCouldBeBuilt".Translate(), MessageTypeDefOf.RejectInput);
-            }
-            */
         }
 
         /*
@@ -412,7 +392,6 @@ namespace RoadsOfTheRim
                 {
                     if (settlement.Faction == faction)
                     {
-                        amountOfHelp += WorldObjectComp_Caravan.CalculateConstruction(settlement.previouslyGeneratedInhabitants);
                     }
                 }
                 DiaOption diaOption = new DiaOption(site.fullName())
@@ -423,7 +402,7 @@ namespace RoadsOfTheRim
                         // Here : test success or failure (maybe even partial success)
                         // Calculate how much a Faction can help based on nearby settlements
                         // trigger an event that will help construction of that site, with a delay, and for a certain amount of time. This can be put in the construction site (tick from where help starts, + amount of help)
-                        // Make sure the faction has a cooldown for construction, to ensure proper MTB
+                        // Make sure the faction has a cooldown for construction, to ensure proper MTB : use a mapcomponent ? seems to be a good way to keep track of game-wide values
                         // Remember to lower goodwill by 10
                         // Also, work should stop in the event the faction is not an ally any more : must patch faction.FactionTick()
                     }

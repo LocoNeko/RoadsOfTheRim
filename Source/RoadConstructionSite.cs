@@ -18,12 +18,6 @@ namespace RoadsOfTheRim
 
         public static int maxTicksToNeighbour = 2 * GenDate.TicksPerDay ; // 2 days
 
-        public int toTile;
-
-        public List<Settlement> listOfSettlements ;
-
-        public string NeighbouringSettlementsDescription ;
-
         public static int MaxSettlementsInDescription = 5;
 
         private static readonly Color ColorTransparent = new Color(0.0f, 0.0f, 0.0f, 0f);
@@ -33,6 +27,12 @@ namespace RoadsOfTheRim
         private static readonly Color ColorUnfilled = new Color(0.3f, 0.3f, 0.3f, 1f);
 
         private Material ProgressBarMaterial;
+
+        public int toTile;
+
+        public List<Settlement> listOfSettlements ;
+
+        public string NeighbouringSettlementsDescription ;
 
         public override IEnumerable<Gizmo> GetGizmos()
         {
@@ -100,7 +100,6 @@ namespace RoadsOfTheRim
             {
                 List<Settlement> result = new List<Settlement>();
                 List<int> tileSearched = new List<int>();
-                //result.AddRange(searchForSettlements(this.Tile , result , ref tileSearched)) ;
                 int iterations = 0;
                 searchForSettlements(this.Tile, this.Tile, ref result, ref tileSearched, ref iterations);
                 return result;
@@ -141,7 +140,8 @@ namespace RoadsOfTheRim
                 if (!tileSearched.Contains(neighbour))
                 {
                     //exclude tiles that are farther away from startTile than a certain distance
-                    if (CaravanArrivalTimeEstimator.EstimatedTicksToArrive(startTile , neighbour , null)<=maxTicksToNeighbour)
+                    int ticksToArrive = CaravanArrivalTimeEstimator.EstimatedTicksToArrive(startTile, neighbour, null);
+                    if (ticksToArrive!=0 && (ticksToArrive<=maxTicksToNeighbour) )
                     {
                         // Is there a settlement ? is it not already in the list of settlements searched ?
                         Settlement settlement = Find.WorldObjects.SettlementAt(neighbour) ;

@@ -61,6 +61,20 @@ namespace RoadsOfTheRim
             */
         }
 
+        public static WorldComponent_FactionRoadConstructionHelp factionsHelp
+        {
+            get 
+            {
+               WorldComponent_FactionRoadConstructionHelp factionsHelp = Find.World.GetComponent(typeof(WorldComponent_FactionRoadConstructionHelp)) as WorldComponent_FactionRoadConstructionHelp;
+               if (factionsHelp != null)
+               {
+                   return factionsHelp;
+               }
+               Log.Message("[RotR] - ERROR, couldn't find WorldComponent_FactionRoadConstructionHelp");
+               return null;
+            }
+        }
+
         public override string SettingsCategory() => "RoadsOfTheRimSettingsCategoryLabel".Translate();
 
         public override void DoSettingsWindowContents(Rect rect)
@@ -374,19 +388,23 @@ namespace RoadsOfTheRim
 
         private static DiaOption HelpRoadConstruction(Faction faction, Pawn negotiator)
         {
-            // Find all construction sites on the world map
-            IEnumerable<WorldObject> constructionSites = Find.WorldObjects.AllWorldObjects.Cast<WorldObject>().Where(site => site.def == DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true)).ToArray() ;
             DiaOption dialog = new DiaOption("RoadsOfTheRim_commsAskHelp".Translate());
 
+            // If the faction is already helping, it must be disabled
+            if (factionsHelp.getCurrentlyHelping(faction)) dialog.Disable("RoadsOfTheRim_commsAlreadyHelping".Translate());
+
+            // If the faction is in construction cooldown, it must be disabled
+            if (factionsHelp.inCooldown(faction)) dialog.Disable("RoadsOfTheRim_commsHasHelpedRecently".Translate(factionsHelp.daysBeforeFactionCanHelp(faction)));
+
+            // Find all construction sites on the world map
+            IEnumerable<WorldObject> constructionSites = Find.WorldObjects.AllWorldObjects.Cast<WorldObject>().Where(site => site.def == DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true)).ToArray() ;
             // If none : option should be disabled
             if (!constructionSites.Any()) dialog.Disable("RoadsOfTheRim_commsNoSites".Translate());
-            // TO DO : 
-            // If the Faction is currently in construction cooldown, this should be disabled
-            // Construction cooldown needs to be added to factions
 
             DiaNode diaNode = new DiaNode("RoadsOfTheRim_commsSitesList".Translate());
             foreach (RoadConstructionSite site in constructionSites)
             {
+                /*
                 float amountOfHelp = 0;
                 foreach (Settlement settlement in site.neighbouringSettlements())
                 {
@@ -394,6 +412,7 @@ namespace RoadsOfTheRim
                     {
                     }
                 }
+                */
                 DiaOption diaOption = new DiaOption(site.fullName())
                 {
                     action = delegate
@@ -402,9 +421,10 @@ namespace RoadsOfTheRim
                         // Here : test success or failure (maybe even partial success)
                         // Calculate how much a Faction can help based on nearby settlements
                         // trigger an event that will help construction of that site, with a delay, and for a certain amount of time. This can be put in the construction site (tick from where help starts, + amount of help)
-                        // Make sure the faction has a cooldown for construction, to ensure proper MTB : use a mapcomponent ? seems to be a good way to keep track of game-wide values
+                        // Make sure the faction has a cooldown for construction, to ensure proper MTB. Trigger construction cooldown only when faction is done helping
                         // Remember to lower goodwill by 10
-                        // Also, work should stop in the event the faction is not an ally any more : must patch faction.FactionTick()
+                        // Only one faction should be able to help
+                        // Also, work should stop in the event the faction is not an ally any more : check the worldcomponent
                     }
                 };
                 diaNode.options.Add(diaOption);

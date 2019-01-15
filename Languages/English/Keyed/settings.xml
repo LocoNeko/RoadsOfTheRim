@@ -8,6 +8,8 @@
   <RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>Can't remove the site : some resources already consumed</RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>
   <RoadsOfTheRim_commsAskHelp>Ask ally for help on road construction (cost: 10 goodwill)</RoadsOfTheRim_commsAskHelp>
   <RoadsOfTheRim_commsNoSites>No construction sites found</RoadsOfTheRim_commsNoSites>
+  <RoadsOfTheRim_commsAlreadyHelping>This faction is already helping with road construction</RoadsOfTheRim_commsAlreadyHelping>
+  <RoadsOfTheRim_commsHasHelpedRecently>This faction has helped recently. It can help again in {0:0.0} days</RoadsOfTheRim_commsHasHelpedRecently>
   <RoadsOfTheRim_commsSitesList>Construction sites</RoadsOfTheRim_commsSitesList>
   <RoadsOfTheRimWorkOnSite>Work</RoadsOfTheRimWorkOnSite>
   <RoadsOfTheRimWorkOnSiteDescription>Work on road construction site</RoadsOfTheRimWorkOnSiteDescription>

@@ -6,13 +6,21 @@
   <RoadsOfTheRimRemoveConstructionSite>取消修路</RoadsOfTheRimRemoveConstructionSite>
   <RoadsOfTheRimRemoveConstructionSiteDescription>移除工地，取消道路建设</RoadsOfTheRimRemoveConstructionSiteDescription>
   <RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>无法移除工地 : 资源已部分消耗</RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>
-  <RoadsOfTheRimWorkOnSite>道路施工</RoadsOfTheRimWorkOnSite>
-  <RoadsOfTheRimWorkOnSiteDescription>开始道路施工</RoadsOfTheRimWorkOnSiteDescription>
+  <RoadsOfTheRim_commsAskHelp>请求道路修建协助 (花费: 10 好感)</RoadsOfTheRim_commsAskHelp>
+  <RoadsOfTheRim_commsNoSites>未找到建筑工地</RoadsOfTheRim_commsNoSites>
+  <RoadsOfTheRim_commsAlreadyHelping>该派系已在帮忙修建道路中</RoadsOfTheRim_commsAlreadyHelping>
+  <RoadsOfTheRim_commsHasHelpedRecently>该派系最近已帮过忙. 下次帮助还需要等待 {0:0.0} 天</RoadsOfTheRim_commsHasHelpedRecently>
+  <RoadsOfTheRim_commsSitesList>建筑工地</RoadsOfTheRim_commsSitesList>
+  <RoadsOfTheRimWorkOnSite>施工</RoadsOfTheRimWorkOnSite>
+  <RoadsOfTheRimWorkOnSiteDescription>在建筑工地施工</RoadsOfTheRimWorkOnSiteDescription>
   <RoadsOfTheRimSettingsCategoryLabel>边缘之路</RoadsOfTheRimSettingsCategoryLabel>
   <RoadsOfTheRimSettingsBaseEffort>道路建筑施工基础倍率</RoadsOfTheRimSettingsBaseEffort>
   <RoadsOfTheRimSettingsOverrideCosts>覆盖标准移动速度倍率 (需要重启游戏)</RoadsOfTheRimSettingsOverrideCosts>
+  <RoadsOfTheRim_CaravanInspectStringWorkingOn>工作于 : {0}</RoadsOfTheRim_CaravanInspectStringWorkingOn>
   <RoadsOfTheRimBuildConstructionSiteAlreadyHere>此处已有道路工地</RoadsOfTheRimBuildConstructionSiteAlreadyHere>
   <RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>此处没有道路工地</RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>
+  <RoadsOfTheRim_CreateConstructionSiteMenuOption>{0} (移动: {1})</RoadsOfTheRim_CreateConstructionSiteMenuOption>
+  <RoadsOfTheRim_NoBetterRoadCouldBeBuilt>没有更高级道路可以修建</RoadsOfTheRim_NoBetterRoadCouldBeBuilt>
   <RoadsOfTheRim_MustPickNeighbouringTile>必须选择相邻区域修建道路</RoadsOfTheRim_MustPickNeighbouringTile>
   <RoadsOfTheRim_SameRoadAlreadyExists>两地之间已有同等级道路了</RoadsOfTheRim_SameRoadAlreadyExists>
   <RoadsOfTheRim_BuildToHere>修建道路到此处</RoadsOfTheRim_BuildToHere>
@@ -20,6 +28,8 @@
   <RoadsOfTheRimWorkOnSiteDescription>在建筑工地施工</RoadsOfTheRimWorkOnSiteDescription>
   <RoadsOfTheRimStopWorkingOnSite>暂停施工</RoadsOfTheRimStopWorkingOnSite>
   <RoadsOfTheRimStopWorkingOnSiteDescription>停下修建道路的工作</RoadsOfTheRimStopWorkingOnSiteDescription>
+  <RoadsOfTheRimBuildWorkOnSiteCantWork>远征队目前无法工作</RoadsOfTheRimBuildWorkOnSiteCantWork>
+  <RoadsOfTheRim_siteFullName>站点正在建造 {0}</RoadsOfTheRim_siteFullName>
   <RoadsOfTheRim_CaravanNoResource>{0} 已耗尽，无法建筑 {1}. 工作已停止.</RoadsOfTheRim_CaravanNoResource>
   <RoadsOfTheRim_RoadBuilt>道路修建完成</RoadsOfTheRim_RoadBuilt>
   <RoadsOfTheRim_RoadBuiltLetterText>{1}已修建完成{0}</RoadsOfTheRim_RoadBuiltLetterText>

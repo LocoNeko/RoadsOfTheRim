@@ -6,13 +6,21 @@
   <RoadsOfTheRimRemoveConstructionSite>Cancel construction</RoadsOfTheRimRemoveConstructionSite>
   <RoadsOfTheRimRemoveConstructionSiteDescription>Remove road construction site</RoadsOfTheRimRemoveConstructionSiteDescription>
   <RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>Can't remove the site : some resources already consumed</RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>
+  <RoadsOfTheRim_commsAskHelp>Ask ally for help on road construction (cost: 10 goodwill)</RoadsOfTheRim_commsAskHelp>
+  <RoadsOfTheRim_commsNoSites>No construction sites found</RoadsOfTheRim_commsNoSites>
+  <RoadsOfTheRim_commsAlreadyHelping>This faction is already helping with road construction</RoadsOfTheRim_commsAlreadyHelping>
+  <RoadsOfTheRim_commsHasHelpedRecently>This faction has helped recently. It can help again in {0:0.0} days</RoadsOfTheRim_commsHasHelpedRecently>
+  <RoadsOfTheRim_commsSitesList>Construction sites</RoadsOfTheRim_commsSitesList>
   <RoadsOfTheRimWorkOnSite>Work</RoadsOfTheRimWorkOnSite>
   <RoadsOfTheRimWorkOnSiteDescription>Work on road construction site</RoadsOfTheRimWorkOnSiteDescription>
   <RoadsOfTheRimSettingsCategoryLabel>Roads of the Rim</RoadsOfTheRimSettingsCategoryLabel>
   <RoadsOfTheRimSettingsBaseEffort>Base multiplier to road building costs</RoadsOfTheRimSettingsBaseEffort>
   <RoadsOfTheRimSettingsOverrideCosts>Override standard movement multipliers (requires game restart)</RoadsOfTheRimSettingsOverrideCosts>
+  <RoadsOfTheRim_CaravanInspectStringWorkingOn>Working on : {0}</RoadsOfTheRim_CaravanInspectStringWorkingOn>
   <RoadsOfTheRimBuildConstructionSiteAlreadyHere>There is already a construction site here</RoadsOfTheRimBuildConstructionSiteAlreadyHere>
   <RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>There is no construction site here</RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>
+  <RoadsOfTheRim_CreateConstructionSiteMenuOption>{0} (movement: {1})</RoadsOfTheRim_CreateConstructionSiteMenuOption>
+  <RoadsOfTheRim_NoBetterRoadCouldBeBuilt>No better road could be built</RoadsOfTheRim_NoBetterRoadCouldBeBuilt>
   <RoadsOfTheRim_MustPickNeighbouringTile>Must choose a neighbouring tile</RoadsOfTheRim_MustPickNeighbouringTile>
   <RoadsOfTheRim_SameRoadAlreadyExists>A similar road already exists between those two tiles</RoadsOfTheRim_SameRoadAlreadyExists>
   <RoadsOfTheRim_BuildToHere>Build road to here</RoadsOfTheRim_BuildToHere>
@@ -20,6 +28,8 @@
   <RoadsOfTheRimWorkOnSiteDescription>Work on construction site</RoadsOfTheRimWorkOnSiteDescription>
   <RoadsOfTheRimStopWorkingOnSite>Stop</RoadsOfTheRimStopWorkingOnSite>
   <RoadsOfTheRimStopWorkingOnSiteDescription>Stop working on construction site</RoadsOfTheRimStopWorkingOnSiteDescription>
+  <RoadsOfTheRimBuildWorkOnSiteCantWork>Caravan unable to work right now</RoadsOfTheRimBuildWorkOnSiteCantWork>
+  <RoadsOfTheRim_siteFullName>Site constructing {0}</RoadsOfTheRim_siteFullName>
   <RoadsOfTheRim_CaravanNoResource>{0} has ran out of resources to build {1}. Work stopped.</RoadsOfTheRim_CaravanNoResource>
   <RoadsOfTheRim_RoadBuilt>Road built</RoadsOfTheRim_RoadBuilt>
   <RoadsOfTheRim_RoadBuiltLetterText>{0} has been built by {1}</RoadsOfTheRim_RoadBuiltLetterText>

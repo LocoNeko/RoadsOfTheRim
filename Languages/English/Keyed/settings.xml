@@ -9,14 +9,20 @@
   <RoadsOfTheRim_commsAskHelp>Ask ally for help on road construction (cost: 10 goodwill)</RoadsOfTheRim_commsAskHelp>
   <RoadsOfTheRim_commsNoSites>No construction sites found</RoadsOfTheRim_commsNoSites>
   <RoadsOfTheRim_commsAlreadyHelping>This faction is already helping with road construction</RoadsOfTheRim_commsAlreadyHelping>
-  <RoadsOfTheRim_commsHasHelpedRecently>This faction has helped recently. It can help again in {0:0.0} days</RoadsOfTheRim_commsHasHelpedRecently>
+  <RoadsOfTheRim_commsHasHelpedRecently>This faction has helped recently. It can help again in {0} days</RoadsOfTheRim_commsHasHelpedRecently>
+  <RoadsOfTheRim_commsNotClose>{0} is not close enough to help on this construction site</RoadsOfTheRim_commsNotClose>
   <RoadsOfTheRim_commsSitesList>Construction sites</RoadsOfTheRim_commsSitesList>
+  <RoadsOfTheRim_commsCancel>Cancel - no goodwill cost</RoadsOfTheRim_commsCancel>
+  <RoadsOfTheRim_FactionStartsHelping>Help with construction</RoadsOfTheRim_FactionStartsHelping>
+  <RoadsOfTheRim_FactionStartsHelpingText>{0} has agreed to help build {1}, help will start in {2} days</RoadsOfTheRim_FactionStartsHelpingText>
+  <RoadsOfTheRim_FactionStopsHelping>Help cancelled</RoadsOfTheRim_FactionStopsHelping>
+  <RoadsOfTheRim_FactionStopsHelpingText>{0} is not your ally any more and has stopped helping on the construction of {1}</RoadsOfTheRim_FactionStopsHelpingText>
   <RoadsOfTheRimWorkOnSite>Work</RoadsOfTheRimWorkOnSite>
   <RoadsOfTheRimWorkOnSiteDescription>Work on road construction site</RoadsOfTheRimWorkOnSiteDescription>
   <RoadsOfTheRimSettingsCategoryLabel>Roads of the Rim</RoadsOfTheRimSettingsCategoryLabel>
   <RoadsOfTheRimSettingsBaseEffort>Base multiplier to road building costs</RoadsOfTheRimSettingsBaseEffort>
   <RoadsOfTheRimSettingsOverrideCosts>Override standard movement multipliers (requires game restart)</RoadsOfTheRimSettingsOverrideCosts>
-  <RoadsOfTheRim_CaravanInspectStringWorkingOn>Working on : {0}</RoadsOfTheRim_CaravanInspectStringWorkingOn>
+  <RoadsOfTheRim_CaravanInspectStringWorkingOn>Working on : {0} [{1} work/sec]</RoadsOfTheRim_CaravanInspectStringWorkingOn>
   <RoadsOfTheRimBuildConstructionSiteAlreadyHere>There is already a construction site here</RoadsOfTheRimBuildConstructionSiteAlreadyHere>
   <RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>There is no construction site here</RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>
   <RoadsOfTheRim_CreateConstructionSiteMenuOption>{0} (movement: {1})</RoadsOfTheRim_CreateConstructionSiteMenuOption>
@@ -29,7 +35,11 @@
   <RoadsOfTheRimStopWorkingOnSite>Stop</RoadsOfTheRimStopWorkingOnSite>
   <RoadsOfTheRimStopWorkingOnSiteDescription>Stop working on construction site</RoadsOfTheRimStopWorkingOnSiteDescription>
   <RoadsOfTheRimBuildWorkOnSiteCantWork>Caravan unable to work right now</RoadsOfTheRimBuildWorkOnSiteCantWork>
+  <RoadsOfTheRim_siteInspectString>Building {0} (movement difficulty {1});</RoadsOfTheRim_siteInspectString>
+  <RoadsOfTheRim_siteDescription>{0} ({1} days)</RoadsOfTheRim_siteDescription>
+  <RoadsOfTheRim_siteDescriptionExtra> and {0} more</RoadsOfTheRim_siteDescriptionExtra>
   <RoadsOfTheRim_siteFullName>Site constructing {0}</RoadsOfTheRim_siteFullName>
+  <RoadsOfTheRim_siteFullNameNeighbours> near {0}</RoadsOfTheRim_siteFullNameNeighbours>
   <RoadsOfTheRim_CaravanNoResource>{0} has ran out of resources to build {1}. Work stopped.</RoadsOfTheRim_CaravanNoResource>
   <RoadsOfTheRim_RoadBuilt>Road built</RoadsOfTheRim_RoadBuilt>
   <RoadsOfTheRim_RoadBuiltLetterText>{0} has been built by {1}</RoadsOfTheRim_RoadBuiltLetterText>

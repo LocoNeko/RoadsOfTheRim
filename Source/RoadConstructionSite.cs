@@ -18,7 +18,7 @@ namespace RoadsOfTheRim
 
         public static int maxTicksToNeighbour = 2 * GenDate.TicksPerDay ; // 2 days
 
-        public static int MaxSettlementsInDescription = 5;
+        public static int MaxSettlementsInDescription = 3;
 
         private static readonly Color ColorTransparent = new Color(0.0f, 0.0f, 0.0f, 0f);
 
@@ -33,6 +33,26 @@ namespace RoadsOfTheRim
         public List<Settlement> listOfSettlements ;
 
         public string NeighbouringSettlementsDescription ;
+
+        /*
+        Factions help
+        To store in the Construction Site :
+        - Faction that helps 
+        - Tick at which help starts
+        - Total amount of work that will be provided (helping factions are always considered having enough resources to help)
+        - Amount of work that will be done per tick (between 5 and 50)
+
+        > Make sure help ends when all total amounts reach 0
+        > When end helps, make sure to call WorldComponent_FactionRoadConstructionHelp.helpFinished(Faction)
+         */
+
+        public Faction helpFromFaction ;
+
+        public int helpFromTick ;
+
+        public float helpAmount;
+
+        public float helpWorkPerTick ;
 
         public override IEnumerable<Gizmo> GetGizmos()
         {
@@ -56,25 +76,30 @@ namespace RoadsOfTheRim
             */
         }
 
-        public void populateDescription()
+        public void initListOfSettlements()
         {
             if (listOfSettlements == null)
             {
                 listOfSettlements = neighbouringSettlements();
             }
+        }
+
+        public void populateDescription()
+        {
+            initListOfSettlements() ;
             List<string> s = new List<string>();
             if ((listOfSettlements != null) && (listOfSettlements.Count > 0))
             {
                 foreach (Settlement settlement in listOfSettlements.Take(MaxSettlementsInDescription))
                 {
                     float nbDays = (float)CaravanArrivalTimeEstimator.EstimatedTicksToArrive(Tile, settlement.Tile, null)/GenDate.TicksPerDay;
-                    s.Add(settlement.Name + " (" + string.Format("{0:0.00}",nbDays) + " days)");
+                    s.Add("RoadsOfTheRim_siteDescription".Translate(settlement.Name, string.Format("{0:0.00}",nbDays)));
                 }
             }
             NeighbouringSettlementsDescription = String.Join(", ", s.ToArray());
             if (listOfSettlements.Count > MaxSettlementsInDescription)
             {
-                NeighbouringSettlementsDescription += String.Format(" and {0} more." , listOfSettlements.Count - MaxSettlementsInDescription);
+                NeighbouringSettlementsDescription += "RoadsOfTheRim_siteDescriptionExtra".Translate(listOfSettlements.Count - MaxSettlementsInDescription);
             }
         }
 
@@ -89,7 +114,7 @@ namespace RoadsOfTheRim
             result.Append("RoadsOfTheRim_siteFullName".Translate(roadToBuild.label));
             if (NeighbouringSettlementsDescription.Length>0)
             {
-                result.Append(" near " + NeighbouringSettlementsDescription);
+                result.Append("RoadsOfTheRim_siteFullNameNeighbours".Translate(NeighbouringSettlementsDescription));
             }
             return result.ToString();
         }
@@ -157,6 +182,29 @@ namespace RoadsOfTheRim
             }
         }
 
+        public Settlement closestSettlementOfFaction(Faction faction)
+        {
+            initListOfSettlements();
+            int travelTicks = maxTicksToNeighbour;
+            Settlement closestSettlement = null;
+            if (listOfSettlements != null)
+            {
+                foreach (Settlement settlement in listOfSettlements)
+                {
+                    if (settlement.Faction == faction)
+                    {
+                        int travelTicksFromHere = CaravanArrivalTimeEstimator.EstimatedTicksToArrive(settlement.Tile, Tile, null);
+                        if (travelTicksFromHere < travelTicks)
+                        {
+                            closestSettlement = settlement;
+                            travelTicks = travelTicksFromHere;
+                        }
+                    }
+                }
+            }
+            return closestSettlement ;
+        }
+
         /*
         public void searchForSettlements(int startTile , int currentTile , ref List<Settlement> settlementsSearched, ref List<int> tileSearched)
         {
@@ -220,7 +268,7 @@ namespace RoadsOfTheRim
             {
                 stringBuilder.AppendLine();
             }
-            stringBuilder.Append("Building: " + roadToBuild.label + " (movement difficulty: " + roadToBuild.movementCostMultiplier + ")");
+            stringBuilder.Append("RoadsOfTheRim_siteInspectString".Translate(roadToBuild.label, string.Format("{0:0.0}",roadToBuild.movementCostMultiplier)));
             stringBuilder.AppendLine();
             stringBuilder.Append(this.GetComponent<CompRoadsOfTheRimConstructionSite>().progressDescription()) ;
             return stringBuilder.ToString();
@@ -232,6 +280,10 @@ namespace RoadsOfTheRim
 
             Scribe_Defs.Look<RoadBuildableDef>(ref this.roadToBuild, "roadToBuild");
             Scribe_Values.Look<int>(ref this.toTile, "toTile", 0 , false);
+            Scribe_References.Look<Faction>(ref helpFromFaction, "helpFromFaction");
+            Scribe_Values.Look<int>(ref helpFromTick, "helpFromTick");
+            Scribe_Values.Look<float>(ref helpAmount, "helpAmount");
+            Scribe_Values.Look<float>(ref helpWorkPerTick, "helpWorkPerTick");
         }
 
         public void UpdateProgressBarMaterial()
@@ -283,6 +335,51 @@ namespace RoadsOfTheRim
                 UpdateProgressBarMaterial();
             }
             WorldRendererUtility.DrawQuadTangentialToPlanet(fromPos, Find.WorldGrid.averageTileSize * .8f, 0.15f, ProgressBarMaterial);
+        }
+
+        public void initiateFactionHelp(Faction faction , int tick , float amount , float amountPerTick)
+        {
+            helpFromFaction = faction ;
+            helpFromTick = tick ;
+            helpAmount = amount ;
+            helpWorkPerTick = amountPerTick ;
+            Find.LetterStack.ReceiveLetter(
+                "RoadsOfTheRim_FactionStartsHelping".Translate(),
+                "RoadsOfTheRim_FactionStartsHelpingText".Translate(helpFromFaction.Name, fullName() , string.Format("{0:0.0}", (tick - Find.TickManager.TicksGame) * GenDate.TicksPerDay)),
+                LetterDefOf.PositiveEvent,
+                new GlobalTargetInfo(this)
+            );
+
+        }
+
+        public float factionHelp()
+        {
+            float amountOfHelp = 0;
+            if ( (helpFromFaction!=null) && (Find.TickManager.TicksGame>helpFromTick) )
+            {
+                if (helpFromFaction.PlayerRelationKind == FactionRelationKind.Ally)
+                {
+                    // amountOfHelp is capped at the total amount of help provided (which is site.helpAmount)
+                    amountOfHelp = helpWorkPerTick ;
+                    if (helpAmount < helpWorkPerTick)
+                    {
+                        amountOfHelp = helpAmount;
+                    }
+                    helpAmount -= amountOfHelp;
+                    Log.Message(String.Format("[RotR] - faction {0} helps with {1:0.00} work" , helpFromFaction.Name , amountOfHelp));
+                }
+                // Cancel help if the faction is not an ally any more
+                else
+                {
+                    Find.LetterStack.ReceiveLetter(
+                        "RoadsOfTheRim_FactionStopsHelping".Translate(),
+                        "RoadsOfTheRim_FactionStopsHelpingText".Translate(helpFromFaction.Name , roadToBuild.label),
+                        LetterDefOf.NegativeEvent,
+                        new GlobalTargetInfo(this)
+                    );
+                }
+            }
+            return amountOfHelp;
         }
 
         // IncidentWorker_QuestPeaceTalks : shows me a good way to create a worldObject
@@ -373,12 +470,6 @@ namespace RoadsOfTheRim
                 float bridgeCostIncrease = 0f ;
                 List<int> fromTileNeighbors = new List<int>();
                 Find.WorldGrid.GetTileNeighbors(parent.Tile, fromTileNeighbors);
-                StringBuilder desc = new StringBuilder();
-                foreach (int neighbor in fromTileNeighbors)
-                {
-                    desc.Append(neighbor+",");
-                }
-                // DEBUG - Log.Message("Neigbors of From tile :" + desc);
 
                 List<int> toTileNeighbors = new List<int>();
                 RoadConstructionSite TheSite = (RoadConstructionSite) parent;
@@ -432,6 +523,10 @@ namespace RoadsOfTheRim
         */
         public bool doSomeWork(Caravan caravan)
         {
+            /*
+            TO DO : how to handle faction help ?
+            - The best might be to check the Tick of the constructionSite comp itself, so help on a construction site occurs independently of a Caravan
+             */
             WorldObjectComp_Caravan caravanComp = caravan.GetComponent<WorldObjectComp_Caravan>() ;
             RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
 
@@ -552,6 +647,7 @@ namespace RoadsOfTheRim
                 }
             }
 
+            // TO DO - how to use this : parentSite.factionHelp();
 
             // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
             amountOfWork = ratio_final * amountOfWork;
@@ -624,21 +720,26 @@ namespace RoadsOfTheRim
         }
 
         public string progressDescription() {
+            // TO DO : Add a mention of faction help, if any
             StringBuilder stringBuilder = new StringBuilder();
             //DEBUG - stringBuilder.Append("[Mvmt difficulty="+ WorldPathGrid.CalculatedMovementDifficultyAt(parent.Tile , true) + "] - Needs: ");
-            stringBuilder.Append("Needs: ");
+            stringBuilder.Append(String.Format("Construction {0:P1} done" , work.getPercentageDone()));
+            RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
+            if (parentSite.helpFromFaction !=null)
+            {
+                stringBuilder.Append(String.Format(", helped by {0} [{1:0.0} work/sec]", parentSite.helpFromFaction.Name , parentSite.helpWorkPerTick));
+            }
             stringBuilder.AppendLine();
-            stringBuilder.Append("Work    : " + (int)work.getLeft() + " / " + (int)work.getCost());
+            stringBuilder.Append(String.Format("{0} Work left of {1}", (int)work.getLeft(), (int)work.getCost()));
             stringBuilder.AppendLine();
-            stringBuilder.Append("Wood    : " + (int)wood.getLeft() + " / " + (int)wood.getCost());
+            stringBuilder.Append(String.Format("{0} Wood left of {1}", (int)wood.getLeft(), (int)wood.getCost()));
             stringBuilder.AppendLine();
-            stringBuilder.Append("Stone   : " + (int)stone.getLeft() + " / " + (int)stone.getCost());
+            stringBuilder.Append(String.Format("{0} Stone left of {1}", (int)stone.getLeft(), (int)stone.getCost()));
             stringBuilder.AppendLine();
-            stringBuilder.Append("Steel   : " + (int)steel.getLeft() + " / " + (int)steel.getCost());
+            stringBuilder.Append(String.Format("{0} Steel left of {1}", (int)steel.getLeft(), (int)steel.getCost()));
             stringBuilder.AppendLine();
-            stringBuilder.Append("Chemfuel: " + (int)chemfuel.getLeft() + " / " + (int)chemfuel.getCost());
+            stringBuilder.Append(String.Format("{0} Chemfuel left of {1}", (int)chemfuel.getLeft(), (int)chemfuel.getCost()));
             return stringBuilder.ToString();
-
         }
 
         public float percentageDone()

@@ -8,8 +8,8 @@ using Verse.Sound;
 namespace RoadsOfTheRim
 {
     /*
-    Nice looking cartridge-style option picker (I can start by looking at DingoDjango/DeepOreIdentifier this tells me quite a lot about how to draw on the UI)
-    Layout : 1 vertical cartridge per type of buidalble road (no need to show anything if empty)
+    Nice looking cartridge-style option picker 
+    Layout : 1 vertical cartridge per type of buidalble road (no need to show roads that can't be built)
     Each cartridge has :
     - A square image at the top, representing the type of road
     - The name of the road below
@@ -19,12 +19,9 @@ namespace RoadsOfTheRim
     > Stone
     > Steel
     > Chemfuel
-    Each cost could be represented by the icon of the resource (need to think of a work icon)
-    For resources with a cost of 0, don't display them
-
-    Upon hover, the cartridge should be highligthed
-    Upon clicking outside, the cartridge should disappear
-    Upon clicking on it, we cna finally call FinaliseConstructionSite(caravan.Tile, toTile_int, thisRoadBuildableDef);
+    Each line starts with the icon of the resource (work uses the construction site icon)
+    Upon clicking outside, the cartridge is closed with no further actions
+    Upon clicking on a road icon, we call RoadsOfTheRim.FinaliseConstructionSite(caravan.Tile, toTile_int, thisRoadBuildableDef);
 
     Check, among others :
     * Widgets many methods
@@ -151,18 +148,10 @@ namespace RoadsOfTheRim
                     Rect ResourceAmountRect = new Rect(0, 176f + i * 40f, 144f, 32f);
                     Widgets.Label(ResourceAmountRect, amount.ToString());
                 }
-                /*Textures :
-                 * Things/Item/Resource/WoodLog
-                 * Things/Item/Resource/StoneBlocks                
-                 * Things/Item/Resource/Steel
-                 * Things/Item/Resource/Chemfuel
-                 */
                 GUI.EndGroup();
                 nbOfSections++;
             }
             Text.Anchor = TextAnchor.UpperLeft;
-            // I must do action.Invoke on an action likned to the button : How ?
         }
-
     }
 }

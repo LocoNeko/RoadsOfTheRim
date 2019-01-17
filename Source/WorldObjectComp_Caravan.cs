@@ -143,7 +143,7 @@ namespace RoadsOfTheRim
             }
             totalConstruction += animalConstruction;
             str.Append(" Total = "+totalConstruction);
-            Log.Message("[RofR] DEBUG : Calculate construction - "+str);
+            // Log.Message("[RofR] DEBUG : Calculate construction - "+str);
             // TO DO : the pawns should learn construction a little when actual construction is done
             return totalConstruction;
         }

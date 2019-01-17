@@ -131,7 +131,7 @@ namespace RoadsOfTheRim
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.Append(__result);
                     stringBuilder.AppendLine();
-                    stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName()));
+                    stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName() , string.Format("{0:0.00}",CaravanComp.amountOfWork())));
                     __result = stringBuilder.ToString();
                 }
             }
@@ -180,6 +180,7 @@ namespace RoadsOfTheRim
 
         public static void FactionDialogForPostifx(ref DiaNode __result, Pawn negotiator, Faction faction)
         {
+            // Allies can help build roads
             if (faction.PlayerRelationKind == FactionRelationKind.Ally)
             {
                 __result.options.Insert(0, HelpRoadConstruction(faction, negotiator));
@@ -394,7 +395,7 @@ namespace RoadsOfTheRim
             if (factionsHelp.getCurrentlyHelping(faction)) dialog.Disable("RoadsOfTheRim_commsAlreadyHelping".Translate());
 
             // If the faction is in construction cooldown, it must be disabled
-            if (factionsHelp.inCooldown(faction)) dialog.Disable("RoadsOfTheRim_commsHasHelpedRecently".Translate(factionsHelp.daysBeforeFactionCanHelp(faction)));
+            if (factionsHelp.inCooldown(faction)) dialog.Disable("RoadsOfTheRim_commsHasHelpedRecently".Translate(string.Format("{0:0.0}",factionsHelp.daysBeforeFactionCanHelp(faction))));
 
             // Find all construction sites on the world map
             IEnumerable<WorldObject> constructionSites = Find.WorldObjects.AllWorldObjects.Cast<WorldObject>().Where(site => site.def == DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true)).ToArray() ;
@@ -415,21 +416,33 @@ namespace RoadsOfTheRim
                 */
                 DiaOption diaOption = new DiaOption(site.fullName())
                 {
+                    // TO DO  disable sites that already receive help (only one faction can help per site)
+
                     action = delegate
                     {
+                        factionsHelp.startHelping(faction , site , negotiator) ;
                         // TO DO
                         // Here : test success or failure (maybe even partial success)
                         // Calculate how much a Faction can help based on nearby settlements
                         // trigger an event that will help construction of that site, with a delay, and for a certain amount of time. This can be put in the construction site (tick from where help starts, + amount of help)
                         // Make sure the faction has a cooldown for construction, to ensure proper MTB. Trigger construction cooldown only when faction is done helping
                         // Remember to lower goodwill by 10
-                        // Only one faction should be able to help
                         // Also, work should stop in the event the faction is not an ally any more : check the worldcomponent
                     }
                 };
+                // Disable sites that do not have a settlement of this faction close enough (as defined by ConstructionSite.maxTicksToNeighbour)
+                if (site.closestSettlementOfFaction(faction)==null)
+                {
+                    diaOption.Disable("RoadsOfTheRim_commsNotClose".Translate(faction.Name));
+                }
                 diaNode.options.Add(diaOption);
                 diaOption.resolveTree = true ;
             }
+            // Cancel option (needed when all sites are disabled for one of the above reason)
+            DiaOption cancelOption = new DiaOption("(" + "RoadsOfTheRim_commsCancel".Translate() + ")");
+            diaNode.options.Add(cancelOption);
+            cancelOption.resolveTree = true;
+
             dialog.link = diaNode ;
             return dialog ;
         }

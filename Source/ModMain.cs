@@ -65,10 +65,10 @@ namespace RoadsOfTheRim
         {
             get 
             {
-               WorldComponent_FactionRoadConstructionHelp factionsHelp = Find.World.GetComponent(typeof(WorldComponent_FactionRoadConstructionHelp)) as WorldComponent_FactionRoadConstructionHelp;
-               if (factionsHelp != null)
+               WorldComponent_FactionRoadConstructionHelp f = Find.World.GetComponent(typeof(WorldComponent_FactionRoadConstructionHelp)) as WorldComponent_FactionRoadConstructionHelp;
+               if (f != null)
                {
-                   return factionsHelp;
+                   return f;
                }
                Log.Message("[RotR] - ERROR, couldn't find WorldComponent_FactionRoadConstructionHelp");
                return null;
@@ -110,7 +110,7 @@ namespace RoadsOfTheRim
             // See https://github.com/erdelf/PrisonerRansom/blob/master/Source/PrisonerRansom/ReplacementCode.cs
             // method of interest : FactionDialogMaker , FactionDialogFor
             __result = __result.Concat(new Gizmo[] { AddConstructionSite(__instance) })
-                               .Concat(new Gizmo[] { RemoveConstructionSite(__instance) });
+                               .Concat(new Gizmo[] { RemoveConstructionSite(__instance.Tile) });
             if (isThereAConstructionSiteHere & !isTheCaravanWorkingOnASite)
             {
                 __result = __result.Concat(new Gizmo[] { WorkOnSite(__instance) });
@@ -343,7 +343,7 @@ namespace RoadsOfTheRim
         /*
         Remove Construction Site
          */
-        public static Command RemoveConstructionSite(Caravan caravan)
+        public static Command RemoveConstructionSite(int tile)
         {
             Command_Action command_Action = new Command_Action();
             command_Action.defaultLabel = "RoadsOfTheRimRemoveConstructionSite".Translate();
@@ -352,13 +352,13 @@ namespace RoadsOfTheRim
             command_Action.action = delegate ()
             {
                 SoundStarter.PlayOneShotOnCamera(SoundDefOf.CancelMode, null);
-                DeleteConstructionSite(caravan);
+                DeleteConstructionSite(tile);
             };
             // Test when the RemoveConstructionSite action should be disabled (i.e. there's already a construction site here)
             bool ConstructionSiteAlreadyHere = false;
             try
             {
-                ConstructionSiteAlreadyHere = Find.WorldObjects.AnyWorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), caravan.Tile);
+                ConstructionSiteAlreadyHere = Find.WorldObjects.AnyWorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), tile);
             }
             catch
             {
@@ -374,9 +374,9 @@ namespace RoadsOfTheRim
         /*
         Delete Construction Site
          */
-        public static void DeleteConstructionSite(Caravan caravan)
+        public static void DeleteConstructionSite(int tile)
         {
-            RoadConstructionSite ConstructionSite = (RoadConstructionSite) Find.WorldObjects.WorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), caravan.Tile) ;
+            RoadConstructionSite ConstructionSite = (RoadConstructionSite) Find.WorldObjects.WorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), tile) ;
             if (ConstructionSite.resourcesAlreadyConsumed())
             {
                 Messages.Message("RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed".Translate(), MessageTypeDefOf.RejectInput);

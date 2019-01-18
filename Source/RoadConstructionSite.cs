@@ -36,14 +36,10 @@ namespace RoadsOfTheRim
 
         /*
         Factions help
-        To store in the Construction Site :
         - Faction that helps 
         - Tick at which help starts
         - Total amount of work that will be provided (helping factions are always considered having enough resources to help)
-        - Amount of work that will be done per tick (between 5 and 50)
-
-        > Make sure help ends when all total amounts reach 0
-        > When end helps, make sure to call WorldComponent_FactionRoadConstructionHelp.helpFinished(Faction)
+        - Amount of work that will be done per tick
          */
 
         public Faction helpFromFaction ;
@@ -61,6 +57,8 @@ namespace RoadsOfTheRim
                 yield return g;
                 g.disabledReason = null;
             }
+            // Ability to remove the construction site without needing to go there with a Caravan.
+            yield return (Gizmo)RoadsOfTheRim.RemoveConstructionSite(Tile);
             yield break;
         }
 
@@ -245,7 +243,6 @@ namespace RoadsOfTheRim
          */
         public override void PostAdd()
         {
-            // TO DO : Set the real costs here. They must come from the RoadBuildableDef roadToBuild
             this.GetComponent<CompRoadsOfTheRimConstructionSite>().setCosts(Find.WorldGrid[Tile] , Find.WorldGrid[toTile] , roadToBuild);
             populateDescription();
         }
@@ -364,9 +361,10 @@ namespace RoadsOfTheRim
                     if (helpAmount < helpWorkPerTick)
                     {
                         amountOfHelp = helpAmount;
+                        Log.Message(String.Format("[RotR] - faction {0} helps with {1:0.00} work", helpFromFaction.Name, amountOfHelp));
+                        EndFactionHelp() ;
                     }
                     helpAmount -= amountOfHelp;
-                    Log.Message(String.Format("[RotR] - faction {0} helps with {1:0.00} work" , helpFromFaction.Name , amountOfHelp));
                 }
                 // Cancel help if the faction is not an ally any more
                 else
@@ -377,9 +375,19 @@ namespace RoadsOfTheRim
                         LetterDefOf.NegativeEvent,
                         new GlobalTargetInfo(this)
                     );
+                    EndFactionHelp() ;
                 }
             }
             return amountOfHelp;
+        }
+
+        public void EndFactionHelp()
+        {
+            RoadsOfTheRim.factionsHelp.helpFinished(helpFromFaction) ;
+            helpFromFaction = null ;
+            helpAmount = 0 ;
+            helpFromTick = -1 ;
+            helpWorkPerTick = 0 ;
         }
 
         // IncidentWorker_QuestPeaceTalks : shows me a good way to create a worldObject
@@ -402,6 +410,9 @@ namespace RoadsOfTheRim
 
     public class CompRoadsOfTheRimConstructionSite : WorldObjectComp
     {
+
+        public RoadConstructionSite parentSite ;
+
         public struct Resource
         {
             public float cost ;
@@ -435,6 +446,28 @@ namespace RoadsOfTheRim
         private Resource steel ;
         private Resource chemfuel ;
 
+        public CompRoadsOfTheRimConstructionSite()
+        {
+            parentSite = this.parent as RoadConstructionSite;
+        }
+
+        public override void CompTick()
+        {
+            // Faction help must be handled here, since it's independent of whether or not a caravan is here.
+            // Make it with a delay of 1/50 s compared to the CaravanComp so both functions end up playing nicely along each other
+            // Don't work at night !
+            if ( (!CaravanNightRestUtility.RestingNowAt(parentSite.Tile)) && (Find.TickManager.TicksGame % 100 == 50) )
+            {
+                float amountOfWork = parentSite.factionHelp() ;
+                float percentOfWorkLeftToDoAfter = (work.left - amountOfWork) / work.cost;
+                wood.reduceLeft((int)Math.Round(wood.left - (percentOfWorkLeftToDoAfter * wood.cost)));
+                stone.reduceLeft((int)Math.Round(stone.left - (percentOfWorkLeftToDoAfter * stone.cost)));
+                steel.reduceLeft((int)Math.Round(steel.left - (percentOfWorkLeftToDoAfter * steel.cost)));
+                chemfuel.reduceLeft((int)Math.Round(chemfuel.left - (percentOfWorkLeftToDoAfter * chemfuel.cost)));
+                UpdateProgress(amountOfWork) ;
+            }
+        }
+
         public CompProperties_RoadsOfTheRimConstructionSite properties
         {
             get
@@ -452,6 +485,7 @@ namespace RoadsOfTheRim
         {
             try
             {
+                parentSite = this.parent as RoadConstructionSite;
                 RoadsOfTheRimSettings settings = LoadedModManager.GetMod<RoadsOfTheRim>().GetSettings<RoadsOfTheRimSettings>();
                 // Cost increase from elevation : if elevation is above {CostIncreaseElevationThreshold} (default 1000m), cost is doubled every {ElevationCostDouble} (default 2000m)
                 float elevationCostIncrease = ( (fromTile.elevation <= settings.CostIncreaseElevationThreshold) ? 0 : (fromTile.elevation - settings.CostIncreaseElevationThreshold)/RoadsOfTheRimSettings.ElevationCostDouble ) ;
@@ -528,11 +562,10 @@ namespace RoadsOfTheRim
             - The best might be to check the Tick of the constructionSite comp itself, so help on a construction site occurs independently of a Caravan
              */
             WorldObjectComp_Caravan caravanComp = caravan.GetComponent<WorldObjectComp_Caravan>() ;
-            RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
 
             if (DebugSettings.godMode)
             {
-                return finishWork(caravan, parentSite);
+                return finishWork(parentSite , caravan);
             }
 
             if (!caravanComp.CaravanCanWork())
@@ -647,22 +680,25 @@ namespace RoadsOfTheRim
                 }
             }
 
-            // TO DO - how to use this : parentSite.factionHelp();
-
             // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
             amountOfWork = ratio_final * amountOfWork;
+            return UpdateProgress(amountOfWork , caravan) ;
+        }
+
+        public bool UpdateProgress(float amountOfWork , Caravan caravan = null)
+        {
             work.reduceLeft(amountOfWork);
             parentSite.UpdateProgressBarMaterial();
 
             // Work is done
             if (work.getLeft()<=0)
             {
-                return finishWork(caravan, parentSite);
+                return finishWork(parentSite , caravan);
             }
             return false;
         }
 
-        public bool finishWork(Caravan caravan , RoadConstructionSite parentSite)
+        public bool finishWork(RoadConstructionSite parentSite , Caravan caravan = null)
         {
             /*
              * Build the road and remove the construction site
@@ -692,7 +728,7 @@ namespace RoadsOfTheRim
             {
                 foreach (Tile.RoadLink aLink in toTile.potentialRoads.ToArray())
                 {
-                    if (aLink.neighbor == caravan.Tile & RoadsOfTheRim.isRoadBetter(newRoadDef, aLink.road))
+                    if (aLink.neighbor == parentSite.Tile & RoadsOfTheRim.isRoadBetter(newRoadDef, aLink.road))
                     {
                         toTile.potentialRoads.Remove(aLink);
                     }
@@ -711,10 +747,13 @@ namespace RoadsOfTheRim
             // Send letter
             Find.LetterStack.ReceiveLetter(
                 "RoadsOfTheRim_RoadBuilt".Translate(),
-                "RoadsOfTheRim_RoadBuiltLetterText".Translate(parentSite.roadToBuild.label, caravan.Label),
+                "RoadsOfTheRim_RoadBuiltLetterText".Translate(parentSite.roadToBuild.label, (caravan!=null ? caravan.Label : "RoadsOfTheRim_RoadBuiltByAlly".Translate())),
                 LetterDefOf.PositiveEvent,
-                new GlobalTargetInfo(caravan)
+                new GlobalTargetInfo(parentSite.Tile)
             );
+
+            // Finally, remove the construction site
+            Find.World.worldObjects.Remove(parentSite);
 
             return true;
         }
@@ -724,7 +763,6 @@ namespace RoadsOfTheRim
             StringBuilder stringBuilder = new StringBuilder();
             //DEBUG - stringBuilder.Append("[Mvmt difficulty="+ WorldPathGrid.CalculatedMovementDifficultyAt(parent.Tile , true) + "] - Needs: ");
             stringBuilder.Append(String.Format("Construction {0:P1} done" , work.getPercentageDone()));
-            RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
             if (parentSite.helpFromFaction !=null)
             {
                 stringBuilder.Append(String.Format(", helped by {0} [{1:0.0} work/sec]", parentSite.helpFromFaction.Name , parentSite.helpWorkPerTick));
@@ -759,6 +797,7 @@ namespace RoadsOfTheRim
             Scribe_Values.Look<float>(ref stone.left,    "left_stone", 0 , true);
             Scribe_Values.Look<float>(ref steel.left,    "left_steel", 0 , true);
             Scribe_Values.Look<float>(ref chemfuel.left, "left_chemfuel", 0 , true);
+            parentSite = this.parent as RoadConstructionSite;
         }
     }
 }

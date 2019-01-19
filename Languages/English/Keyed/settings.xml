@@ -6,6 +6,10 @@
   <RoadsOfTheRimRemoveConstructionSite>Cancel construction</RoadsOfTheRimRemoveConstructionSite>
   <RoadsOfTheRimRemoveConstructionSiteDescription>Remove road construction site</RoadsOfTheRimRemoveConstructionSiteDescription>
   <RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>Can't remove the site : some resources already consumed</RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>
+  <RoadsOfTheRim_ConstructionSiteDescription_Main>Construction {0} done</RoadsOfTheRim_ConstructionSiteDescription_Main>
+  <RoadsOfTheRim_ConstructionSiteDescription_Help>, helped by {0} [{1} work/sec]</RoadsOfTheRim_ConstructionSiteDescription_Help>
+  <RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen> starting in {0} days</RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen>
+  <RoadsOfTheRim_ConstructionSiteDescription_Resource>{1} {0} left of {2}</RoadsOfTheRim_ConstructionSiteDescription_Resource>
   <RoadsOfTheRim_commsAskHelp>Ask ally for help on road construction (cost: 10 goodwill)</RoadsOfTheRim_commsAskHelp>
   <RoadsOfTheRim_commsNoSites>No construction sites found</RoadsOfTheRim_commsNoSites>
   <RoadsOfTheRim_commsAlreadyHelping>This faction is already helping with road construction</RoadsOfTheRim_commsAlreadyHelping>
@@ -43,4 +47,5 @@
   <RoadsOfTheRim_CaravanNoResource>{0} has ran out of resources to build {1}. Work stopped.</RoadsOfTheRim_CaravanNoResource>
   <RoadsOfTheRim_RoadBuilt>Road built</RoadsOfTheRim_RoadBuilt>
   <RoadsOfTheRim_RoadBuiltLetterText>{0} has been built by {1}</RoadsOfTheRim_RoadBuiltLetterText>
+  <RoadsOfTheRim_RoadBuiltByAlly>your ally</RoadsOfTheRim_RoadBuiltByAlly>
 </LanguageData>

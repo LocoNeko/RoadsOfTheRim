@@ -1,5 +1,4 @@
-﻿using Harmony;
-using System.Text;
+﻿using System.Text;
 using System.Collections.Generic;
 using System.Reflection;
 using System;
@@ -60,18 +59,6 @@ namespace RoadsOfTheRim
             // Ability to remove the construction site without needing to go there with a Caravan.
             yield return (Gizmo)RoadsOfTheRim.RemoveConstructionSite(Tile);
             yield break;
-        }
-
-        public RoadConstructionSite()
-        {
-            /*
-             * Removed since I overwrote Draw instead of patching it           
-            var harmony = HarmonyInstance.Create("Loconeko.Rimworld.RoadsOfTheRim");
-            MethodInfo method = typeof(WorldObject).GetMethod("Draw");
-            HarmonyMethod prefix = null;
-            HarmonyMethod postfix = new HarmonyMethod(typeof(RoadsOfTheRim).GetMethod("DrawPostfix")); ;
-            harmony.Patch(method, prefix, postfix);
-            */
         }
 
         public void initListOfSettlements()
@@ -342,7 +329,7 @@ namespace RoadsOfTheRim
             helpWorkPerTick = amountPerTick ;
             Find.LetterStack.ReceiveLetter(
                 "RoadsOfTheRim_FactionStartsHelping".Translate(),
-                "RoadsOfTheRim_FactionStartsHelpingText".Translate(helpFromFaction.Name, fullName() , string.Format("{0:0.0}", (tick - Find.TickManager.TicksGame) * GenDate.TicksPerDay)),
+                "RoadsOfTheRim_FactionStartsHelpingText".Translate(helpFromFaction.Name, fullName() , string.Format("{0:0.00}", (float)(tick - Find.TickManager.TicksGame) / (float)GenDate.TicksPerDay)),
                 LetterDefOf.PositiveEvent,
                 new GlobalTargetInfo(this)
             );
@@ -752,6 +739,11 @@ namespace RoadsOfTheRim
                 new GlobalTargetInfo(parentSite.Tile)
             );
 
+            if (parentSite.helpFromFaction != null)
+            {
+                RoadsOfTheRim.factionsHelp.helpFinished(parentSite.helpFromFaction);
+            }
+
             // Finally, remove the construction site
             Find.World.worldObjects.Remove(parentSite);
 
@@ -759,24 +751,26 @@ namespace RoadsOfTheRim
         }
 
         public string progressDescription() {
-            // TO DO : Add a mention of faction help, if any
             StringBuilder stringBuilder = new StringBuilder();
-            //DEBUG - stringBuilder.Append("[Mvmt difficulty="+ WorldPathGrid.CalculatedMovementDifficultyAt(parent.Tile , true) + "] - Needs: ");
-            stringBuilder.Append(String.Format("Construction {0:P1} done" , work.getPercentageDone()));
+            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Main".Translate(String.Format("{0:P1}", work.getPercentageDone())));
             if (parentSite.helpFromFaction !=null)
             {
-                stringBuilder.Append(String.Format(", helped by {0} [{1:0.0} work/sec]", parentSite.helpFromFaction.Name , parentSite.helpWorkPerTick));
+                stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Help".Translate(parentSite.helpFromFaction.Name, String.Format("{0:0.0}", parentSite.helpWorkPerTick)));
+                if (parentSite.helpFromTick > Find.TickManager.TicksGame)
+                {
+                    stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen".Translate(String.Format("{0:0.00}", (float)(parentSite.helpFromTick - Find.TickManager.TicksGame) / (float)GenDate.TicksPerDay)));
+                }
             }
             stringBuilder.AppendLine();
-            stringBuilder.Append(String.Format("{0} Work left of {1}", (int)work.getLeft(), (int)work.getCost()));
+            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate("work", (int)work.getLeft(), (int)work.getCost()));
             stringBuilder.AppendLine();
-            stringBuilder.Append(String.Format("{0} Wood left of {1}", (int)wood.getLeft(), (int)wood.getCost()));
+            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate("wood", (int)wood.getLeft(), (int)wood.getCost()));
             stringBuilder.AppendLine();
-            stringBuilder.Append(String.Format("{0} Stone left of {1}", (int)stone.getLeft(), (int)stone.getCost()));
+            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate("stone", (int)stone.getLeft(), (int)stone.getCost()));
             stringBuilder.AppendLine();
-            stringBuilder.Append(String.Format("{0} Steel left of {1}", (int)steel.getLeft(), (int)steel.getCost()));
+            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate("steel", (int)steel.getLeft(), (int)steel.getCost()));
             stringBuilder.AppendLine();
-            stringBuilder.Append(String.Format("{0} Chemfuel left of {1}", (int)chemfuel.getLeft(), (int)chemfuel.getCost()));
+            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate("chemfuel", (int)chemfuel.getLeft(), (int)chemfuel.getCost()));
             return stringBuilder.ToString();
         }
 

@@ -45,20 +45,6 @@ namespace RoadsOfTheRim
         public RoadsOfTheRim(ModContentPack content) : base(content)
         {
             settings = GetSettings<RoadsOfTheRimSettings>();
-            HarmonyInstance harmony = HarmonyInstance.Create("Loconeko.Rimworld.RoadsOfTheRim");
-            // Patching the Caravan's Gizmos to add "Add construction Site" , "Remove construction Site" , "Work", "Stop working"
-            harmony.Patch(typeof(Caravan).GetMethod("GetGizmos") , null , new HarmonyMethod(typeof(RoadsOfTheRim).GetMethod("GetGizmosPostfix")) , null);
-            harmony.Patch(typeof(Caravan).GetMethod("GetInspectString"), null, new HarmonyMethod(typeof(RoadsOfTheRim).GetMethod("Caravan_GetInspectStringPostfix")), null);
-            harmony.Patch(typeof(Tile).GetMethod("get_Roads"), null, new HarmonyMethod(typeof(RoadsOfTheRim).GetMethod("get_RoadsPostifx")), null);
-            harmony.Patch(typeof(FactionDialogMaker).GetMethod("FactionDialogFor"), null, new HarmonyMethod(typeof(RoadsOfTheRim).GetMethod("FactionDialogForPostifx")), null);
-
-            /* How I found the hidden methods :
-            var methods = typeof(Tile).GetMethods();
-            foreach (var method in methods)
-            {
-                Log.Message(method.Name);
-            }
-            */
         }
 
         public static WorldComponent_FactionRoadConstructionHelp factionsHelp
@@ -99,91 +85,6 @@ namespace RoadsOfTheRim
                 catch
                 {
                 }
-            }
-        }
-
-        public static void GetGizmosPostfix(ref IEnumerable<Gizmo> __result, Caravan __instance)
-        {
-            bool isThereAConstructionSiteHere = Find.WorldObjects.AnyWorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), __instance.Tile);
-            bool isTheCaravanWorkingOnASite = __instance.GetComponent<WorldObjectComp_Caravan>().currentlyWorkingOnSite;
-            // TO DO : Add comms console dialog to ask for help on a construction site
-            // See https://github.com/erdelf/PrisonerRansom/blob/master/Source/PrisonerRansom/ReplacementCode.cs
-            // method of interest : FactionDialogMaker , FactionDialogFor
-            __result = __result.Concat(new Gizmo[] { AddConstructionSite(__instance) })
-                               .Concat(new Gizmo[] { RemoveConstructionSite(__instance.Tile) });
-            if (isThereAConstructionSiteHere & !isTheCaravanWorkingOnASite)
-            {
-                __result = __result.Concat(new Gizmo[] { WorkOnSite(__instance) });
-            }
-            if (isTheCaravanWorkingOnASite)
-            {
-                __result = __result.Concat(new Gizmo[] { StopWorkingOnSite(__instance) });
-            }
-        }
-
-        public static void Caravan_GetInspectStringPostfix(ref string __result, Caravan __instance)
-        {
-            try
-            {
-                WorldObjectComp_Caravan CaravanComp = __instance.GetComponent<WorldObjectComp_Caravan>();
-                if (CaravanComp != null && CaravanComp.currentlyWorkingOnSite)
-                {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.Append(__result);
-                    stringBuilder.AppendLine();
-                    stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName() , string.Format("{0:0.00}",CaravanComp.amountOfWork())));
-                    __result = stringBuilder.ToString();
-                }
-            }
-            catch
-            {
-                // lazy way out : the caravan can, on occasions (mainly debug teleport, though...), not have a site linked to the comp
-            }
-        }
-
-        public static void get_RoadsPostifx(ref List<Tile.RoadLink> __result , Tile __instance)
-        {
-            if (__result!=null)
-            {
-                bool overrideCosts = settings.OverrideCosts ;
-                List<Tile.RoadLink> patchedRoads = new List<Tile.RoadLink>();
-                foreach (Tile.RoadLink aLink in __result)
-                {
-                    Tile.RoadLink aRoadLink = new Tile.RoadLink();
-                    RoadDef aRoad = aLink.road;
-
-                    float biomeMovementDifficultyEffect = 0; // To be taken from road type : 1 (best) , 0.75 , 0.25 , 0 (worst)
-                    /*
-                    foreach (RoadBuildableDef thisRoadBuildableDef in DefDatabase<RoadBuildableDef>.AllDefs)
-                    {
-                        if (thisRoadBuildableDef.roadDef == aRoad.defName)
-                        {
-                            biomeMovementDifficultyEffect = thisRoadBuildableDef.biomeMovementDifficultyEffect;
-                            Log.Message("RotR DEBUG biomeMovementDifficultyEffect = "+biomeMovementDifficultyEffect);
-                        }
-                    }
-                    */
-                    // Roads cancel biome movement difficulty
-                    // e.g : Biome is at 3, effect is at 0.75 : we get a multiplier of .5, combined with the biome of 3, we'll only get 1.5 for biome
-                    // i.e. : effect is at 0, we always get a multiplier of 1 (no effect)
-                    // effect is at 1, we always get a multiplier of 1/biome, which effectively cancels biome effects
-                    float biomeMovementDifficultyCancellation = (1 + (__instance.biome.movementDifficulty - 1) * (1 - biomeMovementDifficultyEffect)) / __instance.biome.movementDifficulty ;
-                    // If the settings are set to override default costs, apply them, otherwise use default (0.5) , multiply by how much the road cancels the biome movement difficulty
-                    aRoad.movementCostMultiplier = (settings.OverrideCosts ? aLink.road.movementCostMultiplier : 0.5f) * biomeMovementDifficultyCancellation ;
-                    aRoadLink.neighbor = aLink.neighbor;
-                    aRoadLink.road = aRoad;
-                    patchedRoads.Add(aRoadLink);
-                }
-                __result = patchedRoads;
-            }
-        }
-
-        public static void FactionDialogForPostifx(ref DiaNode __result, Pawn negotiator, Faction faction)
-        {
-            // Allies can help build roads
-            if (faction.PlayerRelationKind == FactionRelationKind.Ally)
-            {
-                __result.options.Insert(0, HelpRoadConstruction(faction, negotiator));
             }
         }
 
@@ -383,11 +284,15 @@ namespace RoadsOfTheRim
             }
             else
             {
+                if (ConstructionSite.helpFromFaction != null)
+                {
+                    RoadsOfTheRim.factionsHelp.helpFinished(ConstructionSite.helpFromFaction);
+                }
                 Find.WorldObjects.Remove(ConstructionSite) ;
             }
         }
 
-        private static DiaOption HelpRoadConstruction(Faction faction, Pawn negotiator)
+        public static DiaOption HelpRoadConstruction(Faction faction, Pawn negotiator)
         {
             DiaOption dialog = new DiaOption("RoadsOfTheRim_commsAskHelp".Translate());
 

@@ -755,7 +755,7 @@ namespace RoadsOfTheRim
             stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Main".Translate(String.Format("{0:P1}", work.getPercentageDone())));
             if (parentSite.helpFromFaction !=null)
             {
-                stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Help".Translate(parentSite.helpFromFaction.Name, String.Format("{0:0.0}", parentSite.helpWorkPerTick)));
+                stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Help".Translate(parentSite.helpFromFaction.Name, (int)parentSite.helpAmount , String.Format("{0:0.0}", parentSite.helpWorkPerTick)));
                 if (parentSite.helpFromTick > Find.TickManager.TicksGame)
                 {
                     stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen".Translate(String.Format("{0:0.00}", (float)(parentSite.helpFromTick - Find.TickManager.TicksGame) / (float)GenDate.TicksPerDay)));

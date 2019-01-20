@@ -297,10 +297,10 @@ namespace RoadsOfTheRim
             DiaOption dialog = new DiaOption("RoadsOfTheRim_commsAskHelp".Translate());
 
             // If the faction is already helping, it must be disabled
-            if (factionsHelp.getCurrentlyHelping(faction)) dialog.Disable("RoadsOfTheRim_commsAlreadyHelping".Translate());
+            if (RoadsOfTheRim.factionsHelp.getCurrentlyHelping(faction)) dialog.Disable("RoadsOfTheRim_commsAlreadyHelping".Translate());
 
             // If the faction is in construction cooldown, it must be disabled
-            if (factionsHelp.inCooldown(faction)) dialog.Disable("RoadsOfTheRim_commsHasHelpedRecently".Translate(string.Format("{0:0.0}",factionsHelp.daysBeforeFactionCanHelp(faction))));
+            if (RoadsOfTheRim.factionsHelp.inCooldown(faction)) dialog.Disable("RoadsOfTheRim_commsHasHelpedRecently".Translate(string.Format("{0:0.0}", RoadsOfTheRim.factionsHelp.daysBeforeFactionCanHelp(faction))));
 
             // Find all construction sites on the world map
             IEnumerable<WorldObject> constructionSites = Find.WorldObjects.AllWorldObjects.Cast<WorldObject>().Where(site => site.def == DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true)).ToArray() ;
@@ -310,22 +310,13 @@ namespace RoadsOfTheRim
             DiaNode diaNode = new DiaNode("RoadsOfTheRim_commsSitesList".Translate());
             foreach (RoadConstructionSite site in constructionSites)
             {
-                /*
-                float amountOfHelp = 0;
-                foreach (Settlement settlement in site.neighbouringSettlements())
-                {
-                    if (settlement.Faction == faction)
-                    {
-                    }
-                }
-                */
                 DiaOption diaOption = new DiaOption(site.fullName())
                 {
                     // TO DO  disable sites that already receive help (only one faction can help per site)
 
                     action = delegate
                     {
-                        factionsHelp.startHelping(faction , site , negotiator) ;
+                        RoadsOfTheRim.factionsHelp.startHelping(faction , site , negotiator) ;
                         // TO DO
                         // Here : test success or failure (maybe even partial success)
                         // Calculate how much a Faction can help based on nearby settlements
@@ -339,6 +330,10 @@ namespace RoadsOfTheRim
                 if (site.closestSettlementOfFaction(faction)==null)
                 {
                     diaOption.Disable("RoadsOfTheRim_commsNotClose".Translate(faction.Name));
+                }
+                if (site.helpFromFaction!=null)
+                {
+                    diaOption.Disable("RoadsOfTheRim_commsAnotherFactionIsHelping".Translate(site.helpFromFaction));
                 }
                 diaNode.options.Add(diaOption);
                 diaOption.resolveTree = true ;

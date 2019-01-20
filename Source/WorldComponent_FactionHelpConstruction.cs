@@ -21,14 +21,12 @@ namespace RoadsOfTheRim
 
         public const float helpPerTickMin = 5f;
 
-        private Dictionary<Faction, int> canHelpAgainAtTick ;
+        private Dictionary<Faction, int> canHelpAgainAtTick = new Dictionary<Faction, int>();
 
-        private Dictionary<Faction, bool> currentlyHelping ;
+        private Dictionary<Faction, bool> currentlyHelping = new Dictionary<Faction, bool>();
 
         public WorldComponent_FactionRoadConstructionHelp(World world) : base(world)
         {
-            canHelpAgainAtTick = new Dictionary<Faction, int>();
-            currentlyHelping = new Dictionary<Faction, bool>();
         }
 
         // those lists are used for ExposeData() to load & save correctly
@@ -42,6 +40,17 @@ namespace RoadsOfTheRim
             base.ExposeData();
             Scribe_Collections.Look<Faction, int>(ref canHelpAgainAtTick, "RotR_canHelpAgainAtTick", LookMode.Reference, LookMode.Value , ref factionList_canHelpAgainAtTick , ref intList_canHelpAgainAtTick) ;
             Scribe_Collections.Look<Faction, bool>(ref currentlyHelping, "RotR_currentlyHelping" , LookMode.Reference , LookMode.Value , ref factionList_currentlyHelping , ref boolList_currentlyHelping) ;
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                if (canHelpAgainAtTick == null)
+                {
+                    canHelpAgainAtTick = new Dictionary<Faction, int>();
+                }
+                if (currentlyHelping==null)
+                {
+                    currentlyHelping = new Dictionary<Faction, bool>();
+                }
+            }
         }
 
         public void setHelpAgainTick(Faction faction, int tick)
@@ -52,7 +61,7 @@ namespace RoadsOfTheRim
         public int? getHelpAgainTick(Faction faction)
         {
             int result;
-            if (canHelpAgainAtTick.TryGetValue(faction, out result))
+            if (canHelpAgainAtTick!=null && canHelpAgainAtTick.TryGetValue(faction, out result))
             {
                 return result;
             }

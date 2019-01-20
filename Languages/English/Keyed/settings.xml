@@ -7,7 +7,7 @@
   <RoadsOfTheRimRemoveConstructionSiteDescription>Remove road construction site</RoadsOfTheRimRemoveConstructionSiteDescription>
   <RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>Can't remove the site : some resources already consumed</RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>
   <RoadsOfTheRim_ConstructionSiteDescription_Main>Construction {0} done</RoadsOfTheRim_ConstructionSiteDescription_Main>
-  <RoadsOfTheRim_ConstructionSiteDescription_Help>, helped by {0} [{1} work/sec]</RoadsOfTheRim_ConstructionSiteDescription_Help>
+  <RoadsOfTheRim_ConstructionSiteDescription_Help>, helped by {0} [{1} work@{2}/sec]</RoadsOfTheRim_ConstructionSiteDescription_Help>
   <RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen> starting in {0} days</RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen>
   <RoadsOfTheRim_ConstructionSiteDescription_Resource>{1} {0} left of {2}</RoadsOfTheRim_ConstructionSiteDescription_Resource>
   <RoadsOfTheRim_commsAskHelp>Ask ally for help on road construction (cost: 10 goodwill)</RoadsOfTheRim_commsAskHelp>
@@ -15,6 +15,7 @@
   <RoadsOfTheRim_commsAlreadyHelping>This faction is already helping with road construction</RoadsOfTheRim_commsAlreadyHelping>
   <RoadsOfTheRim_commsHasHelpedRecently>This faction has helped recently. It can help again in {0} days</RoadsOfTheRim_commsHasHelpedRecently>
   <RoadsOfTheRim_commsNotClose>{0} is not close enough to help on this construction site</RoadsOfTheRim_commsNotClose>
+  <RoadsOfTheRim_commsAnotherFactionIsHelping>{0} is already helping with this construction site</RoadsOfTheRim_commsAnotherFactionIsHelping>
   <RoadsOfTheRim_commsSitesList>Construction sites</RoadsOfTheRim_commsSitesList>
   <RoadsOfTheRim_commsCancel>Cancel - no goodwill cost</RoadsOfTheRim_commsCancel>
   <RoadsOfTheRim_FactionStartsHelping>Help with construction</RoadsOfTheRim_FactionStartsHelping>

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System;
 
 namespace RoadsOfTheRim
 {
@@ -84,7 +85,7 @@ namespace RoadsOfTheRim
     public static class Patch_FactionDialogMaker_FactionDialogFor
     {
         [HarmonyPostfix]
-        public static void Postifx(ref DiaNode __result, Pawn negotiator, Faction faction)
+        public static void Postfix(ref DiaNode __result, Pawn negotiator, Faction faction)
         {
             // Allies can help build roads
             if (faction.PlayerRelationKind == FactionRelationKind.Ally)
@@ -136,4 +137,40 @@ namespace RoadsOfTheRim
             }
         }
     }
+
+    /*
+     * Below are attempts at preventing rocks from spawning on SterileTile, as a test.
+     * Once sucessful, I can create a new type of road and prevent stuff from spawning on them
+     * To control what type of ground is created where, I will have to XML patch roadGenSteps    
+    [HarmonyPatch(typeof(GenStep_RockChunks), "GrowLowRockFormationFrom")]
+    public static class Patch_GenStep_RockChunks_GrowLowRockFormationFrom
+    {
+        [HarmonyPrefix]
+        public static void Prefix(ref IntVec3 root , Map map)
+        {
+            if (map.terrainGrid.TerrainAt(root).defName== "SterileTile")
+            {
+                root = new IntVec3(-999,0,-999);
+                Log.Message("[RotR] - Placing rock on sterile tile");
+                return;
+            }
+        }
+    }
+    */
+
+    /*
+    [HarmonyPatch(typeof(GenSpawn), "Spawn" , new Type[] { typeof(ThingDef), typeof(IntVec3), typeof(Map) , typeof(WipeMode) })]
+    public static class Patch_GenSpawn_Spawn
+    {
+        [HarmonyPostfix]
+        public static void Postfix(ref Thing __result , ref ThingDef def, ref IntVec3 loc, ref Map map , ref WipeMode wipeMode)
+        {
+            map.terrainGrid.TerrainAt(loc).ToString();
+            if (map.terrainGrid.TerrainAt(loc).defName == "SterileTile")
+            {
+                Log.Message("[RotR] - Placing rock on a sterile tile");
+            }
+        }
+    }
+    */
 }

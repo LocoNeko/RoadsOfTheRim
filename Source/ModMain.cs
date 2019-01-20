@@ -317,13 +317,6 @@ namespace RoadsOfTheRim
                     action = delegate
                     {
                         RoadsOfTheRim.factionsHelp.startHelping(faction , site , negotiator) ;
-                        // TO DO
-                        // Here : test success or failure (maybe even partial success)
-                        // Calculate how much a Faction can help based on nearby settlements
-                        // trigger an event that will help construction of that site, with a delay, and for a certain amount of time. This can be put in the construction site (tick from where help starts, + amount of help)
-                        // Make sure the faction has a cooldown for construction, to ensure proper MTB. Trigger construction cooldown only when faction is done helping
-                        // Remember to lower goodwill by 10
-                        // Also, work should stop in the event the faction is not an ally any more : check the worldcomponent
                     }
                 };
                 // Disable sites that do not have a settlement of this faction close enough (as defined by ConstructionSite.maxTicksToNeighbour)

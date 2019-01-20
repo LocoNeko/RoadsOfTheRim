@@ -27,7 +27,7 @@
             <movementCostMultiplier>0.4</movementCostMultiplier>
         </value>
     </Operation>
-    
+
     <Operation Class="PatchOperationReplace">
         <xpath>*/RoadDef[defName = "AncientAsphaltHighway"]/movementCostMultiplier</xpath>
         <value>

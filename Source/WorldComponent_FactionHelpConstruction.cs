@@ -128,6 +128,7 @@ namespace RoadsOfTheRim
 
         public void helpFinished(Faction faction)
         {
+            faction.TryAffectGoodwillWith(Faction.OfPlayer, -10, true, true, "Help with road construction cost 10 goodwill");
             setCurrentlyHelping(faction , false) ;
             setHelpAgainTick(faction , Find.TickManager.TicksGame + helpCooldownTicks) ;
         }

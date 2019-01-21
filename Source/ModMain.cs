@@ -9,6 +9,7 @@ using System.Reflection;
 using RimWorld.Planet;
 using Verse.Sound;
 using UnityEngine;
+using System;
 
 namespace RoadsOfTheRim
 {
@@ -59,6 +60,36 @@ namespace RoadsOfTheRim
                Log.Message("[RotR] - ERROR, couldn't find WorldComponent_FactionRoadConstructionHelp");
                return null;
             }
+        }
+
+        public static float calculateBiomeModifier(RoadDef roadDef, float biomeMovementDifficulty, out float biomeCancellation)
+        {
+            biomeCancellation = 0;
+            try
+            {
+                if (roadDef.defName == "DirtRoad")
+                {
+                    biomeCancellation = 0.25f;
+                }
+                if (roadDef.defName == "StoneRoad")
+                {
+                    biomeCancellation = 0.75f;
+                }
+                if (roadDef.defName == "AncientAsphaltRoad")
+                {
+                    biomeCancellation = 1f;
+                }
+                // Roads cancel biome movement difficulty
+                // e.g : Biome is at 3, effect is at 0.75 : we get a multiplier of .5, combined with the biome of 3, we'll only get 1.5 for biome
+                // i.e. : effect is at 0, we always get a multiplier of 1 (no effect)
+                // effect is at 1, we always get a multiplier of 1/biome, which effectively cancels biome effects
+                return (1 + (biomeMovementDifficulty - 1) * (1 - biomeCancellation)) / biomeMovementDifficulty;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
         }
 
         public override string SettingsCategory() => "RoadsOfTheRimSettingsCategoryLabel".Translate();

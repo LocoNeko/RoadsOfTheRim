@@ -95,45 +95,38 @@ namespace RoadsOfTheRim
         }
     }
 
-    [HarmonyPatch(typeof(Tile), "get_Roads")]
-    public static class Patch_Tile_get_Roads
+    /*
+     * Patching roads so they cancel all or part of the Tile.biome.movementDifficulty
+     * The actual rates are stored in static method RoadsOfTheRim.calculateBiomeModifier
+     */
+    [HarmonyPatch(typeof(WorldGrid), "GetRoadMovementDifficultyMultiplier")]
+    public static class Patch_WorldGrid_GetRoadMovementDifficultyMultiplier
     {
         [HarmonyPostfix]
-        public static void Postifx(ref List<Tile.RoadLink> __result, Tile __instance)
+        public static void Postifx(ref float __result , WorldGrid __instance, ref int fromTile, ref int toTile, ref StringBuilder explanation)
         {
-            RoadsOfTheRimSettings settings = LoadedModManager.GetMod<RoadsOfTheRim>().GetSettings<RoadsOfTheRimSettings>();
-            if (__result != null)
-            {
-                bool overrideCosts = settings.OverrideCosts;
-                List<Tile.RoadLink> patchedRoads = new List<Tile.RoadLink>();
-                foreach (Tile.RoadLink aLink in __result)
-                {
-                    Tile.RoadLink aRoadLink = new Tile.RoadLink();
-                    RoadDef aRoad = aLink.road;
-
-                    float biomeMovementDifficultyEffect = 0; // To be taken from road type : 1 (best) , 0.75 , 0.25 , 0 (worst)
-                    /*
-                        foreach (RoadBuildableDef thisRoadBuildableDef in DefDatabase<RoadBuildableDef>.AllDefs)
-                    {
-                        if (thisRoadBuildableDef.roadDef == aRoad.defName)
-                        {
-                            biomeMovementDifficultyEffect = thisRoadBuildableDef.biomeMovementDifficultyEffect;
-                            Log.Message("RotR DEBUG biomeMovementDifficultyEffect = " + biomeMovementDifficultyEffect);
-                        }
+            List<Tile.RoadLink> roads = __instance.tiles[fromTile].Roads;
+			if (roads == null)
+			{
+                return ;
+			}
+			if (toTile == -1)
+			{
+				toTile = __instance.FindMostReasonableAdjacentTileForDisplayedPathCost(fromTile);
+			}
+            float biomeCancellation = 0;
+            for (int i = 0; i < roads.Count; i++)
+			{
+				if (roads[i].neighbor == toTile)
+				{
+                    // Calculate biome modifier, update explanation &  multiply result by biome modifier
+                    float biomeModifier = RoadsOfTheRim.calculateBiomeModifier(roads[i].road, Find.WorldGrid[toTile].biome.movementDifficulty, out biomeCancellation);
+                    __result *= biomeModifier;
+                    if (explanation != null) {
+                        explanation.AppendLine ();
+                        explanation.Append(String.Format("The road cancels {0:P0} of the biome's movement cost", biomeCancellation));
                     }
-                    */
-                    // Roads cancel biome movement difficulty
-                    // e.g : Biome is at 3, effect is at 0.75 : we get a multiplier of .5, combined with the biome of 3, we'll only get 1.5 for biome
-                    // i.e. : effect is at 0, we always get a multiplier of 1 (no effect)
-                    // effect is at 1, we always get a multiplier of 1/biome, which effectively cancels biome effects
-                    float biomeMovementDifficultyCancellation = (1 + (__instance.biome.movementDifficulty - 1) * (1 - biomeMovementDifficultyEffect)) / __instance.biome.movementDifficulty;
-                    // If the settings are set to override default costs, apply them, otherwise use default (0.5) , multiply by how much the road cancels the biome movement difficulty
-                    aRoad.movementCostMultiplier = (settings.OverrideCosts ? aLink.road.movementCostMultiplier : 0.5f) * biomeMovementDifficultyCancellation;
-                    aRoadLink.neighbor = aLink.neighbor;
-                    aRoadLink.road = aRoad;
-                    patchedRoads.Add(aRoadLink);
                 }
-                __result = patchedRoads;
             }
         }
     }

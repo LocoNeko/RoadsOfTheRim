@@ -3,13 +3,27 @@ using RimWorld;
 using RimWorld.Planet;
 using Verse;
 using System.Text;
+using System ;
 
 namespace RoadsOfTheRim
 {
+    public enum CaravanState : byte
+    {
+        Moving,
+        NightResting,
+        AllOwnersHaveMentalBreak,
+        AllOwnersDowned,
+        ImmobilizedByMass,
+        ReadyToWork
+    }
+
     public class WorldObjectComp_Caravan : WorldObjectComp
     {
         public bool currentlyWorkingOnSite = false;
+
         public bool workOnWakeUp = false;
+
+        private RoadConstructionSite site ;
 
         public Caravan GetCaravan()
         {
@@ -23,20 +37,55 @@ namespace RoadsOfTheRim
 
         public RoadConstructionSite getSite()
         {
+            return site ;
+        }
+
+        public bool setSiteFromTile()
+        {
             try
             {
-                return (RoadConstructionSite)Find.WorldObjects.WorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), ((Caravan)this.parent).Tile);
+                site = (RoadConstructionSite)Find.WorldObjects.WorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), (GetCaravan().Tile));
+                return true ;
             }
-            catch
+            catch (Exception e)
             {
-                return null;
+                return false ;
             }
         }
 
-        public bool CaravanCanWork()
+        public void unsetSite()
+        {
+            site = null ;
+        }
+
+        public CaravanState CaravanCurrentState()
         {
             Caravan caravan = GetCaravan() ;
-            return (!caravan.CantMove & !caravan.pather.MovingNow) ;
+            if (caravan.pather.MovingNow)
+            {
+                return CaravanState.Moving ;
+            }
+            if (caravan.ImmobilizedByMass)
+            {
+                return CaravanState.ImmobilizedByMass ;
+            }
+            if (caravan.AllOwnersDowned)
+            {
+                return CaravanState.AllOwnersDowned ;
+            }
+            if (caravan.AllOwnersHaveMentalBreak)
+            {
+                return CaravanState.AllOwnersHaveMentalBreak ;
+            }
+            if (caravan.ImmobilizedByMass)
+            {
+                return CaravanState.ImmobilizedByMass ;
+            }
+            if (caravan.NightResting)
+            {
+                return CaravanState.NightResting ;
+            }
+            return CaravanState.ReadyToWork ;
         }
 
         public override void CompTick()
@@ -52,25 +101,52 @@ namespace RoadsOfTheRim
                 }
 
                 // Do some work & stop working if finished
-                if (this.currentlyWorkingOnSite & isThereAConstructionSiteHere() & CaravanCanWork())
+                // Caravan is working AND there's a site here AND caravan can work AND the site is indeed the same the caravan was working on
+                if (this.currentlyWorkingOnSite & isThereAConstructionSiteHere() & (CaravanCurrentState() == CaravanState.ReadyToWork) && (GetCaravan().Tile==getSite().Tile))
                 {
-                    RoadConstructionSite TheSite = getSite();
-                    if (TheSite.GetComponent<CompRoadsOfTheRimConstructionSite>().doSomeWork(caravan))
+                    base.CompTick();
+                    if (getSite().GetComponent<CompRoadsOfTheRimConstructionSite>().doSomeWork(caravan))
                     {
                         stopWorking() ;
+                        unsetSite() ;
                     }
-                    base.CompTick();
+                }
+
+                // Site tile and Caravan tile mismatch 
+                if (getSite()!=null && (GetCaravan().Tile!=getSite().Tile))
+                {
+                    stopWorking() ;
+                    unsetSite() ;
                 }
 
                 // Stop working as soon as the caravan moves, or rests, or is downed
-                if (this.currentlyWorkingOnSite & !CaravanCanWork())
+                if (this.currentlyWorkingOnSite & (CaravanCurrentState() != CaravanState.ReadyToWork))
                 {
                     stopWorking();
+                    string stoppedReason = "";
+                    if (CaravanCurrentState() == CaravanState.AllOwnersDowned)
+                    {
+                        stoppedReason = "Everyone is down";
+                    }
+                    if (CaravanCurrentState() == CaravanState.AllOwnersHaveMentalBreak)
+                    {
+                        stoppedReason = "Everyone is having a mental break";
+                    }
+                    if (CaravanCurrentState() == CaravanState.ImmobilizedByMass)
+                    {
+                        stoppedReason = "Too heavy to move";
+                    }
                     // If the caravan is resting, stop working but remember to restart working on wake up
-                    if (caravan.NightResting)
+                    if (CaravanCurrentState() == CaravanState.NightResting)
                     {
                         this.workOnWakeUp = true;
+                        stoppedReason = " resting at night. Work will resume in the morning.";
                     }
+                    if (stoppedReason != "")
+                    {
+                        Messages.Message("Caravan stopped working on site : " + stoppedReason, MessageTypeDefOf.RejectInput);
+                    }
+
                 }
 
                 if (!isThereAConstructionSiteHere())
@@ -83,10 +159,11 @@ namespace RoadsOfTheRim
         //Start working on a Construction Site.
         public void startWorking()
         {
-            if (CaravanCanWork())
+            if (CaravanCurrentState() == CaravanState.ReadyToWork)
             {
                 Caravan caravan = GetCaravan();
                 caravan.pather.StopDead();
+                setSiteFromTile() ;
                 this.currentlyWorkingOnSite = true ;
             }
             else
@@ -99,6 +176,7 @@ namespace RoadsOfTheRim
         public void stopWorking()
         {
             this.currentlyWorkingOnSite = false ;
+            // TO DO : A quick message (with a reason) would be nice
         }
 
         /*
@@ -138,8 +216,7 @@ namespace RoadsOfTheRim
 
         public float amountOfWork()
         {
-            Caravan caravan = (Caravan)this.parent;
-            return CalculateConstruction(caravan.PawnsListForReading);
+            return CalculateConstruction(GetCaravan().PawnsListForReading);
         }
 
         public override void PostExposeData()
@@ -147,6 +224,7 @@ namespace RoadsOfTheRim
             base.PostExposeData();
             Scribe_Values.Look<bool>(ref this.currentlyWorkingOnSite, "RoadsOfTheRim_Caravan_currentlyWorkingOnSite" , false , true);
             Scribe_Values.Look<bool>(ref this.workOnWakeUp, "RoadsOfTheRim_Caravan_workOnWakeUp", false, true);
+            Scribe_References.Look<RoadConstructionSite>(ref this.site, "RoadsOfTheRim_Caravan_RoadConstructionSite");
         }
     }
 }

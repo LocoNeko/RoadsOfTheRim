@@ -555,7 +555,7 @@ namespace RoadsOfTheRim
                 return finishWork(parentSite , caravan);
             }
 
-            if (!caravanComp.CaravanCanWork())
+            if (!(caravanComp.CaravanCurrentState() == CaravanState.ReadyToWork))
             {
                 Log.Message("[Roads of the Rim] DEBUG : doSomeWork() failed because the caravan can't work.");
                 return false;

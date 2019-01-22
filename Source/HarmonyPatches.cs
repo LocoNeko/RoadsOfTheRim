@@ -121,7 +121,8 @@ namespace RoadsOfTheRim
 				{
                     // Calculate biome modifier, update explanation &  multiply result by biome modifier
                     float biomeModifier = RoadsOfTheRim.calculateBiomeModifier(roads[i].road, Find.WorldGrid[toTile].biome.movementDifficulty, out biomeCancellation);
-                    __result *= biomeModifier;
+                    // TO DO : Cancel part of Hilliness as well. See WorldPathGrid.HillinessMovementDifficultyOffset
+                    __result *= biomeModifier ;
                     if (explanation != null) {
                         explanation.AppendLine ();
                         explanation.Append(String.Format("The road cancels {0:P0} of the biome's movement cost", biomeCancellation));
@@ -151,19 +152,16 @@ namespace RoadsOfTheRim
     }
     */
 
-    /*
     [HarmonyPatch(typeof(GenSpawn), "Spawn" , new Type[] { typeof(ThingDef), typeof(IntVec3), typeof(Map) , typeof(WipeMode) })]
     public static class Patch_GenSpawn_Spawn
     {
         [HarmonyPostfix]
         public static void Postfix(ref Thing __result , ref ThingDef def, ref IntVec3 loc, ref Map map , ref WipeMode wipeMode)
         {
-            map.terrainGrid.TerrainAt(loc).ToString();
-            if (map.terrainGrid.TerrainAt(loc).defName == "SterileTile")
+            if (map.terrainGrid.TerrainAt(loc).defName == "BrokenAsphalt")
             {
-                Log.Message("[RotR] - Placing rock on a sterile tile");
+                Log.Warning("[RotR] - DEBUG - Placing something on Broken Asphalt") ;
             }
         }
     }
-    */
 }

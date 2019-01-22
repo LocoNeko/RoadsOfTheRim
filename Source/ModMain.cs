@@ -89,7 +89,29 @@ namespace RoadsOfTheRim
             {
                 throw e;
             }
-
+        }
+        
+        public static float calculateRoadModifier(RoadDef roadDef, float BiomeMovementDifficulty , float HillinessOffset , float WinterOffset , out float BiomeModifier , out float HillModifier)
+        {
+            float biomeCoef = 1f ;
+            HillModifier = 1f;
+            if (roadDef.defName == "DirtRoad")
+            {
+                biomeCoef = 0.25f;
+                HillModifier = 0.8f;
+            }
+            if (roadDef.defName == "StoneRoad")
+            {
+                biomeCoef = 0.75f;
+                HillModifier = 0.6f;
+            }
+            if (roadDef.defName == "AncientAsphaltRoad")
+            {
+                biomeCoef = 1f;
+                HillModifier = 0.4f;
+            }
+            BiomeModifier = (1 + (BiomeMovementDifficulty-1) * (1-biomeCoef)) / BiomeMovementDifficulty ;
+            return ((BiomeModifier*BiomeMovementDifficulty) + (HillModifier*HillinessOffset) + WinterOffset ) / (BiomeMovementDifficulty + HillinessOffset + WinterOffset) ;
         }
 
         public override string SettingsCategory() => "RoadsOfTheRimSettingsCategoryLabel".Translate();
@@ -247,8 +269,8 @@ namespace RoadsOfTheRim
                 SoundStarter.PlayOneShotOnCamera(SoundDefOf.Click, null);
                 caravan.GetComponent<WorldObjectComp_Caravan>().startWorking();
             };
-            // disable based on : __instance.GetComponent<WorldObjectComp_Caravan>().CaravanCanWork();
-            if (!caravan.GetComponent<WorldObjectComp_Caravan>().CaravanCanWork())
+            // disable if the caravan can't work
+            if (caravan.GetComponent<WorldObjectComp_Caravan>().CaravanCurrentState() != CaravanState.ReadyToWork)
             {
                 command_Action.Disable("RoadsOfTheRimBuildWorkOnSiteCantWork".Translate());
             }

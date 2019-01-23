@@ -49,6 +49,7 @@ namespace RoadsOfTheRim
             }
             catch (Exception e)
             {
+                Log.Error("[Roads of the Rim] EXCEPTION : " + e);
                 return false ;
             }
         }
@@ -168,7 +169,7 @@ namespace RoadsOfTheRim
             }
             else
             {
-                Log.Message("[Roads of the Rim] : Caravan was given the order to start working but can't work.");
+                Log.Error("[Roads of the Rim] : Caravan was given the order to start working but can't work.");
             }
         }
         

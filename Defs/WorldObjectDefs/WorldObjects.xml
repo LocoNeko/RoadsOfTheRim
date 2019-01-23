@@ -18,5 +18,15 @@
       <li>RoadsOfTheRim.WITab_RoadConstructionSite</li>
     </inspectorTabs>
     -->
-</WorldObjectDef>
+  </WorldObjectDef>
+  <WorldObjectDef>
+    <defName>RoadConstructionLeg</defName>
+    <label>road construction leg</label>
+    <description>Section of a planned road</description>
+    <worldObjectClass>RoadsOfTheRim.RoadConstructionLeg</worldObjectClass>
+    <texture>World/WorldObjects/ConstructionLeg</texture>
+    <comps>
+        <li Class="RoadsOfTheRim.CompProperties_RoadsOfTheRimConstructionSite" />
+    </comps>
+  </WorldObjectDef>
 </Defs>

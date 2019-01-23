@@ -133,7 +133,6 @@ namespace RoadsOfTheRim
                 try
                 {
                     Find.WorldPathGrid.RecalculateAllPerceivedPathCosts();
-                    Find.World.renderer.RegenerateAllLayersNow();
                 }
                 catch
                 {

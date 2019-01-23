@@ -33,6 +33,8 @@ namespace RoadsOfTheRim
 
         public string NeighbouringSettlementsDescription ;
 
+        public WorldObject LastLeg ;
+
         /*
         Factions help
         - Faction that helps 
@@ -230,6 +232,7 @@ namespace RoadsOfTheRim
          */
         public override void PostAdd()
         {
+            LastLeg = this;
             this.GetComponent<CompRoadsOfTheRimConstructionSite>().setCosts(Find.WorldGrid[Tile] , Find.WorldGrid[toTile] , roadToBuild);
             populateDescription();
         }
@@ -268,6 +271,7 @@ namespace RoadsOfTheRim
             Scribe_Values.Look<int>(ref helpFromTick, "helpFromTick");
             Scribe_Values.Look<float>(ref helpAmount, "helpAmount");
             Scribe_Values.Look<float>(ref helpWorkPerTick, "helpWorkPerTick");
+            Scribe_References.Look<WorldObject>(ref LastLeg, "LastLeg");
         }
 
         public void UpdateProgressBarMaterial()
@@ -729,7 +733,8 @@ namespace RoadsOfTheRim
             // Add the road to fromTile & toTile
             fromTile.potentialRoads.Add(new Tile.RoadLink { neighbor = parentSite.toTile, road = newRoadDef });
             toTile.potentialRoads.Add(new Tile.RoadLink { neighbor = parentSite.Tile, road = newRoadDef });
-            Find.World.renderer.RegenerateAllLayersNow();
+            Find.World.renderer.SetDirty<WorldLayer_Roads>();
+            Find.World.renderer.SetDirty<WorldLayer_Paths>();
 
             // Send letter
             Find.LetterStack.ReceiveLetter(

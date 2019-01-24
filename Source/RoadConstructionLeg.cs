@@ -29,48 +29,122 @@ namespace RoadsOfTheRim
             {
                 if (next==null)
                 {
-                    // TO DO : This alternate structure should be a goal flag. Would love to NOT hardcode the path and somehow put it in the XML for RoadConstructionLeg, but can I ?
-                    return MaterialPool.MatFrom(this.def.texture , ShaderDatabase.WorldOverlayTransparentLit , Color.blue , WorldMaterials.DynamicObjectRenderQueue ) ;
+                    // This alternate Material : goal flag
+                    return RotR_StaticConstructorOnStartup.ConstructionLegLast_Material;
                 }
                 return base.Material ;
             }
 
         }
 
-        // Here, test if we picked a tile that's already part of the chain.
-        // Yes -> delete this leg and all legs after it
+        public RoadConstructionLeg Previous
+        {
+            get
+            {
+                return previous ;
+            }
+            set
+            {
+                previous = value ;
+            }
+        }
+
+        public RoadConstructionLeg Next
+        {
+            get
+            {
+                return next;
+            }
+            set
+            {
+                next = value;
+            }
+        }
+
+        public RoadConstructionSite GetSite()
+        {
+            return site;
+        }
+
+        // Here, test if we picked a tile that's already part of the chain for this construction site (different construction sites can cross each other's paths)
+        // Yes -> 
+        //      Was it the construction site itself ?
+        //      Yes -> We are done creating the site
+        //      No ->  delete this leg and all legs after it
         // No -> create a new Leg
-        public static RoadConstructionLeg ActionOnTile(RoadConstructionSite site , int tile)
+        public static bool ActionOnTile(RoadConstructionSite site , int tile)
         {
             // The RoadConstructionSite given is somehow wrong
             if (site.def != DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true))
             {
-                return null ;
+                Log.Error("[RotR] - The RoadConstructionSite given is somehow wrong");
+                return true ;
             }
             try
             {
-                return new RoadConstructionLeg(site, tile) ;
+                foreach (WorldObject o in Find.WorldObjects.ObjectsAt(tile))
+                {
+                    // Action on the construction site = we're done
+                    if ( (o.def == DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true)) && (RoadConstructionSite)o == site)
+                    {
+                        return true; 
+                    }
+                    // Action on a leg that's part of this chain = we should delete all legs after that & keep targetting
+                    if ((o.def == DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionLeg", true)) && ((RoadConstructionLeg)o).site == site)
+                    {
+                        RoadConstructionLeg.Remove((RoadConstructionLeg)o);
+                        Target(site);
+                        return false;
+                    }
+                }
+                RoadConstructionLeg newLeg = (RoadConstructionLeg)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionLeg", true));
+                newLeg.Tile = tile;
+
+                List<int> neighbouringTiles = new List<int>();
+                Find.WorldGrid.GetTileNeighbors(tile, neighbouringTiles);
+                // This is not a neighbour : do nothing
+                if (!neighbouringTiles.Contains(site.LastLeg.Tile))
+                {
+                    Target(site);
+                    return false;
+                }
+                newLeg.site = site;
+                // This is not the first Leg
+                if (site.LastLeg.def == DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionLeg", true))
+                {
+                    RoadConstructionLeg l = site.LastLeg as RoadConstructionLeg;
+                    l.SetNext(newLeg);
+                    newLeg.previous = l;
+                }
+                else
+                {
+                    newLeg.previous = null;
+                }
+                newLeg.SetNext(null);
+                Find.WorldObjects.Add(newLeg);
+                site.LastLeg = newLeg ;
+                Target(site);
+                return false;
             }
             catch (Exception e)
             {
-                Log.Error(e.ToString()) ;
-                return null ;
+                Log.Error("[RotR] Exception : " + e);
+                return true;
             }
         }
 
         public override void Draw()
         {
+            base.Draw();
             WorldGrid worldGrid = Find.WorldGrid;
             Vector3 fromPos = worldGrid.GetTileCenter(Tile);
-            if (next!=null)
-            {
-                // Draw a line to the next leg
-                Vector3 toPos = worldGrid.GetTileCenter(next.Tile);
-                GenDraw.DrawWorldLineBetween(fromPos, toPos) ;
-            }
+            Vector3 toPos = ((previous != null) ? worldGrid.GetTileCenter(previous.Tile) : worldGrid.GetTileCenter(site.Tile));
+            float d = 0.05f;
+            fromPos += fromPos.normalized * d;
+            toPos += toPos.normalized * d;
+            GenDraw.DrawWorldLineBetween(fromPos, toPos);
             // Note : I override the material (see above) to display a goal flag if the leg is the last one, and a circle if it's not, so it looks like this :
             // Site---Leg---Leg---Leg---Leg---Goal
-            base.Draw() ;
         }
 
         public void SetNext(RoadConstructionLeg nextLeg)
@@ -81,39 +155,47 @@ namespace RoadsOfTheRim
             }
             catch (Exception e)
             {
-                Log.Error("[RotR] Exception : "+e.ToString());
+                Log.Error("[RotR] Exception : "+e);
             }
         }
 
-        public void remove()
+        public static void Target(RoadConstructionSite site)
         {
-
+            Find.WorldTargeter.BeginTargeting(delegate (GlobalTargetInfo target)
+            {
+                return RoadConstructionLeg.ActionOnTile(site, target.Tile);
+            },
+            true, RotR_StaticConstructorOnStartup.ConstructionLeg_MouseAttachment , false, null ,
+            delegate (GlobalTargetInfo target)
+            {
+                return "RoadsOfTheRim_BuildToHere".Translate();
+            });
         }
 
-        private RoadConstructionLeg(RoadConstructionSite site , int tile)
+        /*
+         * Remove all legs up to and including the one passed in argument      
+         */      
+        public static void Remove(RoadConstructionLeg leg)
         {
-            List<int> neighbouringTiles = new List<int>();
-            Find.WorldGrid.GetTileNeighbors(tile, neighbouringTiles);
-            // This is not a neighbour : do nothing
-            if (!neighbouringTiles.Contains(site.LastLeg.Tile))
+            RoadConstructionSite site = leg.site;
+            RoadConstructionLeg CurrentLeg = (RoadConstructionLeg)site.LastLeg;
+            while (CurrentLeg != leg.previous)
             {
-                return ;
+                if (CurrentLeg.previous!=null)
+                {
+                    RoadConstructionLeg PreviousLeg = CurrentLeg.previous;
+                    PreviousLeg.SetNext(null);
+                    site.LastLeg = PreviousLeg;
+                    Find.WorldObjects.Remove(CurrentLeg);
+                    CurrentLeg = PreviousLeg;
+                }
+                else
+                {
+                    Find.WorldObjects.Remove(CurrentLeg);
+                    site.LastLeg = site;
+                    break;
+                }
             }
-            this.site = site;
-            // This is not the first Leg
-            if (site.LastLeg.def == DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionLeg", true))
-            {
-                RoadConstructionLeg l = site.LastLeg as RoadConstructionLeg ;
-                l.SetNext(this) ;
-                previous = l ;
-                // Then, change the material of the previous leg to a dot, and the last leg to a goal flag
-            }
-            else
-            {
-                previous = null ;
-            }
-            SetNext(null) ;
-            site.LastLeg = this ;
         }
     }
 }

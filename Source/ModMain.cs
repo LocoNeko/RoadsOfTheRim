@@ -1,4 +1,4 @@
-using Harmony;
+﻿using Harmony;
 using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,14 @@ using System;
 
 namespace RoadsOfTheRim
 {
+    [StaticConstructorOnStartup]
+    static class RotR_StaticConstructorOnStartup
+    {
+        public static readonly Texture2D ConstructionLeg_MouseAttachment = ContentFinder<Texture2D>.Get("UI/Overlays/ConstructionLeg", true);
+
+        public static Material ConstructionLegLast_Material = MaterialPool.MatFrom("World/WorldObjects/ConstructionLegLast", ShaderDatabase.WorldOverlayTransparentLit , WorldMaterials.DynamicObjectRenderQueue ) ;
+    }
+
     public class RoadsOfTheRimSettings : ModSettings
     {
         // Constants
@@ -59,6 +67,20 @@ namespace RoadsOfTheRim
                }
                Log.Message("[RotR] - ERROR, couldn't find WorldComponent_FactionRoadConstructionHelp");
                return null;
+            }
+        }
+
+        public static WorldComponent_RoadBuildingState RoadBuildingState
+        {
+            get
+            {
+                WorldComponent_RoadBuildingState f = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState;
+                if (f != null)
+                {
+                    return f;
+                }
+                Log.Message("[RotR] - ERROR, couldn't find WorldComponent_RoadBuildingState");
+                return null;
             }
         }
 
@@ -140,10 +162,6 @@ namespace RoadsOfTheRim
             }
         }
 
-        /*
-        Add a construction site :
-        - pick a neighbouring tile (fail if the tile clicked was not a neighbour)
-         */
         public static Command AddConstructionSite(Caravan caravan)
         {
             Command_Action command_Action = new Command_Action();
@@ -152,45 +170,83 @@ namespace RoadsOfTheRim
             command_Action.icon = ContentFinder<Texture2D>.Get("UI/Commands/AddConstructionSite", true);
             command_Action.action = delegate ()
             {
-                // Find neighbours of caravan tile
-                List<int> neighbouringTiles = new List<int>();
-                Find.WorldGrid.GetTileNeighbors(caravan.Tile, neighbouringTiles);
+                RoadConstructionSite constructionSite = (RoadConstructionSite)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true));
+                constructionSite.Tile = caravan.Tile;
+                Find.WorldObjects.Add(constructionSite);
 
-                // Find clicked tile
-                Find.WorldTargeter.BeginTargeting(delegate (GlobalTargetInfo target)
+                ConstructionMenu menu = new ConstructionMenu(constructionSite);
+                if (menu.CountBuildableRoads() == 0)
                 {
-                    if (neighbouringTiles.Contains(target.Tile))
-                    {
-                        CreateConstructionSite(caravan, target.Tile);
-                    }
-                    else
-                    {
-                        Messages.Message("RoadsOfTheRim_MustPickNeighbouringTile".Translate(), MessageTypeDefOf.RejectInput);
-                    };
-                    return true;
-                },
-                true, null, false, null, delegate (GlobalTargetInfo target)
+                    Find.WorldObjects.Remove(constructionSite);
+                    Messages.Message("RoadsOfTheRim_NoBetterRoadCouldBeBuilt".Translate(), MessageTypeDefOf.RejectInput);
+                }
+                else
                 {
-                    return "RoadsOfTheRim_BuildToHere".Translate();
-                });
+                    menu.closeOnClickedOutside = true;
+                    menu.forcePause = true;
+                    Find.WindowStack.Add(menu);
+                }
             };
-
-            // Test when the AddConstructionSite action should be disabled : when there's already a construction site here
-            bool ConstructionSiteAlreadyHere = false;
-            try
-            {
-                ConstructionSiteAlreadyHere = Find.WorldObjects.AnyWorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), caravan.Tile);
-            }
-            catch
-            {
-
-            }
-            if (ConstructionSiteAlreadyHere)
+            if (Find.WorldObjects.AnyWorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), caravan.Tile))
             {
                 command_Action.Disable("RoadsOfTheRimBuildConstructionSiteAlreadyHere".Translate());
             }
             return command_Action;
         }
+        /*
+         * OLD VERSION before issue_10
+        Add a construction site :
+        - pick a neighbouring tile (fail if the tile clicked was not a neighbour)
+         */
+        /*
+       public static Command AddConstructionSite(Caravan caravan)
+       {
+           Command_Action command_Action = new Command_Action();
+           command_Action.defaultLabel = "RoadsOfTheRimAddConstructionSite".Translate();
+           command_Action.defaultDesc = "RoadsOfTheRimAddConstructionSiteDescription".Translate();
+           command_Action.icon = ContentFinder<Texture2D>.Get("UI/Commands/AddConstructionSite", true);
+           command_Action.action = delegate ()
+           {
+               // Find neighbours of caravan tile
+               List<int> neighbouringTiles = new List<int>();
+               Find.WorldGrid.GetTileNeighbors(caravan.Tile, neighbouringTiles);
+
+               // Find clicked tile
+               Find.WorldTargeter.BeginTargeting(delegate (GlobalTargetInfo target)
+               {
+                   if (neighbouringTiles.Contains(target.Tile))
+                   {
+                       CreateConstructionSite(caravan, target.Tile);
+                   }
+                   else
+                   {
+                       Messages.Message("RoadsOfTheRim_MustPickNeighbouringTile".Translate(), MessageTypeDefOf.RejectInput);
+                   };
+                   return true;
+               },
+               true, null, false, null, delegate (GlobalTargetInfo target)
+               {
+                   return "RoadsOfTheRim_BuildToHere".Translate();
+               });
+           };
+
+           // Test when the AddConstructionSite action should be disabled : when there's already a construction site here
+           bool ConstructionSiteAlreadyHere = false;
+           try
+           {
+               ConstructionSiteAlreadyHere = Find.WorldObjects.AnyWorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), caravan.Tile);
+           }
+           catch
+           {
+
+           }
+           if (ConstructionSiteAlreadyHere)
+           {
+               command_Action.Disable("RoadsOfTheRimBuildConstructionSiteAlreadyHere".Translate());
+           }
+           return command_Action;
+       }
+       */
 
         /*
         Create a new Construction site
@@ -198,6 +254,7 @@ namespace RoadsOfTheRim
         - Exclude already existing similar or lesser roads
         - Fail if no road can be built (there's already an asphalt road here)
          */
+        /*
         public static void CreateConstructionSite(Caravan caravan , int toTile_int)
         {
             Tile fromTile = Find.WorldGrid[caravan.Tile] ;
@@ -240,10 +297,15 @@ namespace RoadsOfTheRim
                 Find.WindowStack.Add(menu);
             }
         }
+        */
+
+        public static void FinaliseConstructionSite(RoadConstructionSite site)
+        {
+            site.GetComponent<WorldObjectComp_ConstructionSite>().setCosts();
+        }
 
         /*
         Finalise creation of construction site
-         */
         public static bool FinaliseConstructionSite(int fromTile_int , int toTile_int , RoadBuildableDef roadBuildableDef)
         {
             RoadConstructionSite constructionSite = (RoadConstructionSite)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true));
@@ -251,8 +313,10 @@ namespace RoadsOfTheRim
             constructionSite.setDestination(toTile_int);
             constructionSite.roadToBuild = roadBuildableDef;
             Find.WorldObjects.Add(constructionSite);
+            RoadConstructionLeg.ActionOnTile(constructionSite, toTile_int);
             return true;
         }
+         */
 
         /*
         Work on  Site
@@ -268,7 +332,7 @@ namespace RoadsOfTheRim
                 SoundStarter.PlayOneShotOnCamera(SoundDefOf.Click, null);
                 caravan.GetComponent<WorldObjectComp_Caravan>().startWorking();
             };
-            // disable if the caravan can't work
+            // disable if the caravan can't work OR if the site is not ready
             if (caravan.GetComponent<WorldObjectComp_Caravan>().CaravanCurrentState() != CaravanState.ReadyToWork)
             {
                 command_Action.Disable("RoadsOfTheRimBuildWorkOnSiteCantWork".Translate());
@@ -298,6 +362,7 @@ namespace RoadsOfTheRim
          */
         public static Command RemoveConstructionSite(int tile)
         {
+            // TO DO : Refactor this so we find the site first, to pass it to Deleteconstructionsite directly, or even get rid of that function all together
             Command_Action command_Action = new Command_Action();
             command_Action.defaultLabel = "RoadsOfTheRimRemoveConstructionSite".Translate();
             command_Action.defaultDesc = "RoadsOfTheRimRemoveConstructionSiteDescription".Translate();
@@ -307,7 +372,7 @@ namespace RoadsOfTheRim
                 SoundStarter.PlayOneShotOnCamera(SoundDefOf.CancelMode, null);
                 DeleteConstructionSite(tile);
             };
-            // Test when the RemoveConstructionSite action should be disabled (i.e. there's already a construction site here)
+            // Test when the RemoveConstructionSite action should be disabled (i.e. there's no construction site here)
             bool ConstructionSiteAlreadyHere = false;
             try
             {
@@ -340,7 +405,7 @@ namespace RoadsOfTheRim
                 {
                     RoadsOfTheRim.factionsHelp.helpFinished(ConstructionSite.helpFromFaction);
                 }
-                Find.WorldObjects.Remove(ConstructionSite) ;
+                RoadConstructionSite.DeleteSite(ConstructionSite) ;
             }
         }
 

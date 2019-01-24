@@ -38,10 +38,6 @@ namespace RoadsOfTheRim
         {
             bool isThereAConstructionSiteHere = Find.WorldObjects.AnyWorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), __instance.Tile);
             bool isTheCaravanWorkingOnASite = __instance.GetComponent<WorldObjectComp_Caravan>().currentlyWorkingOnSite;
-            // TO DO : Add comms console dialog to ask for help on a construction site
-            // See https://github.com/erdelf/PrisonerRansom/blob/master/Source/PrisonerRansom/ReplacementCode.cs
-            // method of interest : FactionDialogMaker , FactionDialogFor
-
             __result = __result.Concat(new Gizmo[] { RoadsOfTheRim.AddConstructionSite(__instance) })
                                .Concat(new Gizmo[] { RoadsOfTheRim.RemoveConstructionSite(__instance.Tile) });
             if (isThereAConstructionSiteHere & !isTheCaravanWorkingOnASite)
@@ -128,6 +124,20 @@ namespace RoadsOfTheRim
                         explanation.Append(String.Format("The road cancels {0:P0} of the biome's movement cost", biomeCancellation));
                     }
                 }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(WorldTargeter), "StopTargeting")]
+    public static class Patch_WorldTargeter_StopTargeting
+    {
+        [HarmonyPrefix]
+        public static void Prefix()
+        {
+            if (RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting!=null)
+            {
+                RoadsOfTheRim.FinaliseConstructionSite(RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting);
+                RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting = null;
             }
         }
     }

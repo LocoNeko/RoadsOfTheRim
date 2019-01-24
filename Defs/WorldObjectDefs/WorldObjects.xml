@@ -25,8 +25,9 @@
     <description>Section of a planned road</description>
     <worldObjectClass>RoadsOfTheRim.RoadConstructionLeg</worldObjectClass>
     <texture>World/WorldObjects/ConstructionLeg</texture>
-    <comps>
-        <li Class="RoadsOfTheRim.CompProperties_RoadsOfTheRimConstructionSite" />
-    </comps>
+    <useDynamicDrawer>true</useDynamicDrawer>
+    <expandingIcon>true</expandingIcon>
+    <expandingIconTexture>World/WorldObjects/ConstructionLeg</expandingIconTexture>
+    <expandingIconPriority>90</expandingIconPriority>
   </WorldObjectDef>
 </Defs>

@@ -106,7 +106,7 @@ namespace RoadsOfTheRim
                 if (this.currentlyWorkingOnSite & isThereAConstructionSiteHere() & (CaravanCurrentState() == CaravanState.ReadyToWork) && (GetCaravan().Tile==getSite().Tile))
                 {
                     base.CompTick();
-                    if (getSite().GetComponent<CompRoadsOfTheRimConstructionSite>().doSomeWork(caravan))
+                    if (getSite().GetComponent<WorldObjectComp_ConstructionSite>().doSomeWork(caravan))
                     {
                         stopWorking() ;
                         unsetSite() ;

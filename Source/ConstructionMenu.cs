@@ -9,7 +9,7 @@ namespace RoadsOfTheRim
 {
     /*
     Nice looking cartridge-style option picker 
-    Layout : 1 vertical cartridge per type of buidalble road (no need to show roads that can't be built)
+    Layout : 1 vertical cartridge per type of buidalble road
     Each cartridge has :
     - A square image at the top, representing the type of road
     - The name of the road below
@@ -21,7 +21,7 @@ namespace RoadsOfTheRim
     > Chemfuel
     Each line starts with the icon of the resource (work uses the construction site icon)
     Upon clicking outside, the cartridge is closed with no further actions
-    Upon clicking on a road icon, we call RoadsOfTheRim.FinaliseConstructionSite(caravan.Tile, toTile_int, thisRoadBuildableDef);
+    Upon clicking on a road icon, we set the roaddef of the site to that road and start targeting the map to add legs
 
     Check, among others :
     * Widgets many methods
@@ -29,17 +29,13 @@ namespace RoadsOfTheRim
 
     public class ConstructionMenu : Window
     {
-        private readonly int fromTile;
-        private readonly int toTile;
-        private readonly RoadDef bestExistingRoad;
+        private readonly RoadConstructionSite site;
         private readonly List<RoadBuildableDef> buildableRoads;
         public override Vector2 InitialSize => new Vector2(676, 544);
 
-        public ConstructionMenu(int fromTile, int toTile , RoadDef bestExistingRoad)
+        public ConstructionMenu(RoadConstructionSite site)
         {
-            this.fromTile = fromTile;
-            this.toTile = toTile;
-            this.bestExistingRoad = bestExistingRoad ;
+            this.site = site;
             buildableRoads = new List<RoadBuildableDef>() ;
         }
 
@@ -47,10 +43,7 @@ namespace RoadsOfTheRim
         {
             foreach (RoadBuildableDef thisRoadBuildableDef in DefDatabase<RoadBuildableDef>.AllDefs)
             {
-                if (bestExistingRoad == null || RoadsOfTheRim.isRoadBetter(DefDatabase<RoadDef>.GetNamed(thisRoadBuildableDef.roadDef, true), bestExistingRoad))
-                {
-                    buildableRoads.Add(thisRoadBuildableDef);
-                }
+                buildableRoads.Add(thisRoadBuildableDef);
             }
             return (buildableRoads!=null ? buildableRoads.Count : 0);
         }
@@ -59,6 +52,7 @@ namespace RoadsOfTheRim
         {
             if (Event.current.isKey)
             {
+                RoadsOfTheRim.DeleteConstructionSite(site.Tile);
                 Close();
             }
 
@@ -111,8 +105,10 @@ namespace RoadsOfTheRim
                     if (Event.current.button == 0)
                     {
                         SoundStarter.PlayOneShotOnCamera(SoundDefOf.Tick_High, null);
-                        RoadsOfTheRim.FinaliseConstructionSite(fromTile, toTile, aDef);
+                        site.roadToBuild = aDef;
                         Close();
+                        RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting = site ;
+                        RoadConstructionLeg.Target(site);
                     }
                 }
 
@@ -153,5 +149,6 @@ namespace RoadsOfTheRim
             }
             Text.Anchor = TextAnchor.UpperLeft;
         }
+
     }
 }

@@ -110,25 +110,15 @@ namespace RoadsOfTheRim
             int tick = Find.TickManager.TicksGame + CaravanArrivalTimeEstimator.EstimatedTicksToArrive(closestSettlement.Tile, site.Tile, null);
 
             // Determine amount of help per tick
-            /*
-            float amountPerTick = 0;
-            for (int i=0; i<50;i++)
-            {
-                amountPerTick = Math.Max(Rand.Gaussian(helpPerTickMedian , helpPerTickVariance) , helpPerTickMin );
-                Log.Message(String.Format("[RotR] - Gaussian : {0:0.00}" , amountPerTick));
-            }
-            */
             float amountPerTick = Math.Max(Rand.Gaussian(helpPerTickMedian, helpPerTickVariance), helpPerTickMin);
 
             setCurrentlyHelping(faction);
             site.initiateFactionHelp(faction, tick, amountOfHelp, amountPerTick);
-
-            // trigger an event that will help construction of that site, with a delay, and for a certain amount of time. This can be put in the construction site (tick from where help starts, + amount of help)
         }
 
         public void helpFinished(Faction faction)
         {
-            faction.TryAffectGoodwillWith(Faction.OfPlayer, -10, true, true, "Help with road construction cost 10 goodwill");
+            faction.TryAffectGoodwillWith(Faction.OfPlayer , -10 , true , true , "Help with road construction cost 10 goodwill");
             setCurrentlyHelping(faction , false) ;
             setHelpAgainTick(faction , Find.TickManager.TicksGame + helpCooldownTicks) ;
         }

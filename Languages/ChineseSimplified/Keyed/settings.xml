@@ -6,21 +6,32 @@
   <RoadsOfTheRimRemoveConstructionSite>取消修路</RoadsOfTheRimRemoveConstructionSite>
   <RoadsOfTheRimRemoveConstructionSiteDescription>移除工地，取消道路建设</RoadsOfTheRimRemoveConstructionSiteDescription>
   <RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>无法移除工地 : 资源已部分消耗</RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>
-  <RoadsOfTheRim_commsAskHelp>请求道路修建协助 (花费: 10 好感)</RoadsOfTheRim_commsAskHelp>
+  <RoadsOfTheRim_ConstructionSiteDescription_Main>施工进度 {0} </RoadsOfTheRim_ConstructionSiteDescription_Main>
+  <RoadsOfTheRim_ConstructionSiteDescription_Help>, 援建者 {0} [{1} 工作量@{2}/秒]</RoadsOfTheRim_ConstructionSiteDescription_Help>
+  <RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen> 开始于 {0} 天</RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen>
+  <RoadsOfTheRim_ConstructionSiteDescription_Resource>剩余 {1} {0} / 总共 {2}</RoadsOfTheRim_ConstructionSiteDescription_Resource>
+  <RoadsOfTheRim_commsAskHelp>请求盟友帮助修建道路 (花费: 10 好感度)</RoadsOfTheRim_commsAskHelp>
   <RoadsOfTheRim_commsNoSites>未找到建筑工地</RoadsOfTheRim_commsNoSites>
-  <RoadsOfTheRim_commsAlreadyHelping>该派系已在帮忙修建道路中</RoadsOfTheRim_commsAlreadyHelping>
-  <RoadsOfTheRim_commsHasHelpedRecently>该派系最近已帮过忙. 下次帮助还需要等待 {0:0.0} 天</RoadsOfTheRim_commsHasHelpedRecently>
+  <RoadsOfTheRim_commsAlreadyHelping>该派系已在帮忙施工了</RoadsOfTheRim_commsAlreadyHelping>
+  <RoadsOfTheRim_commsHasHelpedRecently>该派系最近已帮助施工过了. 下一次帮助会在 {0} 天后</RoadsOfTheRim_commsHasHelpedRecently>
+  <RoadsOfTheRim_commsNotClose>{0} 离该工地太远，无法协助施工</RoadsOfTheRim_commsNotClose>
+  <RoadsOfTheRim_commsAnotherFactionIsHelping>{0} 已经正在帮助此工地施工</RoadsOfTheRim_commsAnotherFactionIsHelping>
   <RoadsOfTheRim_commsSitesList>建筑工地</RoadsOfTheRim_commsSitesList>
+  <RoadsOfTheRim_commsCancel>取消 - 不耗费好感度</RoadsOfTheRim_commsCancel>
+  <RoadsOfTheRim_FactionStartsHelping>帮助建造</RoadsOfTheRim_FactionStartsHelping>
+  <RoadsOfTheRim_FactionStartsHelpingText>{0} 同意帮你建造 {1}, 施工队将会在 {2} 天内到达</RoadsOfTheRim_FactionStartsHelpingText>
+  <RoadsOfTheRim_FactionStopsHelping>援助已取消</RoadsOfTheRim_FactionStopsHelping>
+  <RoadsOfTheRim_FactionStopsHelpingText>{0} 已不再是你的盟友，故取消了对 {1} 的道路施工援助</RoadsOfTheRim_FactionStopsHelpingText>
   <RoadsOfTheRimWorkOnSite>施工</RoadsOfTheRimWorkOnSite>
   <RoadsOfTheRimWorkOnSiteDescription>在建筑工地施工</RoadsOfTheRimWorkOnSiteDescription>
   <RoadsOfTheRimSettingsCategoryLabel>边缘之路</RoadsOfTheRimSettingsCategoryLabel>
   <RoadsOfTheRimSettingsBaseEffort>道路建筑施工基础倍率</RoadsOfTheRimSettingsBaseEffort>
   <RoadsOfTheRimSettingsOverrideCosts>覆盖标准移动速度倍率 (需要重启游戏)</RoadsOfTheRimSettingsOverrideCosts>
-  <RoadsOfTheRim_CaravanInspectStringWorkingOn>工作于 : {0}</RoadsOfTheRim_CaravanInspectStringWorkingOn>
+  <RoadsOfTheRim_CaravanInspectStringWorkingOn>施工中 : {0} [{1} 工作量/秒]</RoadsOfTheRim_CaravanInspectStringWorkingOn>
   <RoadsOfTheRimBuildConstructionSiteAlreadyHere>此处已有道路工地</RoadsOfTheRimBuildConstructionSiteAlreadyHere>
   <RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>此处没有道路工地</RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>
-  <RoadsOfTheRim_CreateConstructionSiteMenuOption>{0} (移动: {1})</RoadsOfTheRim_CreateConstructionSiteMenuOption>
-  <RoadsOfTheRim_NoBetterRoadCouldBeBuilt>没有更高级道路可以修建</RoadsOfTheRim_NoBetterRoadCouldBeBuilt>
+  <RoadsOfTheRim_CreateConstructionSiteMenuOption>{0} (移动速度: {1})</RoadsOfTheRim_CreateConstructionSiteMenuOption>
+  <RoadsOfTheRim_NoBetterRoadCouldBeBuilt>没有更高级的道路了</RoadsOfTheRim_NoBetterRoadCouldBeBuilt>
   <RoadsOfTheRim_MustPickNeighbouringTile>必须选择相邻区域修建道路</RoadsOfTheRim_MustPickNeighbouringTile>
   <RoadsOfTheRim_SameRoadAlreadyExists>两地之间已有同等级道路了</RoadsOfTheRim_SameRoadAlreadyExists>
   <RoadsOfTheRim_BuildToHere>修建道路到此处</RoadsOfTheRim_BuildToHere>
@@ -29,9 +40,14 @@
   <RoadsOfTheRimStopWorkingOnSite>暂停施工</RoadsOfTheRimStopWorkingOnSite>
   <RoadsOfTheRimStopWorkingOnSiteDescription>停下修建道路的工作</RoadsOfTheRimStopWorkingOnSiteDescription>
   <RoadsOfTheRimBuildWorkOnSiteCantWork>远征队目前无法工作</RoadsOfTheRimBuildWorkOnSiteCantWork>
-  <RoadsOfTheRim_siteFullName>站点正在建造 {0}</RoadsOfTheRim_siteFullName>
+  <RoadsOfTheRim_siteInspectString>正在建造 {0} (移动难度 {1});</RoadsOfTheRim_siteInspectString>
+  <RoadsOfTheRim_siteDescription>{0} ({1} 天路程)</RoadsOfTheRim_siteDescription>
+  <RoadsOfTheRim_siteDescriptionExtra> 及其他 {0} 个站点</RoadsOfTheRim_siteDescriptionExtra>
+  <RoadsOfTheRim_siteFullName>正在修建 {0}</RoadsOfTheRim_siteFullName>
+  <RoadsOfTheRim_siteFullNameNeighbours>，附近居住区有 {0}</RoadsOfTheRim_siteFullNameNeighbours>
   <RoadsOfTheRim_CaravanNoResource>{0} 已耗尽，无法建筑 {1}. 工作已停止.</RoadsOfTheRim_CaravanNoResource>
   <RoadsOfTheRim_RoadBuilt>道路修建完成</RoadsOfTheRim_RoadBuilt>
   <RoadsOfTheRim_RoadBuiltLetterText>{1}已修建完成{0}</RoadsOfTheRim_RoadBuiltLetterText>
+  <RoadsOfTheRim_RoadBuiltByAlly>你的盟友</RoadsOfTheRim_RoadBuiltByAlly>
 
 </LanguageData>

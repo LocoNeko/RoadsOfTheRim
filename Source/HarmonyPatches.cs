@@ -162,6 +162,7 @@ namespace RoadsOfTheRim
     }
     */
 
+    /*
     [HarmonyPatch(typeof(GenSpawn), "Spawn" , new Type[] { typeof(ThingDef), typeof(IntVec3), typeof(Map) , typeof(WipeMode) })]
     public static class Patch_GenSpawn_Spawn
     {
@@ -174,4 +175,5 @@ namespace RoadsOfTheRim
             }
         }
     }
+    */
 }

@@ -19,7 +19,6 @@ namespace RoadsOfTheRim
         {
             var harmony = HarmonyInstance.Create("Loconeko.Rimworld.RoadsOfTheRim");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
-
             /* How I found the hidden methods :
             var methods = typeof(Tile).GetMethods();
             foreach (var method in methods)
@@ -37,10 +36,18 @@ namespace RoadsOfTheRim
         public static void Postfix(ref IEnumerable<Gizmo> __result, Caravan __instance)
         {
             bool isThereAConstructionSiteHere = Find.WorldObjects.AnyWorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), __instance.Tile);
-            bool isTheCaravanWorkingOnASite = __instance.GetComponent<WorldObjectComp_Caravan>().currentlyWorkingOnSite;
+            bool isTheCaravanWorkingOnASite = true;
+            try
+            {
+                isTheCaravanWorkingOnASite = __instance.GetComponent<WorldObjectComp_Caravan>().currentlyWorkingOnSite;
+            }
+            catch (Exception e)
+            {
+                RoadsOfTheRim.DebugLog(null, e);
+            }
             __result = __result.Concat(new Gizmo[] { RoadsOfTheRim.AddConstructionSite(__instance) })
                                .Concat(new Gizmo[] { RoadsOfTheRim.RemoveConstructionSite(__instance.Tile) });
-            if (isThereAConstructionSiteHere & !isTheCaravanWorkingOnASite)
+            if (isThereAConstructionSiteHere & !isTheCaravanWorkingOnASite && RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting==null)
             {
                 __result = __result.Concat(new Gizmo[] { RoadsOfTheRim.WorkOnSite(__instance) });
             }
@@ -98,6 +105,27 @@ namespace RoadsOfTheRim
     [HarmonyPatch(typeof(WorldGrid), "GetRoadMovementDifficultyMultiplier")]
     public static class Patch_WorldGrid_GetRoadMovementDifficultyMultiplier
     {
+        private static readonly MethodInfo DaMethod = AccessTools.Method(typeof(WorldPathGrid), "HillinessMovementDifficultyOffset", new Type[] { typeof(Hilliness) });
+
+        /* // This is private in WorldPathGrid. No choice but to copy that here
+        private static float HillinessMovementDifficultyOffset(Hilliness hilliness)
+        {
+            switch (hilliness)
+            {
+                case Hilliness.Flat:
+                    return 0f;
+                case Hilliness.SmallHills:
+                    return 0.5f;
+                case Hilliness.LargeHills:
+                    return 1.5f;
+                case Hilliness.Mountainous:
+                    return 3f;
+                case Hilliness.Impassable:
+                    return 1000f;
+                default:
+                    return 0f;
+            }
+        }*/
         [HarmonyPostfix]
         public static void Postifx(ref float __result , WorldGrid __instance, ref int fromTile, ref int toTile, ref StringBuilder explanation)
         {
@@ -110,18 +138,29 @@ namespace RoadsOfTheRim
 			{
 				toTile = __instance.FindMostReasonableAdjacentTileForDisplayedPathCost(fromTile);
 			}
-            float biomeCancellation = 0;
+            float BiomeCoef = 0 ;
+            float HillModifier = 0 ;
             for (int i = 0; i < roads.Count; i++)
 			{
-				if (roads[i].neighbor == toTile)
+                if (roads[i].neighbor == toTile)
 				{
+
                     // Calculate biome modifier, update explanation &  multiply result by biome modifier
-                    float biomeModifier = RoadsOfTheRim.calculateBiomeModifier(roads[i].road, Find.WorldGrid[toTile].biome.movementDifficulty, out biomeCancellation);
-                    // TO DO : Cancel part of Hilliness as well. See WorldPathGrid.HillinessMovementDifficultyOffset
-                    __result *= biomeModifier ;
+                    //float biomeModifier = RoadsOfTheRim.calculateBiomeModifier(roads[i].road, Find.WorldGrid[toTile].biome.movementDifficulty, out biomeCancellation);
+                    float RoadModifier = RoadsOfTheRim.calculateRoadModifier(
+                        roads[i].road , 
+                        Find.WorldGrid[toTile].biome.movementDifficulty ,
+                        (float)DaMethod.Invoke(null , new object[] { Find.WorldGrid[toTile].hilliness }),
+                        /*HillinessMovementDifficultyOffset(Find.WorldGrid[toTile].hilliness) ,*/
+                        WorldPathGrid.GetCurrentWinterMovementDifficultyOffset(toTile) ,
+                        out BiomeCoef,
+                        out HillModifier
+                    );
+
+                    __result *= RoadModifier ;
                     if (explanation != null) {
                         explanation.AppendLine ();
-                        explanation.Append(String.Format("The road cancels {0:P0} of the biome's movement cost", biomeCancellation));
+                        explanation.Append(String.Format("The road cancels {0:P0} of the biome and {1:P0} of the hills movement cost", BiomeCoef, 1-HillModifier));
                     }
                 }
             }
@@ -136,6 +175,7 @@ namespace RoadsOfTheRim
         {
             if (RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting!=null)
             {
+                //RoadsOfTheRim.DebugLog("StopTargeting");
                 RoadsOfTheRim.FinaliseConstructionSite(RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting);
                 RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting = null;
             }
@@ -146,6 +186,8 @@ namespace RoadsOfTheRim
      * Below are attempts at preventing rocks from spawning on SterileTile, as a test.
      * Once sucessful, I can create a new type of road and prevent stuff from spawning on them
      * To control what type of ground is created where, I will have to XML patch roadGenSteps    
+     * NO : do a new genstep that cleans up the roads !!!
+     * Thanks DnaJur & Bendigeidfran
     [HarmonyPatch(typeof(GenStep_RockChunks), "GrowLowRockFormationFrom")]
     public static class Patch_GenStep_RockChunks_GrowLowRockFormationFrom
     {

@@ -21,8 +21,8 @@
   </WorldObjectDef>
   <WorldObjectDef>
     <defName>RoadConstructionLeg</defName>
-    <label>road construction leg</label>
-    <description>Section of a planned road</description>
+    <label>Section of road to be built</label>
+    <description>A section of road that will be built by working on the relevant construction site</description>
     <worldObjectClass>RoadsOfTheRim.RoadConstructionLeg</worldObjectClass>
     <texture>World/WorldObjects/ConstructionLeg</texture>
     <useDynamicDrawer>true</useDynamicDrawer>

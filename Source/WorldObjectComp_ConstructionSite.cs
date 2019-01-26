@@ -10,8 +10,6 @@ namespace RoadsOfTheRim
     public class WorldObjectComp_ConstructionSite : WorldObjectComp
     {
 
-        public RoadConstructionSite parentSite;
-
         public struct Resource
         {
             public float cost;
@@ -46,25 +44,27 @@ namespace RoadsOfTheRim
         private Resource steel;
         private Resource chemfuel;
 
-        public WorldObjectComp_ConstructionSite()
-        {
-            parentSite = this.parent as RoadConstructionSite;
-        }
-
         public override void CompTick()
         {
             // Faction help must be handled here, since it's independent of whether or not a caravan is here.
             // Make it with a delay of 1/50 s compared to the CaravanComp so both functions end up playing nicely along each other
             // Don't work at night !
-            if ((!CaravanNightRestUtility.RestingNowAt(parentSite.Tile)) && (Find.TickManager.TicksGame % 100 == 50))
+            try
             {
-                float amountOfWork = parentSite.factionHelp();
-                float percentOfWorkLeftToDoAfter = (work.left - amountOfWork) / work.cost;
-                wood.reduceLeft((int)Math.Round(wood.left - (percentOfWorkLeftToDoAfter * wood.cost)));
-                stone.reduceLeft((int)Math.Round(stone.left - (percentOfWorkLeftToDoAfter * stone.cost)));
-                steel.reduceLeft((int)Math.Round(steel.left - (percentOfWorkLeftToDoAfter * steel.cost)));
-                chemfuel.reduceLeft((int)Math.Round(chemfuel.left - (percentOfWorkLeftToDoAfter * chemfuel.cost)));
-                UpdateProgress(amountOfWork);
+                if ((((RoadConstructionSite)parent).helpFromFaction != null) && (!CaravanNightRestUtility.RestingNowAt(((RoadConstructionSite)parent).Tile)) && (Find.TickManager.TicksGame % 100 == 50))
+                {
+                    float amountOfWork = ((RoadConstructionSite)parent).factionHelp();
+                    float percentOfWorkLeftToDoAfter = (work.left - amountOfWork) / work.cost;
+                    wood.reduceLeft((int)Math.Round(wood.left - (percentOfWorkLeftToDoAfter * wood.cost)));
+                    stone.reduceLeft((int)Math.Round(stone.left - (percentOfWorkLeftToDoAfter * stone.cost)));
+                    steel.reduceLeft((int)Math.Round(steel.left - (percentOfWorkLeftToDoAfter * steel.cost)));
+                    chemfuel.reduceLeft((int)Math.Round(chemfuel.left - (percentOfWorkLeftToDoAfter * chemfuel.cost)));
+                    UpdateProgress(amountOfWork);
+                }
+            }
+            catch (Exception e)
+            {
+                RoadsOfTheRim.DebugLog("Construction Site CompTick. parentsite = "+ ((RoadConstructionSite)parent), e);
             }
         }
 
@@ -85,7 +85,7 @@ namespace RoadsOfTheRim
         {
             try
             {
-                parentSite = this.parent as RoadConstructionSite;
+                RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
                 Tile fromTile = Find.WorldGrid[parentSite.Tile];
                 Tile toTile = Find.WorldGrid[parentSite.GetNextLeg().Tile];
                 RoadBuildableDef roadToBuild = parentSite.roadToBuild;
@@ -138,7 +138,7 @@ namespace RoadsOfTheRim
             }
             catch (Exception e)
             {
-                Log.Error("[Roads of the Rim] : Exception when setting constructionSite costs = " + e);
+                Log.Error("[RotR] : Exception when setting constructionSite costs = " + e);
             }
         }
 
@@ -149,6 +149,7 @@ namespace RoadsOfTheRim
         public bool doSomeWork(Caravan caravan)
         {
             WorldObjectComp_Caravan caravanComp = caravan.GetComponent<WorldObjectComp_Caravan>();
+            RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
 
             if (DebugSettings.godMode)
             {
@@ -157,7 +158,7 @@ namespace RoadsOfTheRim
 
             if (!(caravanComp.CaravanCurrentState() == CaravanState.ReadyToWork))
             {
-                Log.Message("[Roads of the Rim] DEBUG : doSomeWork() failed because the caravan can't work.");
+                Log.Message("[RotR] DEBUG : doSomeWork() failed because the caravan can't work.");
                 return false;
             }
 
@@ -274,6 +275,8 @@ namespace RoadsOfTheRim
 
         public bool UpdateProgress(float amountOfWork, Caravan caravan = null)
         {
+            RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
+
             work.reduceLeft(amountOfWork);
             parentSite.UpdateProgressBarMaterial();
 
@@ -335,15 +338,16 @@ namespace RoadsOfTheRim
                 Find.World.renderer.SetDirty<WorldLayer_Roads>();
                 Find.World.renderer.SetDirty<WorldLayer_Paths>();
             }
-            catch
+            catch (Exception e)
             {
-                Log.Error("[RotR] Exception while rendering new roads.");
+                Log.Error("[RotR] Exception : "+e);
             }
 
             // The Consutrction site and the caravan can move to the next leg
             RoadConstructionLeg nextLeg = parentSite.GetNextLeg();
             if (nextLeg != null)
             {
+                int CurrentTile = parentSite.Tile;
                 parentSite.Tile = nextLeg.Tile;
                 RoadConstructionLeg nextNextLeg = nextLeg.Next;
                 if (nextNextLeg != null)
@@ -353,6 +357,10 @@ namespace RoadsOfTheRim
                     if (caravan != null)
                     {
                         caravan.pather.StartPath(nextLeg.Tile, new CaravanArrivalAction_StartWorkingOnRoad());
+                    }
+                    if (parentSite.helpFromFaction != null) // Delay when the help starts on the next leg by as many ticks as it would take a caravan to travel from the site to the next leg
+                    {
+                        parentSite.helpFromTick = Find.TickManager.TicksGame + CaravanArrivalTimeEstimator.EstimatedTicksToArrive(CurrentTile, nextLeg.Tile, null);
                     }
                 }
                 else
@@ -378,6 +386,7 @@ namespace RoadsOfTheRim
 
         public string progressDescription()
         {
+            RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Main".Translate(String.Format("{0:P1}", work.getPercentageDone())));
             if (parentSite.helpFromFaction != null)
@@ -418,7 +427,6 @@ namespace RoadsOfTheRim
             Scribe_Values.Look<float>(ref stone.left, "left_stone", 0, true);
             Scribe_Values.Look<float>(ref steel.left, "left_steel", 0, true);
             Scribe_Values.Look<float>(ref chemfuel.left, "left_chemfuel", 0, true);
-            parentSite = this.parent as RoadConstructionSite;
         }
     }
 }

@@ -143,7 +143,7 @@ namespace RoadsOfTheRim
             }
             else
             {
-                Log.Message("[RofR] DEBUG neighbouringSettlements reached 10000 iterations") ;
+                Log.Warning("[RotR] DEBUG neighbouringSettlements reached 10000 iterations") ;
             }
         }
 
@@ -338,7 +338,7 @@ namespace RoadsOfTheRim
          */
         public override void Draw()
         {
-            if (RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting!=this)
+            if (RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting!=this || this.roadToBuild==null) // Do not draw the site if it's not yet finalised or if we don't know the type of road to build yet
             {
                 base.Draw();
                 WorldGrid worldGrid = Find.WorldGrid;
@@ -379,7 +379,7 @@ namespace RoadsOfTheRim
                     if (helpAmount < helpWorkPerTick)
                     {
                         amountOfHelp = helpAmount;
-                        Log.Message(String.Format("[RotR] - faction {0} helps with {1:0.00} work", helpFromFaction.Name, amountOfHelp));
+                        //Log.Message(String.Format("[RotR] - faction {0} helps with {1:0.00} work", helpFromFaction.Name, amountOfHelp));
                         EndFactionHelp() ;
                     }
                     helpAmount -= amountOfHelp;

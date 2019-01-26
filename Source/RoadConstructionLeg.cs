@@ -97,9 +97,8 @@ namespace RoadsOfTheRim
                         return false;
                     }
                 }
-                RoadConstructionLeg newLeg = (RoadConstructionLeg)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionLeg", true));
-                newLeg.Tile = tile;
 
+                // Check whether we clicked on a neighbour
                 List<int> neighbouringTiles = new List<int>();
                 Find.WorldGrid.GetTileNeighbors(tile, neighbouringTiles);
                 // This is not a neighbour : do nothing
@@ -108,6 +107,9 @@ namespace RoadsOfTheRim
                     Target(site);
                     return false;
                 }
+
+                RoadConstructionLeg newLeg = (RoadConstructionLeg)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionLeg", true));
+                newLeg.Tile = tile;
                 newLeg.site = site;
                 // This is not the first Leg
                 if (site.LastLeg.def == DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionLeg", true))
@@ -161,6 +163,7 @@ namespace RoadsOfTheRim
 
         public static void Target(RoadConstructionSite site)
         {
+            // Log.Warning("[RotR] - Target(site)");
             Find.WorldTargeter.BeginTargeting(delegate (GlobalTargetInfo target)
             {
                 return RoadConstructionLeg.ActionOnTile(site, target.Tile);

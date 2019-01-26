@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
+using System;
 
 namespace RoadsOfTheRim
 {
@@ -50,7 +51,7 @@ namespace RoadsOfTheRim
 
         public override void DoWindowContents(Rect inRect)
         {
-            if (Event.current.isKey)
+            if (Event.current.isKey && site!=null)
             {
                 RoadsOfTheRim.DeleteConstructionSite(site.Tile);
                 Close();
@@ -150,5 +151,19 @@ namespace RoadsOfTheRim
             Text.Anchor = TextAnchor.UpperLeft;
         }
 
+        public override void PostClose() // If the menu was somehow closed without picking a road, delete the construction site
+        {
+            try
+            {
+                if (site.roadToBuild == null)
+                {
+                    RoadsOfTheRim.DeleteConstructionSite(site.Tile);
+                }
+            }
+            catch (Exception e)
+            {
+                RoadsOfTheRim.DebugLog(null, e);
+            }
+        }
     }
 }

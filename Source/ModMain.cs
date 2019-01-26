@@ -65,7 +65,7 @@ namespace RoadsOfTheRim
                {
                    return f;
                }
-               Log.Message("[RotR] - ERROR, couldn't find WorldComponent_FactionRoadConstructionHelp");
+               Log.Warning("[RotR] - ERROR, couldn't find WorldComponent_FactionRoadConstructionHelp");
                return null;
             }
         }
@@ -81,6 +81,22 @@ namespace RoadsOfTheRim
                 }
                 Log.Message("[RotR] - ERROR, couldn't find WorldComponent_RoadBuildingState");
                 return null;
+            }
+        }
+
+        public static void DebugLog(String message = null , Exception e = null)
+        {
+            if (message!=null)
+            {
+                Log.Warning("[RotR] - " + message);
+            }
+            if (Prefs.DevMode && e!=null)
+            {
+                Log.Error(
+                "[RotR] Exception :\n" + e + "\n=====\n" +
+                "Stack trace :\n" + e.StackTrace +"\n=====\n"+
+                "Data : " + e.Data
+                );
             }
         }
 
@@ -113,9 +129,9 @@ namespace RoadsOfTheRim
             }
         }
         
-        public static float calculateRoadModifier(RoadDef roadDef, float BiomeMovementDifficulty , float HillinessOffset , float WinterOffset , out float BiomeModifier , out float HillModifier)
+        public static float calculateRoadModifier(RoadDef roadDef, float BiomeMovementDifficulty , float HillinessOffset , float WinterOffset , out float biomeCoef, out float HillModifier)
         {
-            float biomeCoef = 1f ;
+            biomeCoef = 0f ;
             HillModifier = 1f;
             if (roadDef.defName == "DirtRoad")
             {
@@ -127,12 +143,12 @@ namespace RoadsOfTheRim
                 biomeCoef = 0.75f;
                 HillModifier = 0.6f;
             }
-            if (roadDef.defName == "AncientAsphaltRoad")
+            if (roadDef.defName == "AncientAsphaltRoad" || roadDef.defName == "AncientAsphaltHighway")
             {
                 biomeCoef = 1f;
                 HillModifier = 0.4f;
             }
-            BiomeModifier = (1 + (BiomeMovementDifficulty-1) * (1-biomeCoef)) / BiomeMovementDifficulty ;
+            float BiomeModifier = (1 + (BiomeMovementDifficulty-1) * (1-biomeCoef)) / BiomeMovementDifficulty ;
             return ((BiomeModifier*BiomeMovementDifficulty) + (HillModifier*HillinessOffset) + WinterOffset ) / (BiomeMovementDifficulty + HillinessOffset + WinterOffset) ;
         }
 
@@ -190,6 +206,11 @@ namespace RoadsOfTheRim
             if (Find.WorldObjects.AnyWorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), caravan.Tile))
             {
                 command_Action.Disable("RoadsOfTheRimBuildConstructionSiteAlreadyHere".Translate());
+            }
+            // disable if the caravan can't work OR if the site is not ready
+            if (caravan.GetComponent<WorldObjectComp_Caravan>().CaravanCurrentState() != CaravanState.ReadyToWork)
+            {
+                command_Action.Disable("RoadsOfTheRimBuildWorkOnSiteCantWork".Translate());
             }
             return command_Action;
         }
@@ -301,7 +322,15 @@ namespace RoadsOfTheRim
 
         public static void FinaliseConstructionSite(RoadConstructionSite site)
         {
-            site.GetComponent<WorldObjectComp_ConstructionSite>().setCosts();
+            // Log.Warning("[RotR] - FinaliseConstructionSite");
+            if (site.GetNextLeg()!=null)
+            {
+                site.GetComponent<WorldObjectComp_ConstructionSite>().setCosts();
+            }
+            else
+            {
+                RoadConstructionSite.DeleteSite(site);
+            }
         }
 
         /*
@@ -395,17 +424,20 @@ namespace RoadsOfTheRim
         public static void DeleteConstructionSite(int tile)
         {
             RoadConstructionSite ConstructionSite = (RoadConstructionSite) Find.WorldObjects.WorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), tile) ;
-            if (ConstructionSite.resourcesAlreadyConsumed())
+            if (ConstructionSite!=null)
             {
-                Messages.Message("RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed".Translate(), MessageTypeDefOf.RejectInput);
-            }
-            else
-            {
-                if (ConstructionSite.helpFromFaction != null)
+                if (ConstructionSite.resourcesAlreadyConsumed())
                 {
-                    RoadsOfTheRim.factionsHelp.helpFinished(ConstructionSite.helpFromFaction);
+                    Messages.Message("RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed".Translate(), MessageTypeDefOf.RejectInput);
                 }
-                RoadConstructionSite.DeleteSite(ConstructionSite) ;
+                else
+                {
+                    if (ConstructionSite.helpFromFaction != null)
+                    {
+                        RoadsOfTheRim.factionsHelp.helpFinished(ConstructionSite.helpFromFaction);
+                    }
+                    RoadConstructionSite.DeleteSite(ConstructionSite);
+                }
             }
         }
 

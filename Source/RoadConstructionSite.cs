@@ -17,6 +17,8 @@ namespace RoadsOfTheRim
 
         public static int maxTicksToNeighbour = 2 * GenDate.TicksPerDay ; // 2 days
 
+        public static int maxNeighbourDistance = 100 ; // search 100 tiles away
+
         public static int MaxSettlementsInDescription = 3;
 
         private static readonly Color ColorTransparent = new Color(0.0f, 0.0f, 0.0f, 0f);
@@ -123,61 +125,25 @@ namespace RoadsOfTheRim
             {
                 List<Settlement> result = new List<Settlement>();
                 List<int> tileSearched = new List<int>();
-                int iterations = 0;
-                searchForSettlements(this.Tile, this.Tile, ref result, ref tileSearched, ref iterations);
+                searchForSettlements(Tile, ref result);
                 return result;
             }
             return null;
         }
 
-        /*
-        Exploding this method in multiple method to better debug
-         */
-        public void searchForSettlements(int startTile , int currentTile , ref List<Settlement> settlementsSearched, ref List<int> tileSearched, ref int iterations)
+        public void searchForSettlements(int startTile, ref List<Settlement> settlementsSearched)
         {
-            // Add currentTile to tileSearched
-            if (iterations++ <10000)
+            var timer = System.Diagnostics.Stopwatch.StartNew();
+            WorldGrid worldGrid = Find.WorldGrid;
+            foreach (Settlement s in Find.WorldObjects.Settlements)
             {
-                tileSearched.Add(currentTile) ;
-                goThroughAllNeighbours(startTile , currentTile , ref settlementsSearched, ref tileSearched, ref iterations) ;
-            }
-            else
-            {
-                Log.Warning("[RotR] DEBUG neighbouringSettlements reached 10000 iterations") ;
-            }
-        }
-
-        public void goThroughAllNeighbours(int startTile , int currentTile , ref List<Settlement> settlementsSearched, ref List<int> tileSearched, ref int iterations) 
-        {
-            // Go through all currentTile neighbours
-            List<int> tileNeighbours = new List<int>();
-            Find.WorldGrid.GetTileNeighbors(currentTile , tileNeighbours) ;
-            mainNeighbourLoop(startTile , ref settlementsSearched, ref tileSearched, ref iterations , tileNeighbours) ;
-        }
-
-        public void mainNeighbourLoop(int startTile , ref List<Settlement> settlementsSearched, ref List<int> tileSearched, ref int iterations , List<int> tileNeighbours)
-        {
-            foreach (int neighbour in tileNeighbours)
-            {
-                // exclude tiles already searched
-                if (!tileSearched.Contains(neighbour))
+                if ( (worldGrid.ApproxDistanceInTiles(startTile, s.Tile) <= maxNeighbourDistance) && (CaravanArrivalTimeEstimator.EstimatedTicksToArrive(startTile, s.Tile, null) <= maxTicksToNeighbour) )
                 {
-                    //exclude tiles that are farther away from startTile than a certain distance
-                    int ticksToArrive = CaravanArrivalTimeEstimator.EstimatedTicksToArrive(startTile, neighbour, null);
-                    if (ticksToArrive!=0 && (ticksToArrive<=maxTicksToNeighbour) )
-                    {
-                        // Is there a settlement ? is it not already in the list of settlements searched ?
-                        Settlement settlement = Find.WorldObjects.SettlementAt(neighbour) ;
-                        if (settlement != null && !settlementsSearched.Contains(settlement))
-                        {
-                            // Then add it to the list of settlements searched
-                            settlementsSearched.Add(settlement) ;
-                        }
-                        // Then fire the algorithm on this tile, since it's still within acceptable distance
-                        searchForSettlements(startTile , neighbour , ref settlementsSearched , ref tileSearched, ref iterations) ;
-                    }
+                    settlementsSearched.Add(s);
                 }
             }
+            timer.Stop();
+            RoadsOfTheRim.DebugLog("Time spent searching for settlements : "+timer.ElapsedMilliseconds+"ms");
         }
 
         public Settlement closestSettlementOfFaction(Faction faction)
@@ -203,48 +169,9 @@ namespace RoadsOfTheRim
             return closestSettlement ;
         }
 
-        /*
-        public void searchForSettlements(int startTile , int currentTile , ref List<Settlement> settlementsSearched, ref List<int> tileSearched)
-        {
-            // Add currentTile to tileSearched
-            tileSearched.Add(currentTile) ;
-
-            // Go through all currentTile neighbours
-            List<int> tileNeighbours = new List<int>();
-            Find.WorldGrid.GetTileNeighbors(currentTile , tileNeighbours) ;
-            Caravan notionalCaravan = new Caravan() ;
-            foreach (int neighbour in tileNeighbours)
-            {
-                // exclude tiles already searched
-                if (!tileSearched.Contains(neighbour))
-                {
-                    WorldPathFinder pathFinderToThisTile = new WorldPathFinder() ;
-                    WorldPath pathToThisTile = pathFinderToThisTile.FindPath(startTile , neighbour , notionalCaravan) ;
-                    //exclude tiles that are farther away from startTile than a certain distance
-                    if (pathToThisTile.TotalCost<=maxNeighbourDistance)
-                    {
-                        // Is there a settlement ? is it not already in the list of settlements searched ?
-                        Settlement settlement = Find.WorldObjects.SettlementAt(neighbour) ;
-                        if (settlement != null && !settlementsSearched.Contains(settlement))
-                        {
-                            // Then add it to the list of settlements searched
-                            settlementsSearched.Add(settlement) ;
-                        }
-                        // Then fire the algorithm on this tile, since it's still within acceptable distance
-                        searchForSettlements(startTile , neighbour , ref settlementsSearched , ref tileSearched) ;
-                    }
-                }
-            }
-        }
-        */
-
-        /*
-        The construction site costs are set here
-         */
         public override void PostAdd()
         {
             LastLeg = this;
-            //this.GetComponent<WorldObjectComp_ConstructionSite>().setCosts(Find.WorldGrid[Tile] , Find.WorldGrid[toTile] , roadToBuild);
             populateDescription();
         }
 

@@ -44,6 +44,65 @@ namespace RoadsOfTheRim
         private Resource steel;
         private Resource chemfuel;
 
+        /*
+        Returns the cost modifiers for building a road from one tile to another, based on Elevation, Hilliness, Swampiness & river crossing
+         */
+        public static void GetCostsModifiers(int fromTile_int , int toTile_int , ref float elevationModifier , ref float hillinessModifier , ref float swampinessModifier , ref float bridgeModifier)
+        {
+            try 
+            {
+                RoadsOfTheRimSettings settings = LoadedModManager.GetMod<RoadsOfTheRim>().GetSettings<RoadsOfTheRimSettings>();
+                Tile fromTile = Find.WorldGrid[fromTile_int];
+                Tile toTile = Find.WorldGrid[toTile_int];
+
+                // Cost increase from elevation : if elevation is above {CostIncreaseElevationThreshold} (default 1000m), cost is doubled every {ElevationCostDouble} (default 2000m)
+                elevationModifier = ((fromTile.elevation <= settings.CostIncreaseElevationThreshold) ? 0 : (fromTile.elevation - settings.CostIncreaseElevationThreshold) / RoadsOfTheRimSettings.ElevationCostDouble);
+                elevationModifier += ((toTile.elevation <= settings.CostIncreaseElevationThreshold) ? 0 : (toTile.elevation - settings.CostIncreaseElevationThreshold) / RoadsOfTheRimSettings.ElevationCostDouble);
+
+                // Hilliness and swampiness are the average between that of the from & to tiles
+                // Hilliness is 0 on flat terrain, never negative. It's between 0 (flat) and 5(Impassable)
+                float hilliness = Math.Max((((float)fromTile.hilliness + (float)toTile.hilliness) / 2) - 1, 0);
+                float swampiness = (fromTile.swampiness + toTile.swampiness) / 2;
+
+                // Hilliness and swampiness double the costs when they equal {HillinessCostDouble} (default 4) and {SwampinessCostDouble} (default 0.5)
+                hillinessModifier = hilliness / RoadsOfTheRimSettings.HillinessCostDouble;
+                swampinessModifier = swampiness / RoadsOfTheRimSettings.SwampinessCostDouble;
+
+                bridgeModifier = 0f;
+                /* TO DO : River crossing
+                List<int> fromTileNeighbors = new List<int>();
+                Find.WorldGrid.GetTileNeighbors(parent.Tile, fromTileNeighbors);
+                foreach (Tile.RiverLink aRiver in fromTile.Rivers )
+                {
+                    Log.Message("River in FROM tile : neighbor="+aRiver.neighbor+", river="+aRiver.river.ToString());
+                }
+                */
+            }
+            catch (Exception e)
+            {
+                RoadsOfTheRim.DebugLog(null , e);
+            }
+        }
+
+        /*
+        Returns the amount of each resource that can be saved when building a road, based on existing roads
+         */
+        /*
+        public static void GetUpgradeModifiers(int fromTile_int , int toTile_int , RoadBuildableDef roadToBuildBuildableDef ,  ref float workRebate , ref float woodRebate , ref float stoneRebate , ref float steelRebate , ref float chemfuelRebate)
+        {
+            RoadDef bestExistingRoad = RoadsOfTheRim.BestExistingRoad(fromTile_int , toTile_int);
+
+            // There is already a road here & the one to be built is better
+            if (bestExistingRoad!=null && RoadsOfTheRim.isRoadBetter(DefDatabase<RoadDef>.GetNamed(roadToBuildBuildableDef.getRoadDef()) , bestExistingRoad))
+            {
+                // Give X% of the cost of the orignal road as a rebate for the new road
+                string buildableDefName = "DirtPath" ;
+                RoadBuildableDef existingRoadBuildableDef = DefDatabase<RoadBuildableDef>.GetNamed(buildableDefName) ;
+
+            }
+        }
+        */
+
         public override void CompTick()
         {
             // Faction help must be handled here, since it's independent of whether or not a caravan is here.
@@ -53,6 +112,7 @@ namespace RoadsOfTheRim
             {
                 if ((((RoadConstructionSite)parent).helpFromFaction != null) && (!CaravanNightRestUtility.RestingNowAt(((RoadConstructionSite)parent).Tile)) && (Find.TickManager.TicksGame % 100 == 50))
                 {
+                    ((RoadConstructionSite)parent).TryToSkipBetterRoads() ;  // No need to work if there's a better road here
                     float amountOfWork = ((RoadConstructionSite)parent).factionHelp();
                     float percentOfWorkLeftToDoAfter = (work.left - amountOfWork) / work.cost;
                     wood.reduceLeft((int)Math.Round(wood.left - (percentOfWorkLeftToDoAfter * wood.cost)));
@@ -85,37 +145,17 @@ namespace RoadsOfTheRim
         {
             try
             {
-                RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
-                Tile fromTile = Find.WorldGrid[parentSite.Tile];
-                Tile toTile = Find.WorldGrid[parentSite.GetNextLeg().Tile];
-                RoadBuildableDef roadToBuild = parentSite.roadToBuild;
                 RoadsOfTheRimSettings settings = LoadedModManager.GetMod<RoadsOfTheRim>().GetSettings<RoadsOfTheRimSettings>();
+                RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
 
-                // Cost increase from elevation : if elevation is above {CostIncreaseElevationThreshold} (default 1000m), cost is doubled every {ElevationCostDouble} (default 2000m)
-                float elevationCostIncrease = ((fromTile.elevation <= settings.CostIncreaseElevationThreshold) ? 0 : (fromTile.elevation - settings.CostIncreaseElevationThreshold) / RoadsOfTheRimSettings.ElevationCostDouble);
-                elevationCostIncrease += ((toTile.elevation <= settings.CostIncreaseElevationThreshold) ? 0 : (toTile.elevation - settings.CostIncreaseElevationThreshold) / RoadsOfTheRimSettings.ElevationCostDouble);
-
-                // Hilliness and swampiness are the average between that of the from & to tiles
-                // Hilliness is 0 on flat terrain, never negative. So it's between 0 and 4
-                float hilliness = Math.Max((((float)fromTile.hilliness + (float)toTile.hilliness) / 2) - 1, 0);
-                float swampiness = (fromTile.swampiness + toTile.swampiness) / 2;
-
-                // Hilliness and swampiness double the costs when they equal {HillinessCostDouble} (default 4) and {SwampinessCostDouble} (default 0.5)
-                float hillinessCostIncrease = hilliness / RoadsOfTheRimSettings.HillinessCostDouble;
-                float swampinessCostIncrease = swampiness / RoadsOfTheRimSettings.SwampinessCostDouble;
-
-                float bridgeCostIncrease = 0f;
-                /* TO DO : River crossing
-                List<int> fromTileNeighbors = new List<int>();
-                Find.WorldGrid.GetTileNeighbors(parent.Tile, fromTileNeighbors);
-                foreach (Tile.RiverLink aRiver in fromTile.Rivers )
-                {
-                    Log.Message("River in FROM tile : neighbor="+aRiver.neighbor+", river="+aRiver.river.ToString());
-                }
-                */
+                float elevationModifier = 0f;
+                float hillinessModifier = 0f;
+                float swampinessModifier = 0f;
+                float bridgeModifier = 0f;
+                GetCostsModifiers(parentSite.Tile , parentSite.GetNextLeg().Tile , ref elevationModifier , ref hillinessModifier , ref swampinessModifier , ref bridgeModifier) ;
 
                 // Total cost modifier
-                float totalCostModifier = 1 + elevationCostIncrease + hillinessCostIncrease + swampinessCostIncrease + bridgeCostIncrease;
+                float totalCostModifier = (1 + elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier) * settings.BaseEffort;
 
                 /* TO DO : This debug info should be shown properly on the site and/or caravan working on it
                 Log.Message( string.Format(
@@ -127,13 +167,21 @@ namespace RoadsOfTheRim
                     elevationCostIncrease , hillinessCostIncrease , swampinessCostIncrease, bridgeCostIncrease, totalCostModifier
                 ));
                 */
+                RoadBuildableDef roadToBuild = parentSite.roadToBuild;
 
-                totalCostModifier *= settings.BaseEffort;
-                this.work.setCost((float)roadToBuild.work * totalCostModifier);
-                this.wood.setCost((float)roadToBuild.wood * settings.BaseEffort);
-                this.stone.setCost((float)roadToBuild.stone * settings.BaseEffort);
-                this.steel.setCost((float)roadToBuild.steel * settings.BaseEffort);
-                this.chemfuel.setCost((float)roadToBuild.chemfuel * settings.BaseEffort);
+                float workRebate = 0f;
+                float woodRebate = 0f;
+                float stoneRebate = 0f;
+                float steelRebate = 0f;
+                float chemfuelRebate = 0f;
+                // TO DO once I have changed the roads to new road defs
+                // GetUpgradeModifiers(parentSite.Tile , parentSite.GetNextLeg().Tile , roadToBuild , ref workRebate , ref woodRebate , ref stoneRebate , ref steelRebate , ref chemfuelRebate) ;
+
+                this.work.setCost((float)(roadToBuild.work - workRebate) * totalCostModifier);
+                this.wood.setCost((float)(roadToBuild.wood - woodRebate) * settings.BaseEffort);
+                this.stone.setCost((float)(roadToBuild.stone - stoneRebate) * settings.BaseEffort);
+                this.steel.setCost((float)(roadToBuild.steel - steelRebate) * settings.BaseEffort);
+                this.chemfuel.setCost((float)(roadToBuild.chemfuel - chemfuelRebate) * settings.BaseEffort);
                 parentSite.UpdateProgressBarMaterial();
             }
             catch (Exception e)
@@ -153,7 +201,7 @@ namespace RoadsOfTheRim
 
             if (DebugSettings.godMode)
             {
-                return finishWork(parentSite, caravan);
+                return finishWork(caravan);
             }
 
             if (!(caravanComp.CaravanCurrentState() == CaravanState.ReadyToWork))
@@ -283,7 +331,7 @@ namespace RoadsOfTheRim
             // Work is done
             if (work.getLeft() <= 0)
             {
-                return finishWork(parentSite, caravan);
+                return finishWork(caravan);
             }
             return false;
         }
@@ -291,8 +339,9 @@ namespace RoadsOfTheRim
         /*
          * Build the road and move the construction site
          */
-        public bool finishWork(RoadConstructionSite parentSite, Caravan caravan = null)
+        public bool finishWork(Caravan caravan = null)
         {
+            RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
             int fromTile_int = parentSite.Tile;
             int toTile_int = parentSite.GetNextLeg().Tile;
             Tile fromTile = Find.WorldGrid[fromTile_int];
@@ -343,40 +392,23 @@ namespace RoadsOfTheRim
                 Log.Error("[RotR] Exception : "+e);
             }
 
-            // The Consutrction site and the caravan can move to the next leg
+            // The Construction site and the caravan can move to the next leg
             RoadConstructionLeg nextLeg = parentSite.GetNextLeg();
             if (nextLeg != null)
             {
                 int CurrentTile = parentSite.Tile;
                 parentSite.Tile = nextLeg.Tile;
                 RoadConstructionLeg nextNextLeg = nextLeg.Next;
+                // TO DO Here : Check if there's an existing road that is the same or better as the one being built. If there is, skip the next leg
                 if (nextNextLeg != null)
                 {
                     nextNextLeg.Previous = null;
                     setCosts();
-                    if (caravan != null)
-                    {
-                        caravan.pather.StartPath(nextLeg.Tile, new CaravanArrivalAction_StartWorkingOnRoad());
-                    }
-                    if (parentSite.helpFromFaction != null) // Delay when the help starts on the next leg by as many ticks as it would take a caravan to travel from the site to the next leg
-                    {
-                        parentSite.helpFromTick = Find.TickManager.TicksGame + CaravanArrivalTimeEstimator.EstimatedTicksToArrive(CurrentTile, nextLeg.Tile, null);
-                    }
+                    parentSite.MoveWorkersToNextLeg(CurrentTile); // Move any caravans working on this site to the next leg, and delay faction help if any
                 }
                 else
                 {
-                    // On the last leg, send letter & remove the construction site
-                    Find.LetterStack.ReceiveLetter(
-                        "RoadsOfTheRim_RoadBuilt".Translate(),
-                        "RoadsOfTheRim_RoadBuiltLetterText".Translate(parentSite.roadToBuild.label, (caravan != null ? caravan.Label : "RoadsOfTheRim_RoadBuiltByAlly".Translate())),
-                        LetterDefOf.PositiveEvent,
-                        new GlobalTargetInfo(parentSite.Tile)
-                    );
-                    Find.World.worldObjects.Remove(parentSite);
-                    if (parentSite.helpFromFaction != null)
-                    {
-                        RoadsOfTheRim.factionsHelp.helpFinished(parentSite.helpFromFaction);
-                    }
+                    EndConstruction(caravan) ; // We have built the last leg. Notify & remove the site
                 }
                 Find.World.worldObjects.Remove(nextLeg);
             }
@@ -384,11 +416,30 @@ namespace RoadsOfTheRim
             return true;
         }
 
+        public void EndConstruction(Caravan caravan = null)
+        {
+            RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
+            // On the last leg, send letter & remove the construction site
+            Find.LetterStack.ReceiveLetter(
+                "RoadsOfTheRim_RoadBuilt".Translate(),
+                "RoadsOfTheRim_RoadBuiltLetterText".Translate(parentSite.roadToBuild.label, (caravan != null ? caravan.Label : "RoadsOfTheRim_RoadBuiltByAlly".Translate())),
+                LetterDefOf.PositiveEvent,
+                new GlobalTargetInfo(parentSite.Tile)
+            );
+            Find.World.worldObjects.Remove(parentSite);
+            if (parentSite.helpFromFaction != null)
+            {
+                RoadsOfTheRim.factionsHelp.helpFinished(parentSite.helpFromFaction);
+            }
+        }
+
         public string progressDescription()
         {
             RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Main".Translate(String.Format("{0:P1}", work.getPercentageDone())));
+
+            // Description of ally's help, if any
             if (parentSite.helpFromFaction != null)
             {
                 stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Help".Translate(parentSite.helpFromFaction.Name, (int)parentSite.helpAmount, String.Format("{0:0.0}", parentSite.helpWorkPerTick)));
@@ -397,6 +448,18 @@ namespace RoadsOfTheRim
                     stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen".Translate(String.Format("{0:0.00}", (float)(parentSite.helpFromTick - Find.TickManager.TicksGame) / (float)GenDate.TicksPerDay)));
                 }
             }
+            // Show total cost modifiers
+            float elevationModifier = 0f;
+            float hillinessModifier = 0f;
+            float swampinessModifier = 0f;
+            float bridgeModifier = 0f;
+            GetCostsModifiers(parentSite.Tile , parentSite.GetNextLeg().Tile , ref elevationModifier , ref hillinessModifier , ref swampinessModifier , ref bridgeModifier) ;
+            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_CostModifiers".Translate(
+                String.Format("{0:P}",elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier) ,
+                String.Format("{0:P}",elevationModifier) , String.Format("{0:P}",hillinessModifier) , String.Format("{0:P}",swampinessModifier) , String.Format("{0:P}",bridgeModifier)
+            )) ;
+            
+            // Per resource : show costs & how much is left to do
             stringBuilder.AppendLine();
             stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate("work", (int)work.getLeft(), (int)work.getCost()));
             stringBuilder.AppendLine();

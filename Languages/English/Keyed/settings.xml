@@ -3,12 +3,14 @@
   <RoadsOfTheRim>Roads of the Rim</RoadsOfTheRim>
   <RoadsOfTheRimAddConstructionSite>Construct</RoadsOfTheRimAddConstructionSite>
   <RoadsOfTheRimAddConstructionSiteDescription>Create road construction site</RoadsOfTheRimAddConstructionSiteDescription>
+  <RoadsOfTheRim_BiomePreventsConstruction>Roads cannot be built in the {0} biome</RoadsOfTheRim_BiomePreventsConstruction>
   <RoadsOfTheRimRemoveConstructionSite>Cancel construction</RoadsOfTheRimRemoveConstructionSite>
   <RoadsOfTheRimRemoveConstructionSiteDescription>Remove road construction site</RoadsOfTheRimRemoveConstructionSiteDescription>
   <RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>Can't remove the site : some resources already consumed</RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>
   <RoadsOfTheRim_ConstructionSiteDescription_Main>Construction {0} done</RoadsOfTheRim_ConstructionSiteDescription_Main>
   <RoadsOfTheRim_ConstructionSiteDescription_Help>, helped by {0} [{1} work@{2}/sec]</RoadsOfTheRim_ConstructionSiteDescription_Help>
   <RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen> starting in {0} days</RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen>
+  <RoadsOfTheRim_ConstructionSiteDescription_CostModifiers>. Work cost increased by {0} because of Elevation({1}), Hills({2}), Swamps({3}) and bridges({4})</RoadsOfTheRim_ConstructionSiteDescription_CostModifiers>
   <RoadsOfTheRim_ConstructionSiteDescription_Resource>{1} {0} left of {2}</RoadsOfTheRim_ConstructionSiteDescription_Resource>
   <RoadsOfTheRim_commsAskHelp>Ask ally for help on road construction (cost: 10 goodwill)</RoadsOfTheRim_commsAskHelp>
   <RoadsOfTheRim_commsNoSites>No construction sites found</RoadsOfTheRim_commsNoSites>

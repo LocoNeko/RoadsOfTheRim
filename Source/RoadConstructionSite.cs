@@ -192,6 +192,63 @@ namespace RoadsOfTheRim
             return null;
         }
 
+        public void MoveWorkersToNextLeg(int fromTile)
+        {
+            RoadConstructionLeg nextLeg = GetNextLeg() ;
+            if (nextLeg!=null)
+            {
+                List<Caravan> CaravansWorkingHere = new List<Caravan>() ;
+                Find.WorldObjects.GetPlayerControlledCaravansAt(fromTile , CaravansWorkingHere) ;
+                foreach (Caravan c in CaravansWorkingHere) // Move to the nextLeg all caravans that are currently set to work on this site
+                {
+                    if (c.GetComponent<WorldObjectComp_Caravan>().getSite() == this)
+                    {
+                        c.pather.StartPath(Tile, new CaravanArrivalAction_StartWorkingOnRoad());
+                    }
+                }
+                if (helpFromFaction != null) // Delay when the help starts on the next leg by as many ticks as it would take a caravan to travel from the site to the next leg
+                {
+                    int delay = CaravanArrivalTimeEstimator.EstimatedTicksToArrive(fromTile, Tile, null) ;
+                    if (helpFromTick > Find.TickManager.TicksGame)
+                    {
+                        helpFromTick += delay ;
+                    }
+                    else
+                    {
+                        helpFromTick = Find.TickManager.TicksGame + delay ;
+                    }
+                }
+            }
+        }
+
+        public void TryToSkipBetterRoads(Caravan caravan = null)
+        {
+            RoadConstructionLeg nextLeg = GetNextLeg() ;
+            if (nextLeg!=null) // nextLeg == null should never happen
+            {
+                RoadDef bestExistingRoad = RoadsOfTheRim.BestExistingRoad(Tile , nextLeg.Tile) ;
+                // We've found an existing road that is better than the one we intend to build : skip this leg and move to the next
+                RoadDef newRoadDef = DefDatabase<RoadDef>.GetNamed(roadToBuild.getRoadDef());
+                if (!RoadsOfTheRim.isRoadBetter(newRoadDef , bestExistingRoad))
+                {
+                    int currentTile = Tile;
+                    Tile = nextLeg.Tile; // The construction site moves to the next leg
+                    RoadConstructionLeg nextNextLeg = nextLeg.Next;
+                    if (nextNextLeg!=null)
+                    {
+                        nextNextLeg.Previous = null ; // The nextNext leg is now the next
+                        GetComponent<WorldObjectComp_ConstructionSite>().setCosts();
+                        MoveWorkersToNextLeg(currentTile) ;
+                    }
+                    else // Finish construction
+                    {
+                        GetComponent<WorldObjectComp_ConstructionSite>().EndConstruction(caravan) ;
+                    }
+                    Find.World.worldObjects.Remove(nextLeg);
+                }
+            }
+        }
+
         /*
         public void setDestination(int destination)
         {

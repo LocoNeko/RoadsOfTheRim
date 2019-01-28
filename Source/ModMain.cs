@@ -152,6 +152,48 @@ namespace RoadsOfTheRim
             return ((BiomeModifier*BiomeMovementDifficulty) + (HillModifier*HillinessOffset) + WinterOffset ) / (BiomeMovementDifficulty + HillinessOffset + WinterOffset) ;
         }
 
+        /*
+        Returns the road with the best movement cost multiplier between 2 neighbouring tiles.
+        returns null if there's no road or if the tiles are not neighbours
+         */
+        public static RoadDef BestExistingRoad(int fromTile_int , int toTile_int)
+        {
+            RoadDef bestExistingRoad = null;
+            try
+            {
+                WorldGrid worldGrid = Find.WorldGrid ;
+                Tile fromTile = worldGrid[fromTile_int];
+                Tile toTile = worldGrid[toTile_int];
+
+                if (fromTile.potentialRoads != null)
+                {
+                    foreach (Tile.RoadLink aLink in fromTile.potentialRoads)
+                    {
+                        if (aLink.neighbor == toTile_int & RoadsOfTheRim.isRoadBetter(aLink.road , bestExistingRoad))
+                        {
+                            bestExistingRoad = aLink.road ;
+                        }
+                    }
+                }
+                if (toTile.potentialRoads != null)
+                {
+                    foreach (Tile.RoadLink aLink in toTile.potentialRoads)
+                    {
+                        if (aLink.neighbor == fromTile_int & RoadsOfTheRim.isRoadBetter(aLink.road , bestExistingRoad))
+                        {
+                            bestExistingRoad = aLink.road ;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                DebugLog(null , e) ;
+            }
+            
+            return bestExistingRoad ;
+        }
+
         public override string SettingsCategory() => "RoadsOfTheRimSettingsCategoryLabel".Translate();
 
         public override void DoSettingsWindowContents(Rect rect)
@@ -174,6 +216,7 @@ namespace RoadsOfTheRim
                 }
                 catch
                 {
+                    // Ugly. I should just check if the WorldPathGrid exists.
                 }
             }
         }
@@ -203,122 +246,27 @@ namespace RoadsOfTheRim
                     Find.WindowStack.Add(menu);
                 }
             };
+            
+            // Disable if there's already a construction site here
             if (Find.WorldObjects.AnyWorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), caravan.Tile))
             {
                 command_Action.Disable("RoadsOfTheRimBuildConstructionSiteAlreadyHere".Translate());
             }
+            
             // disable if the caravan can't work OR if the site is not ready
             if (caravan.GetComponent<WorldObjectComp_Caravan>().CaravanCurrentState() != CaravanState.ReadyToWork)
             {
                 command_Action.Disable("RoadsOfTheRimBuildWorkOnSiteCantWork".Translate());
             }
+
+            // Disable on biomes that don't allow roads
+            BiomeDef biomeHere = Find.WorldGrid.tiles[caravan.Tile].biome ;
+            if (!biomeHere.allowRoads)
+            {
+                command_Action.Disable("RoadsOfTheRim_BiomePreventsConstruction".Translate(biomeHere.label));
+            }
             return command_Action;
         }
-        /*
-         * OLD VERSION before issue_10
-        Add a construction site :
-        - pick a neighbouring tile (fail if the tile clicked was not a neighbour)
-         */
-        /*
-       public static Command AddConstructionSite(Caravan caravan)
-       {
-           Command_Action command_Action = new Command_Action();
-           command_Action.defaultLabel = "RoadsOfTheRimAddConstructionSite".Translate();
-           command_Action.defaultDesc = "RoadsOfTheRimAddConstructionSiteDescription".Translate();
-           command_Action.icon = ContentFinder<Texture2D>.Get("UI/Commands/AddConstructionSite", true);
-           command_Action.action = delegate ()
-           {
-               // Find neighbours of caravan tile
-               List<int> neighbouringTiles = new List<int>();
-               Find.WorldGrid.GetTileNeighbors(caravan.Tile, neighbouringTiles);
-
-               // Find clicked tile
-               Find.WorldTargeter.BeginTargeting(delegate (GlobalTargetInfo target)
-               {
-                   if (neighbouringTiles.Contains(target.Tile))
-                   {
-                       CreateConstructionSite(caravan, target.Tile);
-                   }
-                   else
-                   {
-                       Messages.Message("RoadsOfTheRim_MustPickNeighbouringTile".Translate(), MessageTypeDefOf.RejectInput);
-                   };
-                   return true;
-               },
-               true, null, false, null, delegate (GlobalTargetInfo target)
-               {
-                   return "RoadsOfTheRim_BuildToHere".Translate();
-               });
-           };
-
-           // Test when the AddConstructionSite action should be disabled : when there's already a construction site here
-           bool ConstructionSiteAlreadyHere = false;
-           try
-           {
-               ConstructionSiteAlreadyHere = Find.WorldObjects.AnyWorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), caravan.Tile);
-           }
-           catch
-           {
-
-           }
-           if (ConstructionSiteAlreadyHere)
-           {
-               command_Action.Disable("RoadsOfTheRimBuildConstructionSiteAlreadyHere".Translate());
-           }
-           return command_Action;
-       }
-       */
-
-        /*
-        Create a new Construction site
-        - Show a list of buildable roads between the From and To tile
-        - Exclude already existing similar or lesser roads
-        - Fail if no road can be built (there's already an asphalt road here)
-         */
-        /*
-        public static void CreateConstructionSite(Caravan caravan , int toTile_int)
-        {
-            Tile fromTile = Find.WorldGrid[caravan.Tile] ;
-            Tile toTile =  Find.WorldGrid[toTile_int] ;
-            
-            // Check best existing roads
-            RoadDef bestExistingRoad = (RoadDef)null ;
-            if (fromTile.potentialRoads != null)
-            {
-                foreach (Tile.RoadLink aLink in fromTile.potentialRoads)
-                {
-                    if (aLink.neighbor == toTile_int & isRoadBetter(aLink.road , bestExistingRoad))
-                    {
-                        bestExistingRoad = aLink.road ;
-                    }
-                }
-            }
-
-            if (toTile.potentialRoads != null)
-            {
-                foreach (Tile.RoadLink aLink in toTile.potentialRoads)
-                {
-                    if (aLink.neighbor == caravan.Tile  & isRoadBetter(aLink.road , bestExistingRoad))
-                    {
-                        bestExistingRoad = aLink.road ;
-                    }
-                }
-            }
-
-            ConstructionMenu menu = new ConstructionMenu(caravan.Tile , toTile_int , bestExistingRoad) ;
-
-            if (menu.CountBuildableRoads()==0)
-            {
-                Messages.Message("RoadsOfTheRim_NoBetterRoadCouldBeBuilt".Translate(), MessageTypeDefOf.RejectInput);
-            }
-            else
-            {
-                menu.closeOnClickedOutside = true;
-                menu.forcePause = true;
-                Find.WindowStack.Add(menu);
-            }
-        }
-        */
 
         public static void FinaliseConstructionSite(RoadConstructionSite site)
         {
@@ -332,20 +280,6 @@ namespace RoadsOfTheRim
                 RoadConstructionSite.DeleteSite(site);
             }
         }
-
-        /*
-        Finalise creation of construction site
-        public static bool FinaliseConstructionSite(int fromTile_int , int toTile_int , RoadBuildableDef roadBuildableDef)
-        {
-            RoadConstructionSite constructionSite = (RoadConstructionSite)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true));
-            constructionSite.Tile = fromTile_int;
-            constructionSite.setDestination(toTile_int);
-            constructionSite.roadToBuild = roadBuildableDef;
-            Find.WorldObjects.Add(constructionSite);
-            RoadConstructionLeg.ActionOnTile(constructionSite, toTile_int);
-            return true;
-        }
-         */
 
         /*
         Work on  Site

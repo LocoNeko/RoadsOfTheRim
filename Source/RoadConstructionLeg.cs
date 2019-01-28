@@ -108,6 +108,15 @@ namespace RoadsOfTheRim
                     return false;
                 }
 
+                // There can be no ConstructionLeg on a biome that doesn't allow roads
+                BiomeDef biomeHere = Find.WorldGrid.tiles[tile].biome ;
+                if (!biomeHere.allowRoads)
+                {
+                    Messages.Message("RoadsOfTheRim_BiomePreventsConstruction".Translate(biomeHere.label) , MessageTypeDefOf.RejectInput);
+                    Target(site);
+                    return false ;
+                }
+
                 RoadConstructionLeg newLeg = (RoadConstructionLeg)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionLeg", true));
                 newLeg.Tile = tile;
                 newLeg.site = site;

@@ -7,8 +7,25 @@ using Verse;
 
 namespace RoadsOfTheRim
 {
+
+    public class CompProperties_RoadsOfTheRimConstructionSite : WorldObjectCompProperties
+    {
+        public CompProperties_RoadsOfTheRimConstructionSite()
+        {
+            this.compClass = typeof(WorldObjectComp_ConstructionSite);
+        }
+    }
+
     public class WorldObjectComp_ConstructionSite : WorldObjectComp
     {
+
+        public CompProperties_RoadsOfTheRimConstructionSite properties
+        {
+            get
+            {
+                return (CompProperties_RoadsOfTheRimConstructionSite)props;
+            }
+        }
 
         public struct Resource
         {
@@ -125,14 +142,6 @@ namespace RoadsOfTheRim
             catch (Exception e)
             {
                 RoadsOfTheRim.DebugLog("Construction Site CompTick. parentsite = "+ ((RoadConstructionSite)parent), e);
-            }
-        }
-
-        public CompProperties_RoadsOfTheRimConstructionSite properties
-        {
-            get
-            {
-                return (CompProperties_RoadsOfTheRimConstructionSite)props;
             }
         }
 

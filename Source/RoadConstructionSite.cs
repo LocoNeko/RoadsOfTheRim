@@ -402,20 +402,5 @@ namespace RoadsOfTheRim
     - Applies the effects of work done by a caravan
     - Creates the road once work is done
      */
-    public class CompProperties_RoadsOfTheRimConstructionSite : WorldObjectCompProperties
-    {
-        public CompProperties_RoadsOfTheRimConstructionSite()
-        {
-            this.compClass = typeof(WorldObjectComp_ConstructionSite);
-        }
-    }
 
 }
-
-/*
- * Useful stuff :
- * WorldGrid.TilesToRawData
- * 
- * WITab_Terrain : shows movement difficulty
- * 
- */

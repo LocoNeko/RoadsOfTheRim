@@ -26,6 +26,14 @@ namespace RoadsOfTheRim
                 Log.Message(method.Name);
             }
             */
+            // DEBUG
+	    /*
+            Log.Message("[RotR] - Roads of the Rim loaded");
+            foreach (RoadDef aRoadDef in DefDatabase<RoadDef>.AllDefs)
+            {
+                Log.Message("[RotR] - RoadDef found : " + aRoadDef + ". Extension :" + aRoadDef.GetModExtension<DefModExtension_RotR_RoadDef>().Description());
+            }
+	    */
         }
     }
 

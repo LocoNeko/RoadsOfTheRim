@@ -1,6 +1,59 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Patch>
-	<Operation Class="PatchOperationReplace">
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>/Defs/RoadDef</xpath>
+        <value>
+            <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
+            </li>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/RoadDef[defName = "DirtPath"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <value>
+            <built>false</built>
+            <work>600</work>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>*/RoadDef[defName = "DirtRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <value>
+            <built>false</built>
+            <work>1200</work>
+            <costList>
+                <WoodLog>120</WoodLog>
+            </costList>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>*/RoadDef[defName = "StoneRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <value>
+            <built>false</built>
+            <work>3600</work>
+            <costList>
+                <WoodLog>240</WoodLog>
+                <Stone>1800</Stone>
+                <Steel>300</Steel>
+            </costList>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>*/RoadDef[defName = "AsphaltRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <value>
+            <built>false</built>
+            <work>5400</work>
+            <costList>
+                <Stone>3600</Stone>
+                <Steel>600</Steel>
+                <Chemfuel>300</Chemfuel>
+            </costList>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationReplace">
 		<xpath>*/RoadDef[defName = "DirtPath"]/movementCostMultiplier</xpath>
 		<value>
 			<movementCostMultiplier>0.75</movementCostMultiplier>

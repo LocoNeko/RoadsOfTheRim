@@ -133,6 +133,11 @@ namespace RoadsOfTheRim
             return true;
         }
 
+        public bool isDeveloppedEnough(Faction faction , DefModExtension_RotR_RoadDef RoadDefModExtension)
+        {
+            return faction.def.techLevel >= RoadDefModExtension.techlevelToBuild ;
+        }
+
         public float daysBeforeFactionCanHelp(Faction faction)
         {
             int? tick;

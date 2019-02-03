@@ -31,20 +31,31 @@ namespace RoadsOfTheRim
     public class ConstructionMenu : Window
     {
         private readonly RoadConstructionSite site;
-        private readonly List<RoadBuildableDef> buildableRoads;
+        private readonly List<RoadDef> buildableRoads;
         public override Vector2 InitialSize => new Vector2(676, 544);
+
+        // TO DO : Use the below to dynamically draw the window based on number of buildable roads (which could include technolcogy limits)
+        // public bool resizeable = true ;
+        // private bool resizeLater = true ;
+        // private Rect resizeLaterRect ;
+
 
         public ConstructionMenu(RoadConstructionSite site)
         {
             this.site = site;
-            buildableRoads = new List<RoadBuildableDef>() ;
+            buildableRoads = new List<RoadDef>() ;
+            // TO DO : COunt number of buildable roads, set the resize later rect based on that
+            
         }
 
         public int CountBuildableRoads()
         {
-            foreach (RoadBuildableDef thisRoadBuildableDef in DefDatabase<RoadBuildableDef>.AllDefs)
+            foreach (RoadDef thisDef in DefDatabase<RoadDef>.AllDefs)
             {
-                buildableRoads.Add(thisRoadBuildableDef);
+                if (thisDef.GetModExtension<DefModExtension_RotR_RoadDef>().built) // Only add RoadDefs that are buildable, based on DefModExtension_RotR_RoadDef.built
+                {
+                    buildableRoads.Add(thisDef);
+                }
             }
             return (buildableRoads!=null ? buildableRoads.Count : 0);
         }
@@ -94,19 +105,20 @@ namespace RoadsOfTheRim
             // Sections : one per type of buildable road
             int nbOfSections = 0;
             Vector2 groupSize = new Vector2(144 , 512);
-            foreach (RoadBuildableDef aDef in buildableRoads)
+            foreach (RoadDef aDef in buildableRoads)
             {
+                DefModExtension_RotR_RoadDef roadDefExtension = aDef.GetModExtension<DefModExtension_RotR_RoadDef>();
                 GUI.BeginGroup(new Rect(new Vector2(64 + 144 * nbOfSections, 32f), groupSize));
 
                 // Buildable Road icon
-                Texture2D theButton = ContentFinder<Texture2D>.Get("World/WorldObjects/"+aDef.defName, true);
+                Texture2D theButton = ContentFinder<Texture2D>.Get("UI/Commands/Build_"+aDef.defName, true);
                 Rect ButtonRect = new Rect(8, 8, 128, 128);
                 if (Widgets.ButtonImage(ButtonRect, theButton))
                 {
                     if (Event.current.button == 0)
                     {
                         SoundStarter.PlayOneShotOnCamera(SoundDefOf.Tick_High, null);
-                        site.roadToBuild = aDef;
+                        site.roadDef = aDef;
                         Close();
                         RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting = site ;
                         RoadConstructionLeg.Target(site);
@@ -121,29 +133,11 @@ namespace RoadsOfTheRim
 
                 // Resources amounts
                 Text.Font = GameFont.Small;
-                for (int i=0; i<5; i++)
+                int i = 0;
+                foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
                 {
-                    int amount;
-                    switch (i)
-                    {
-                        case 0:
-                            amount = aDef.work;
-                            break;
-                        case 1:
-                            amount = aDef.wood;
-                            break;
-                        case 2:
-                            amount = aDef.stone;
-                            break;
-                        case 3:
-                            amount = aDef.steel;
-                            break;
-                        default:
-                            amount = aDef.chemfuel;
-                            break;
-                    }
-                    Rect ResourceAmountRect = new Rect(0, 176f + i * 40f, 144f, 32f);
-                    Widgets.Label(ResourceAmountRect, amount.ToString());
+                    Rect ResourceAmountRect = new Rect(0, 176f + i++ * 40f, 144f, 32f);
+                    Widgets.Label(ResourceAmountRect, roadDefExtension.GetCost(resourceName).ToString());
                 }
                 GUI.EndGroup();
                 nbOfSections++;
@@ -155,7 +149,7 @@ namespace RoadsOfTheRim
         {
             try
             {
-                if (site.roadToBuild == null)
+                if (site.roadDef == null)
                 {
                     RoadsOfTheRim.DeleteConstructionSite(site.Tile);
                 }

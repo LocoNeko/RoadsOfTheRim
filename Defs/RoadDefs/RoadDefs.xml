@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Those are buildable roads, they are never generated during World generation
+    On a map, roadGenSteps must be less random (the roads have not degraded) and the material (<place> tag) must prevent things to spawn on them during map generation
+    In WorldRenderSteps, I could change the layers slightly, so they have a different look than existing roads
+-->
+<Defs>
+  <RoadDef>
+    <defName>DirtPathBuilt</defName>
+    <label>dirt path+</label>
+    <priority>10</priority>
+    <movementCostMultiplier>0.75</movementCostMultiplier>
+    <tilesPerSegment>15</tilesPerSegment>
+    <pathingMode>Avoid</pathingMode>
+    <roadGenSteps>
+      <li Class="RoadDefGenStep_Place">
+        <chancePerPositionCurve>
+          <points>
+            <li>(1.1, 1)</li>
+            <li>(1.1, 0)</li>
+          </points>
+        </chancePerPositionCurve>
+        <place>Bridge</place>
+        <antialiasingMultiplier>0</antialiasingMultiplier>
+        <onlyIfOriginAllows>true</onlyIfOriginAllows> <!-- only if bridge also at the center -->
+      </li>
+      <li Class="RoadDefGenStep_Place">
+        <chancePerPositionCurve>
+          <points>
+            <li>(0.6, 1)</li>
+            <li>(0.8, 0)</li>
+          </points>
+        </chancePerPositionCurve>
+        <place>PackedDirt</place>
+      </li>
+    </roadGenSteps>
+    <distortionFrequency>0.5</distortionFrequency>
+    <distortionIntensity>0.2</distortionIntensity>
+    <worldRenderSteps>
+      <li>
+        <layer>Outline</layer>
+        <width>0.35</width>
+      </li>
+      <li>
+        <layer>Dirt</layer>
+        <width>0.2</width>
+      </li>
+    </worldRenderSteps>
+    <worldTransitionGroup>Dirt</worldTransitionGroup>
+    <modExtensions>
+            <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
+                <built>true</built>
+                <costs>
+                    <li>
+                        <key>Work</key>
+                        <value>600</value>
+                    </li>
+                </costs>
+            </li>
+    </modExtensions>    
+  </RoadDef>
+
+  <RoadDef>
+    <defName>DirtRoadBuilt</defName>
+    <label>dirt road+</label>
+    <priority>20</priority>
+    <movementCostMultiplier>0.6</movementCostMultiplier>
+    <tilesPerSegment>15</tilesPerSegment>
+    <pathingMode>Avoid</pathingMode>
+    <roadGenSteps>
+      <li Class="RoadDefGenStep_Place">
+        <chancePerPositionCurve>
+          <points>
+            <li>(1.4, 1)</li>
+            <li>(1.4, 0)</li>
+          </points>
+        </chancePerPositionCurve>
+        <place>Bridge</place>
+        <antialiasingMultiplier>0</antialiasingMultiplier>
+        <onlyIfOriginAllows>true</onlyIfOriginAllows> <!-- only if bridge also at the center -->
+      </li>
+      <li Class="RoadDefGenStep_Place">
+        <chancePerPositionCurve>
+          <points>
+            <li>(1.2, 1)</li>
+            <li>(1.4, 0)</li>
+          </points>
+        </chancePerPositionCurve>
+        <place>PackedDirt</place>
+      </li>
+    </roadGenSteps>
+    <distortionFrequency>0.5</distortionFrequency>
+    <distortionIntensity>0.2</distortionIntensity>
+    <worldRenderSteps>
+      <li>
+        <layer>Outline</layer>
+        <width>0.55</width>
+      </li>
+      <li>
+        <layer>Dirt</layer>
+        <width>0.4</width>
+      </li>
+    </worldRenderSteps>
+    <worldTransitionGroup>Dirt</worldTransitionGroup>
+    <modExtensions>
+            <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
+                <built>true</built>
+                <costs>
+                    <li>
+                        <key>Work</key>
+                        <value>1200</value>
+                    </li>
+                    <li>
+                        <key>Wood</key>
+                        <value>120</value>
+                    </li>
+                </costs>
+            </li>
+    </modExtensions>    
+  </RoadDef>
+
+  <RoadDef>
+    <defName>StoneRoadBuilt</defName>
+    <label>stone road+</label>
+    <priority>30</priority>
+    <movementCostMultiplier>0.5</movementCostMultiplier>
+    <tilesPerSegment>25</tilesPerSegment>
+    <pathingMode>Avoid</pathingMode>
+    <roadGenSteps>
+      <li Class="RoadDefGenStep_Place">
+        <chancePerPositionCurve>
+          <points>
+            <li>(1.8, 1)</li>
+            <li>(1.8, 0)</li>
+          </points>
+        </chancePerPositionCurve>
+        <place>Bridge</place>
+        <antialiasingMultiplier>0</antialiasingMultiplier>
+        <onlyIfOriginAllows>true</onlyIfOriginAllows> <!-- only if bridge also at the center -->
+      </li>
+      <li Class="RoadDefGenStep_Place">
+        <chancePerPositionCurve>
+          <points>
+            <li>(1.8, 1)</li>
+            <li>(1.8, 0)</li>
+          </points>
+        </chancePerPositionCurve>
+        <antialiasingMultiplier>0</antialiasingMultiplier>
+        <place>FlagstoneSandstone</place>
+      </li>
+    </roadGenSteps>
+    <distortionFrequency>0.2</distortionFrequency>
+    <distortionIntensity>0.10</distortionIntensity>
+    <worldRenderSteps>
+      <li>
+        <layer>Outline</layer>
+        <width>0.55</width>
+      </li>
+      <li>
+        <layer>Stone</layer>
+        <width>0.4</width>
+      </li>
+    </worldRenderSteps>
+    <worldTransitionGroup>Stone</worldTransitionGroup>
+    <modExtensions>
+            <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
+                <built>true</built>
+                <costs>
+                    <li>
+                        <key>Work</key>
+                        <value>3600</value>
+                    </li>
+                    <li>
+                        <key>Wood</key>
+                        <value>240</value>
+                    </li>
+                    <li>
+                        <key>Stone</key>
+                        <value>1800</value>
+                    </li>
+                    <li>
+                        <key>Steel</key>
+                        <value>300</value>
+                    </li>
+                </costs>
+            </li>
+    </modExtensions>    
+  </RoadDef>
+
+    <RoadDef>
+        <defName>AsphaltRoad</defName>
+        <label>asphalt road</label>
+        <priority>40</priority>
+        <ancientOnly>true</ancientOnly>
+        <movementCostMultiplier>0.4</movementCostMultiplier>
+        <tilesPerSegment>100</tilesPerSegment>
+        <pathingMode>Bulldoze</pathingMode>
+        <roadGenSteps>
+          <li Class="RoadDefGenStep_Place">
+            <chancePerPositionCurve>
+              <points>
+                <li>(1.8, 1)</li>
+                <li>(1.8, 0)</li>
+              </points>
+            </chancePerPositionCurve>
+            <place>Bridge</place>
+            <antialiasingMultiplier>0</antialiasingMultiplier>
+            <onlyIfOriginAllows>true</onlyIfOriginAllows> <!-- only if bridge also at the center -->
+          </li>
+          <li Class="RoadDefGenStep_Place">
+            <chancePerPositionCurve>
+              <points>
+                <li>(1.8, 1)</li>
+                <li>(1.8, 0)</li>
+              </points>
+            </chancePerPositionCurve>
+            <place>BrokenAsphalt</place>
+          </li>
+        </roadGenSteps>
+        <worldRenderSteps>
+          <li>
+            <layer>Outline</layer>
+            <width>0.65</width>
+          </li>
+          <li>
+            <layer>Gravel</layer>
+            <width>0.5</width>
+          </li>
+          <li>
+            <layer>Asphalt</layer>
+            <width>0.25</width>
+          </li>
+        </worldRenderSteps>
+        <worldTransitionGroup>Asphalt</worldTransitionGroup>
+        <modExtensions>
+                <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
+                    <built>true</built>
+                    <costs>
+                        <li>
+                            <key>Work</key>
+                            <value>5400</value>
+                        </li>
+                        <li>
+                            <key>Stone</key>
+                            <value>3600</value>
+                        </li>
+                        <li>
+                            <key>Steel</key>
+                            <value>600</value>
+                        </li>
+                        <li>
+                            <key>Chemfuel</key>
+                            <value>300</value>
+                        </li>
+                    </costs>
+                </li>
+        </modExtensions>    
+    </RoadDef>
+
+    <!--
+    TO DO : Glitter roads
+    -->
+</Defs>
+
+
+

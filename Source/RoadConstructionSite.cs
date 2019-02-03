@@ -13,7 +13,7 @@ namespace RoadsOfTheRim
 
     public class RoadConstructionSite : WorldObject
     {
-        public RoadBuildableDef roadToBuild;
+        public RoadDef roadDef ; // TO DO as part of the phasing out of road buildable
 
         public static int maxTicksToNeighbour = 2 * GenDate.TicksPerDay ; // 2 days
 
@@ -111,7 +111,7 @@ namespace RoadsOfTheRim
                 populateDescription();
             }
             StringBuilder result = new StringBuilder();
-            result.Append("RoadsOfTheRim_siteFullName".Translate(roadToBuild.label));
+            result.Append("RoadsOfTheRim_siteFullName".Translate(roadDef.label));
             if (NeighbouringSettlementsDescription.Length>0)
             {
                 result.Append("RoadsOfTheRim_siteFullNameNeighbours".Translate(NeighbouringSettlementsDescription));
@@ -228,8 +228,7 @@ namespace RoadsOfTheRim
             {
                 RoadDef bestExistingRoad = RoadsOfTheRim.BestExistingRoad(Tile , nextLeg.Tile) ;
                 // We've found an existing road that is better than the one we intend to build : skip this leg and move to the next
-                RoadDef newRoadDef = DefDatabase<RoadDef>.GetNamed(roadToBuild.getRoadDef());
-                if (!RoadsOfTheRim.isRoadBetter(newRoadDef , bestExistingRoad))
+                if (!RoadsOfTheRim.isRoadBetter(roadDef , bestExistingRoad))
                 {
                     int currentTile = Tile;
                     Tile = nextLeg.Tile; // The construction site moves to the next leg
@@ -269,7 +268,7 @@ namespace RoadsOfTheRim
             {
                 stringBuilder.AppendLine();
             }
-            stringBuilder.Append("RoadsOfTheRim_siteInspectString".Translate(roadToBuild.label, string.Format("{0:0.0}",roadToBuild.movementCostMultiplier)));
+            stringBuilder.Append("RoadsOfTheRim_siteInspectString".Translate(roadDef.label, string.Format("{0:0.0}", roadDef.movementCostMultiplier)));
             stringBuilder.AppendLine();
             stringBuilder.Append(this.GetComponent<WorldObjectComp_ConstructionSite>().progressDescription()) ;
             return stringBuilder.ToString();
@@ -279,7 +278,7 @@ namespace RoadsOfTheRim
         {
             base.ExposeData();
 
-            Scribe_Defs.Look<RoadBuildableDef>(ref this.roadToBuild, "roadToBuild");
+            Scribe_Defs.Look<RoadDef>(ref this.roadDef, "roadToBuild");
             Scribe_References.Look<Faction>(ref helpFromFaction, "helpFromFaction");
             Scribe_Values.Look<int>(ref helpFromTick, "helpFromTick");
             Scribe_Values.Look<float>(ref helpAmount, "helpAmount");
@@ -322,7 +321,7 @@ namespace RoadsOfTheRim
          */
         public override void Draw()
         {
-            if (RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting!=this || this.roadToBuild==null) // Do not draw the site if it's not yet finalised or if we don't know the type of road to build yet
+            if (RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting!=this || this.roadDef==null) // Do not draw the site if it's not yet finalised or if we don't know the type of road to build yet
             {
                 base.Draw();
                 WorldGrid worldGrid = Find.WorldGrid;
@@ -373,7 +372,7 @@ namespace RoadsOfTheRim
                 {
                     Find.LetterStack.ReceiveLetter(
                         "RoadsOfTheRim_FactionStopsHelping".Translate(),
-                        "RoadsOfTheRim_FactionStopsHelpingText".Translate(helpFromFaction.Name , roadToBuild.label),
+                        "RoadsOfTheRim_FactionStopsHelpingText".Translate(helpFromFaction.Name , roadDef.label),
                         LetterDefOf.NegativeEvent,
                         new GlobalTargetInfo(this)
                     );

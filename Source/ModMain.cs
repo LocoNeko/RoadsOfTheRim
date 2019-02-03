@@ -47,6 +47,8 @@ namespace RoadsOfTheRim
     {
         public static RoadsOfTheRimSettings settings;
 
+        public static string[] allResources = new string[] { "Wood", "Stone", "Steel", "Chemfuel" }; // TO DO : Add all needed resources here later (plasteel, components, etc)
+
         /*
         For construction help from ally , I will need a dictionary whenCanFactionHelp <Faction , int> that stores the ticks when that faction can help again 
          */
@@ -55,6 +57,10 @@ namespace RoadsOfTheRim
         {
             settings = GetSettings<RoadsOfTheRimSettings>();
         }
+
+        /***********************************
+         * Static links to WorldComponents *       
+         ***********************************/
 
         public static WorldComponent_FactionRoadConstructionHelp factionsHelp
         {
@@ -100,6 +106,7 @@ namespace RoadsOfTheRim
             }
         }
 
+        // TO DO : Phase out in favour of calculateRoadModifier
         public static float calculateBiomeModifier(RoadDef roadDef, float biomeMovementDifficulty, out float biomeCancellation)
         {
             biomeCancellation = 0;
@@ -152,47 +159,118 @@ namespace RoadsOfTheRim
             return ((BiomeModifier*BiomeMovementDifficulty) + (HillModifier*HillinessOffset) + WinterOffset ) / (BiomeMovementDifficulty + HillinessOffset + WinterOffset) ;
         }
 
-        /*
-        Returns the road with the best movement cost multiplier between 2 neighbouring tiles.
-        returns null if there's no road or if the tiles are not neighbours
-         */
-        public static RoadDef BestExistingRoad(int fromTile_int , int toTile_int)
-        {
-            RoadDef bestExistingRoad = null;
-            try
-            {
-                WorldGrid worldGrid = Find.WorldGrid ;
-                Tile fromTile = worldGrid[fromTile_int];
-                Tile toTile = worldGrid[toTile_int];
 
-                if (fromTile.potentialRoads != null)
-                {
-                    foreach (Tile.RoadLink aLink in fromTile.potentialRoads)
-                    {
-                        if (aLink.neighbor == toTile_int & RoadsOfTheRim.isRoadBetter(aLink.road , bestExistingRoad))
-                        {
-                            bestExistingRoad = aLink.road ;
-                        }
-                    }
-                }
-                if (toTile.potentialRoads != null)
-                {
-                    foreach (Tile.RoadLink aLink in toTile.potentialRoads)
-                    {
-                        if (aLink.neighbor == fromTile_int & RoadsOfTheRim.isRoadBetter(aLink.road , bestExistingRoad))
-                        {
-                            bestExistingRoad = aLink.road ;
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
+        /*
+        Based on the Caravan's resources, Pawns & the road's cost (modified by terrain) :
+        - Determine the amount of work done in a tick
+        - Consume the caravan's resources
+        - Return whether or not the Caravan must now stop because it ran out of resources
+        - NOTE : Does this need to be here ? Maybe better in Mod.cs
+        * Returns TRUE if work finished
+        * CALLED FROM : CompTick() of WorldObjectComp_Caravan        
+        */
+        public static bool doSomeWork(Caravan caravan, RoadConstructionSite site, out bool noMoreResources)
+        {
+            WorldObjectComp_Caravan caravanComp = caravan.GetComponent<WorldObjectComp_Caravan>();
+            WorldObjectComp_ConstructionSite siteComp = site.GetComponent<WorldObjectComp_ConstructionSite>();
+            DefModExtension_RotR_RoadDef roadDefExtension = site.roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
+            noMoreResources = false;
+            Dictionary<string, int> available = new Dictionary<string, int>();
+            Dictionary<string, int> needed = new Dictionary<string, int>();
+            Dictionary<string, float> ratio = new Dictionary<string, float>();
+            float ratio_final = 1;
+
+            if (DebugSettings.godMode)
             {
-                DebugLog(null , e) ;
+                return siteComp.finishWork(caravan);
             }
-            
-            return bestExistingRoad ;
+
+            if (!(caravanComp.CaravanCurrentState() == CaravanState.ReadyToWork))
+            {
+                Log.Message("[RotR] DEBUG : doSomeWork() failed because the caravan can't work.");
+                return false;
+            }
+
+            // Percentage of total work that can be done in this batch
+            float amountOfWork = caravanComp.amountOfWork();
+
+            if (amountOfWork > siteComp.GetLeft("Work"))
+            {
+                amountOfWork = siteComp.GetLeft("Work");
+            }
+
+            // calculate material present in the caravan
+            foreach (string resourceName in allResources)
+            {
+                available[resourceName] = 0;
+            }
+
+            foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
+            {
+                foreach (string resourceName in allResources)
+                {
+                    if (isThis(aThing.def, resourceName))
+                    {
+                        available[resourceName] += aThing.stackCount;
+                    }
+                }
+            }
+
+            // What percentage of work will remain after amountOfWork is done ?
+            float percentOfWorkLeftToDoAfter = (siteComp.GetLeft("Work") - amountOfWork) / siteComp.GetCost("Work");
+
+            // The amount of each resource left to spend in total is : percentOfWorkLeftToDoAfter * {this resource cost}
+            // Materials that would be needed to do that much work
+            foreach (string resourceName in allResources)
+            {
+                needed[resourceName] = (int)Math.Round(siteComp.GetLeft(resourceName) - (percentOfWorkLeftToDoAfter * siteComp.GetCost(resourceName)));
+                // Check if there's enough material to go through this batch. Materials with a cost of 0 are always OK
+                ratio[resourceName] = (needed[resourceName] == 0 ? 1f : Math.Min((float)available[resourceName] / (float)needed[resourceName], 1f));
+                if (ratio[resourceName] < ratio_final)
+                {
+                    ratio_final = ratio[resourceName];
+                }
+            }
+
+            // The caravan didn't have enough resources for a full batch of work. Use as much as we can then stop working
+            if (ratio_final < 1f)
+            {
+                Messages.Message("RoadsOfTheRim_CaravanNoResource".Translate(caravan.Name, site.roadDef.label), MessageTypeDefOf.RejectInput);
+                foreach (string resourceName in allResources)
+                {
+                    needed[resourceName] = (int)(needed[resourceName] * ratio_final);
+                }
+                caravanComp.stopWorking();
+            }
+
+            // Consume resources from the caravan 
+            foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
+            {
+                foreach (string resourceName in allResources)
+                {
+                    if (needed[resourceName] > 0 && isThis(aThing.def, resourceName))
+                    {
+                        int amountUsed = (aThing.stackCount > needed[resourceName]) ? needed[resourceName] : aThing.stackCount;
+                        aThing.stackCount -= amountUsed;
+                        needed[resourceName] -= amountUsed;
+                        siteComp.ReduceLeft(resourceName, amountUsed);
+                    }
+                }
+                if (aThing.stackCount == 0)
+                {
+                    aThing.Destroy();
+                }
+            }
+
+            // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
+            amountOfWork = ratio_final * amountOfWork;
+            return siteComp.UpdateProgress(amountOfWork, caravan);
         }
+
+
+        /***********************************
+         * Settings                        *       
+         ***********************************/
 
         public override string SettingsCategory() => "RoadsOfTheRimSettingsCategoryLabel".Translate();
 
@@ -220,6 +298,10 @@ namespace RoadsOfTheRim
                 }
             }
         }
+
+        /********************************
+         * Gizmos commands              *       
+         ********************************/
 
         public static Command AddConstructionSite(Caravan caravan)
         {
@@ -411,6 +493,10 @@ namespace RoadsOfTheRim
                 {
                     diaOption.Disable("RoadsOfTheRim_commsAnotherFactionIsHelping".Translate(site.helpFromFaction));
                 }
+                if (!factionsHelp.isDeveloppedEnough(faction , site.roadDef.GetModExtension<DefModExtension_RotR_RoadDef>()))
+                {
+                    diaOption.Disable("RoadsOfTheRim_commsNotDevelopedEnough".Translate(faction.Name , site.roadDef.label));
+                }
                 diaNode.options.Add(diaOption);
                 diaOption.resolveTree = true ;
             }
@@ -422,6 +508,11 @@ namespace RoadsOfTheRim
             dialog.link = diaNode ;
             return dialog ;
         }
+
+
+        /********************************
+         * Convenience static functions *       
+         ********************************/
 
         // Compares the movement cost multiplier of 2 roaddefs, returns TRUE if roadA is better or roadB is null. returns FALSE in all other cases
         public static bool isRoadBetter(RoadDef roadA , RoadDef roadB)
@@ -436,5 +527,73 @@ namespace RoadsOfTheRim
             }
             return (roadA.movementCostMultiplier < roadB.movementCostMultiplier) ;
         }
+
+        /*
+        Tells me whether or not a ThingDef is Wood, Stone, Steel, or Chemfuel
+        TO DO : make this ugly hack better
+        */
+        public static bool isThis(ThingDef def, string name)
+        {
+            // TO DO : Switch is better
+            if (name == "Wood" && def.ToString() == "WoodLog")
+            {
+                return true;
+            }
+            else if (name == "Stone" && (def.FirstThingCategory != null) && (def.FirstThingCategory.ToString() == "StoneBlocks"))
+            {
+                return true;
+            }
+            else if (name == "Steel" && def.IsMetal)
+            {
+                return true;
+            }
+            else if (name == "Chemfuel" && def.ToString() == "Chemfuel")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /*
+        Returns the road with the best movement cost multiplier between 2 neighbouring tiles.
+        returns null if there's no road or if the tiles are not neighbours
+         */
+        public static RoadDef BestExistingRoad(int fromTile_int, int toTile_int)
+        {
+            RoadDef bestExistingRoad = null;
+            try
+            {
+                WorldGrid worldGrid = Find.WorldGrid;
+                Tile fromTile = worldGrid[fromTile_int];
+                Tile toTile = worldGrid[toTile_int];
+
+                if (fromTile.potentialRoads != null)
+                {
+                    foreach (Tile.RoadLink aLink in fromTile.potentialRoads)
+                    {
+                        if (aLink.neighbor == toTile_int & RoadsOfTheRim.isRoadBetter(aLink.road, bestExistingRoad))
+                        {
+                            bestExistingRoad = aLink.road;
+                        }
+                    }
+                }
+                if (toTile.potentialRoads != null)
+                {
+                    foreach (Tile.RoadLink aLink in toTile.potentialRoads)
+                    {
+                        if (aLink.neighbor == fromTile_int & RoadsOfTheRim.isRoadBetter(aLink.road, bestExistingRoad))
+                        {
+                            bestExistingRoad = aLink.road;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                DebugLog(null, e);
+            }
+            return bestExistingRoad;
+        }
+
     }
 }

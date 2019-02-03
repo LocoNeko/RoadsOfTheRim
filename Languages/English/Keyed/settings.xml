@@ -18,6 +18,7 @@
   <RoadsOfTheRim_commsHasHelpedRecently>This faction has helped recently. It can help again in {0} days</RoadsOfTheRim_commsHasHelpedRecently>
   <RoadsOfTheRim_commsNotClose>{0} is not close enough to help on this construction site</RoadsOfTheRim_commsNotClose>
   <RoadsOfTheRim_commsAnotherFactionIsHelping>{0} is already helping with this construction site</RoadsOfTheRim_commsAnotherFactionIsHelping>
+  <RoadsOfTheRim_commsNotDevelopedEnough>{0} is not developed enough to build {1}</RoadsOfTheRim_commsNotDevelopedEnough>
   <RoadsOfTheRim_commsSitesList>Construction sites</RoadsOfTheRim_commsSitesList>
   <RoadsOfTheRim_commsCancel>Cancel - no goodwill cost</RoadsOfTheRim_commsCancel>
   <RoadsOfTheRim_FactionStartsHelping>Help with construction</RoadsOfTheRim_FactionStartsHelping>

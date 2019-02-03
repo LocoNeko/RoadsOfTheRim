@@ -27,39 +27,54 @@ namespace RoadsOfTheRim
             }
         }
 
-        public struct Resource
+        // TO DO : Make those 2 private
+        public Dictionary<string , int> costs = new Dictionary<string, int>() ; 
+
+        public Dictionary<string , int> left = new Dictionary<string, int>() ;
+
+        // Used for ExposeData()
+        private List<string> costs_Keys = new List<string>();
+        private List<int> costs_Values = new List<int>();
+        private List<string> left_Keys = new List<string>();
+        private List<int> left_Values = new List<int>();
+
+        public int GetCost(string name)
         {
-            public float cost;
-            public float left;
-
-            public void setCost(float f)
+            int value = 0 ;
+            if (!costs.TryGetValue(name , out value))
             {
-                cost = f;
-                left = f;
+                return 0 ; // TO DO : Throwing an excepion would be bettah
             }
+            return value ;
+        }
 
-            public void reduceLeft(float f)
+        public int GetLeft(string name)
+        {
+            int value = 0 ;
+            if (!left.TryGetValue(name , out value))
             {
-                left -= (f > left) ? left : f;
+                return 0 ; // TO DO : Throwing an excepion would be bettah
             }
+            return value ;
+        }
 
-            public float getCost() { return cost; }
-            public float getLeft() { return left; }
-            public float getPercentageDone()
+        public void ReduceLeft (string name, int amount)
+        {
+            int value =0 ;
+            if (left.TryGetValue(name, out value))
             {
-                if (cost <= 0)
-                {
-                    return 1f;
-                }
-                return 1f - (left / cost);
+                left[name] -= (amount > value) ? value : amount ;
             }
         }
 
-        private Resource work;
-        private Resource wood;
-        private Resource stone;
-        private Resource steel;
-        private Resource chemfuel;
+        public float GetPercentageDone(string name)
+        {
+            if (!costs.TryGetValue(name, out int costTotal) & !left.TryGetValue(name, out int leftTotal))
+            {
+                return 0;
+            }
+            return (float)(costTotal - leftTotal) / (float)costTotal;
+        }
 
         /*
         Returns the cost modifiers for building a road from one tile to another, based on Elevation, Hilliness, Swampiness & river crossing
@@ -120,22 +135,25 @@ namespace RoadsOfTheRim
         }
         */
 
+        /*
+         * Faction help must be handled here, since it's independent of whether or not a caravan is here.
+         * Make it with a delay of 1/50 s compared to the CaravanComp so both functions end up playing nicely along each other
+         * Don't work at night !
+         */       
         public override void CompTick()
         {
-            // Faction help must be handled here, since it's independent of whether or not a caravan is here.
-            // Make it with a delay of 1/50 s compared to the CaravanComp so both functions end up playing nicely along each other
-            // Don't work at night !
             try
             {
                 if ((((RoadConstructionSite)parent).helpFromFaction != null) && (!CaravanNightRestUtility.RestingNowAt(((RoadConstructionSite)parent).Tile)) && (Find.TickManager.TicksGame % 100 == 50))
                 {
                     ((RoadConstructionSite)parent).TryToSkipBetterRoads() ;  // No need to work if there's a better road here
                     float amountOfWork = ((RoadConstructionSite)parent).factionHelp();
-                    float percentOfWorkLeftToDoAfter = (work.left - amountOfWork) / work.cost;
-                    wood.reduceLeft((int)Math.Round(wood.left - (percentOfWorkLeftToDoAfter * wood.cost)));
-                    stone.reduceLeft((int)Math.Round(stone.left - (percentOfWorkLeftToDoAfter * stone.cost)));
-                    steel.reduceLeft((int)Math.Round(steel.left - (percentOfWorkLeftToDoAfter * steel.cost)));
-                    chemfuel.reduceLeft((int)Math.Round(chemfuel.left - (percentOfWorkLeftToDoAfter * chemfuel.cost)));
+
+                    float percentOfWorkLeftToDoAfter = ((float)GetLeft("Work") - amountOfWork) / (float)GetCost("Work");
+                    foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
+                    {
+                        ReduceLeft ( resourceName, (int)Math.Round( (float)GetLeft(resourceName) - (percentOfWorkLeftToDoAfter * (float)GetCost(resourceName)) ) );
+                    }
                     UpdateProgress(amountOfWork);
                 }
             }
@@ -147,7 +165,14 @@ namespace RoadsOfTheRim
 
         public bool resourcesAlreadyConsumed()
         {
-            return ((wood.left < wood.cost) | (stone.left < stone.cost) | (steel.left < steel.cost) | (chemfuel.left < chemfuel.cost));
+            foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
+            {
+                if (GetCost(resourceName) > 0 && GetLeft(resourceName) < GetCost(resourceName))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void setCosts()
@@ -176,21 +201,17 @@ namespace RoadsOfTheRim
                     elevationCostIncrease , hillinessCostIncrease , swampinessCostIncrease, bridgeCostIncrease, totalCostModifier
                 ));
                 */
-                RoadBuildableDef roadToBuild = parentSite.roadToBuild;
+                DefModExtension_RotR_RoadDef roadDefExtension = parentSite.roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
 
-                float workRebate = 0f;
-                float woodRebate = 0f;
-                float stoneRebate = 0f;
-                float steelRebate = 0f;
-                float chemfuelRebate = 0f;
+
                 // TO DO once I have changed the roads to new road defs
                 // GetUpgradeModifiers(parentSite.Tile , parentSite.GetNextLeg().Tile , roadToBuild , ref workRebate , ref woodRebate , ref stoneRebate , ref steelRebate , ref chemfuelRebate) ;
-
-                this.work.setCost((float)(roadToBuild.work - workRebate) * totalCostModifier);
-                this.wood.setCost((float)(roadToBuild.wood - woodRebate) * settings.BaseEffort);
-                this.stone.setCost((float)(roadToBuild.stone - stoneRebate) * settings.BaseEffort);
-                this.steel.setCost((float)(roadToBuild.steel - steelRebate) * settings.BaseEffort);
-                this.chemfuel.setCost((float)(roadToBuild.chemfuel - chemfuelRebate) * settings.BaseEffort);
+                // Those will have to be changed to a Dictionary of resources : Rebate[resourceName] 
+                foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
+                {
+                    costs[resourceName] = (int)(roadDefExtension.GetCost(resourceName) * totalCostModifier) ;
+                    // TO DO - rebates : costs[resourceName] = (int)( (roadDefExtension.GetCost(resourceName)-Rebate[resourceName]) * totalCostModifier);
+                }
                 parentSite.UpdateProgressBarMaterial();
             }
             catch (Exception e)
@@ -199,146 +220,16 @@ namespace RoadsOfTheRim
             }
         }
 
-        /* 
-         * Received a tick from a caravan with WorldObjectComp_Caravan
-         * Returns TRUE if work finished
-        */
-        public bool doSomeWork(Caravan caravan)
-        {
-            WorldObjectComp_Caravan caravanComp = caravan.GetComponent<WorldObjectComp_Caravan>();
-            RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
-
-            if (DebugSettings.godMode)
-            {
-                return finishWork(caravan);
-            }
-
-            if (!(caravanComp.CaravanCurrentState() == CaravanState.ReadyToWork))
-            {
-                Log.Message("[RotR] DEBUG : doSomeWork() failed because the caravan can't work.");
-                return false;
-            }
-
-            // Percentage of total work that can be done in this batch
-            float amountOfWork = caravanComp.amountOfWork();
-
-            if (amountOfWork > this.work.getLeft())
-            {
-                amountOfWork = this.work.getLeft();
-            }
-
-            // calculate material present in the caravan
-            int available_wood = 0;
-            int available_stone = 0;
-            int available_steel = 0;
-            int available_chemfuel = 0;
-
-            // DEBUG - StringBuilder inventoryDescription = new StringBuilder();
-            foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
-            {
-                if (aThing.def.ToString() == "WoodLog")
-                {
-                    available_wood += aThing.stackCount;
-                }
-                else if ((aThing.def.FirstThingCategory != null) && (aThing.def.FirstThingCategory.ToString() == "StoneBlocks"))
-                {
-                    available_stone += aThing.stackCount;
-                }
-                else if (aThing.def.IsMetal)
-                {
-                    available_steel += aThing.stackCount;
-                }
-                else if (aThing.def.ToString() == "Chemfuel")
-                {
-                    available_chemfuel += aThing.stackCount;
-                }
-                // DEBUG - inventoryDescription.Append(aThing.def.ToString() + " {"+ aThing.def.FirstThingCategory.ToString()+"}: " + aThing.stackCount+", ") ;
-            }
-            // DEBUG - Log.Message(inventoryDescription.ToString());
-            // DEBUG - Log.Message("Resources : Wood="+available_wood+", Stone="+available_stone+", Metal="+available_steel+", Chemfuel="+available_chemfuel);
-
-            // What percentage of work will remain after amountOfWork is done ?
-            float percentOfWorkLeftToDoAfter = (work.left - amountOfWork) / work.cost;
-
-            // The amount of each resource left to spend in total is : percentOfWorkLeftToDoAfter * {this resource cost}
-            // Materials that would be needed to do that much work
-            int needed_wood = (int)Math.Round(wood.left - (percentOfWorkLeftToDoAfter * wood.cost));
-            int needed_stone = (int)Math.Round(stone.left - (percentOfWorkLeftToDoAfter * stone.cost));
-            int needed_steel = (int)Math.Round(steel.left - (percentOfWorkLeftToDoAfter * steel.cost));
-            int needed_chemfuel = (int)Math.Round(chemfuel.left - (percentOfWorkLeftToDoAfter * chemfuel.cost));
-            // DEBUG - Log.Message("Needed: Wood=" + needed_wood + ", Stone=" + needed_stone + ", Metal=" + needed_steel + ", Chemfuel=" + needed_chemfuel);
-
-            // Check if there's enough material to go through this batch. Materials with a cost of 0 are always OK
-            float ratio_wood = (needed_wood == 0 ? 1f : Math.Min((float)available_wood / (float)needed_wood, 1f));
-            float ratio_stone = (needed_stone == 0 ? 1f : Math.Min((float)available_stone / (float)needed_stone, 1f));
-            float ratio_steel = (needed_steel == 0 ? 1f : Math.Min((float)available_steel / (float)needed_steel, 1f));
-            float ratio_chemfuel = (needed_chemfuel == 0 ? 1f : Math.Min((float)available_chemfuel / (float)needed_chemfuel, 1f));
-
-            //There's a shortage of materials
-            float ratio_final = Math.Min(ratio_wood, Math.Min(ratio_stone, Math.Min(ratio_steel, ratio_chemfuel)));
-
-            // The caravan didn't have enough resources for a full batch of work. Use as much as we can then stop working
-            if (ratio_final < 1f)
-            {
-                Messages.Message("RoadsOfTheRim_CaravanNoResource".Translate(caravan.Name, parentSite.roadToBuild.label), MessageTypeDefOf.RejectInput);
-                needed_wood = (int)(needed_wood * ratio_final);
-                needed_stone = (int)(needed_stone * ratio_final);
-                needed_steel = (int)(needed_steel * ratio_final);
-                needed_chemfuel = (int)(needed_chemfuel * ratio_final);
-                caravanComp.stopWorking();
-            }
-
-            // Consume resources from the caravan 
-            foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
-            {
-                if ((aThing.def.ToString() == "WoodLog") && needed_wood > 0)
-                {
-                    int used_wood = (aThing.stackCount > needed_wood) ? needed_wood : aThing.stackCount;
-                    aThing.stackCount -= used_wood;
-                    needed_wood -= used_wood;
-                    wood.reduceLeft(used_wood);
-                }
-                else if ((aThing.def.FirstThingCategory != null) && (aThing.def.FirstThingCategory.ToString() == "StoneBlocks") && needed_stone > 0)
-                {
-                    int used_stone = (aThing.stackCount > needed_stone) ? needed_stone : aThing.stackCount;
-                    aThing.stackCount -= used_stone;
-                    needed_stone -= used_stone;
-                    stone.reduceLeft(used_stone);
-                }
-                else if ((aThing.def.IsMetal) && needed_steel > 0)
-                {
-                    int used_steel = (aThing.stackCount > needed_steel) ? needed_steel : aThing.stackCount;
-                    aThing.stackCount -= used_steel;
-                    needed_steel -= used_steel;
-                    steel.reduceLeft(used_steel);
-                }
-                else if ((aThing.def.ToString() == "Chemfuel") && needed_chemfuel > 0)
-                {
-                    int used_chemfuel = (aThing.stackCount > needed_chemfuel) ? needed_chemfuel : aThing.stackCount;
-                    aThing.stackCount -= used_chemfuel;
-                    needed_chemfuel -= used_chemfuel;
-                    chemfuel.reduceLeft(used_chemfuel);
-                }
-                if (aThing.stackCount == 0)
-                {
-                    aThing.Destroy();
-                }
-            }
-
-            // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
-            amountOfWork = ratio_final * amountOfWork;
-            return UpdateProgress(amountOfWork, caravan);
-        }
-
         public bool UpdateProgress(float amountOfWork, Caravan caravan = null)
         {
             RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
 
-            work.reduceLeft(amountOfWork);
+            ReduceLeft("Work", (int)amountOfWork);
+
             parentSite.UpdateProgressBarMaterial();
 
             // Work is done
-            if (work.getLeft() <= 0)
+            if (GetLeft("Work") <= 0)
             {
                 return finishWork(caravan);
             }
@@ -355,14 +246,13 @@ namespace RoadsOfTheRim
             int toTile_int = parentSite.GetNextLeg().Tile;
             Tile fromTile = Find.WorldGrid[fromTile_int];
             Tile toTile = Find.WorldGrid[toTile_int];
-            RoadDef newRoadDef = DefDatabase<RoadDef>.GetNamed(parentSite.roadToBuild.getRoadDef());
 
             // Remove lesser roads, they don't deserve to live
             if (fromTile.potentialRoads != null)
             {
                 foreach (Tile.RoadLink aLink in fromTile.potentialRoads.ToArray())
                 {
-                    if (aLink.neighbor == toTile_int & RoadsOfTheRim.isRoadBetter(newRoadDef, aLink.road))
+                    if (aLink.neighbor == toTile_int & RoadsOfTheRim.isRoadBetter(parentSite.roadDef, aLink.road))
                     {
                         fromTile.potentialRoads.Remove(aLink);
                     }
@@ -377,7 +267,7 @@ namespace RoadsOfTheRim
             {
                 foreach (Tile.RoadLink aLink in toTile.potentialRoads.ToArray())
                 {
-                    if (aLink.neighbor == parentSite.Tile & RoadsOfTheRim.isRoadBetter(newRoadDef, aLink.road))
+                    if (aLink.neighbor == parentSite.Tile & RoadsOfTheRim.isRoadBetter(parentSite.roadDef, aLink.road))
                     {
                         toTile.potentialRoads.Remove(aLink);
                     }
@@ -389,8 +279,8 @@ namespace RoadsOfTheRim
             }
 
             // Add the road to fromTile & toTile
-            fromTile.potentialRoads.Add(new Tile.RoadLink { neighbor = toTile_int, road = newRoadDef });
-            toTile.potentialRoads.Add(new Tile.RoadLink { neighbor = fromTile_int, road = newRoadDef });
+            fromTile.potentialRoads.Add(new Tile.RoadLink { neighbor = toTile_int, road = parentSite.roadDef });
+            toTile.potentialRoads.Add(new Tile.RoadLink { neighbor = fromTile_int, road = parentSite.roadDef });
             try
             {
                 Find.World.renderer.SetDirty<WorldLayer_Roads>();
@@ -431,7 +321,7 @@ namespace RoadsOfTheRim
             // On the last leg, send letter & remove the construction site
             Find.LetterStack.ReceiveLetter(
                 "RoadsOfTheRim_RoadBuilt".Translate(),
-                "RoadsOfTheRim_RoadBuiltLetterText".Translate(parentSite.roadToBuild.label, (caravan != null ? caravan.Label : "RoadsOfTheRim_RoadBuiltByAlly".Translate())),
+                "RoadsOfTheRim_RoadBuiltLetterText".Translate(parentSite.roadDef.label, (caravan != null ? caravan.Label : "RoadsOfTheRim_RoadBuiltByAlly".Translate())),
                 LetterDefOf.PositiveEvent,
                 new GlobalTargetInfo(parentSite.Tile)
             );
@@ -446,7 +336,7 @@ namespace RoadsOfTheRim
         {
             RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Main".Translate(String.Format("{0:P1}", work.getPercentageDone())));
+            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Main".Translate(String.Format("{0:P1}", GetPercentageDone("Work"))));
 
             // Description of ally's help, if any
             if (parentSite.helpFromFaction != null)
@@ -467,38 +357,29 @@ namespace RoadsOfTheRim
                 String.Format("{0:P}",elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier) ,
                 String.Format("{0:P}",elevationModifier) , String.Format("{0:P}",hillinessModifier) , String.Format("{0:P}",swampinessModifier) , String.Format("{0:P}",bridgeModifier)
             )) ;
-            
+
             // Per resource : show costs & how much is left to do
-            stringBuilder.AppendLine();
-            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate("work", (int)work.getLeft(), (int)work.getCost()));
-            stringBuilder.AppendLine();
-            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate("wood", (int)wood.getLeft(), (int)wood.getCost()));
-            stringBuilder.AppendLine();
-            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate("stone", (int)stone.getLeft(), (int)stone.getCost()));
-            stringBuilder.AppendLine();
-            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate("steel", (int)steel.getLeft(), (int)steel.getCost()));
-            stringBuilder.AppendLine();
-            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate("chemfuel", (int)chemfuel.getLeft(), (int)chemfuel.getCost()));
+
+            foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
+            {
+                if (GetCost(resourceName) > 0)
+                {
+                    stringBuilder.AppendLine();
+                    stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate("work", (int)GetLeft(resourceName), (int)GetCost(resourceName)));
+                }
+            }
             return stringBuilder.ToString();
         }
 
         public float percentageDone()
         {
-            return work.getPercentageDone();
+            return GetPercentageDone("Work");
         }
 
         public override void PostExposeData()
         {
-            Scribe_Values.Look<float>(ref work.cost, "cost_work", 0, true);
-            Scribe_Values.Look<float>(ref wood.cost, "cost_wood", 0, true);
-            Scribe_Values.Look<float>(ref stone.cost, "cost_stone", 0, true);
-            Scribe_Values.Look<float>(ref steel.cost, "cost_steel", 0, true);
-            Scribe_Values.Look<float>(ref chemfuel.cost, "cost_chemfuel", 0, true);
-            Scribe_Values.Look<float>(ref work.left, "left_work", 0, true);
-            Scribe_Values.Look<float>(ref wood.left, "left_wood", 0, true);
-            Scribe_Values.Look<float>(ref stone.left, "left_stone", 0, true);
-            Scribe_Values.Look<float>(ref steel.left, "left_steel", 0, true);
-            Scribe_Values.Look<float>(ref chemfuel.left, "left_chemfuel", 0, true);
+            Scribe_Collections.Look<string, int>(ref costs, "RotR_site_costs", LookMode.Reference, LookMode.Value, ref costs_Keys , ref costs_Values);
+            Scribe_Collections.Look<string, int>(ref left, "RotR_site_left", LookMode.Reference, LookMode.Value, ref left_Keys, ref left_Values);
         }
     }
 }

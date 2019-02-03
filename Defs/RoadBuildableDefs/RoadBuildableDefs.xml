@@ -53,3 +53,8 @@
     </RoadsOfTheRim.RoadBuildableDef>
 
 </Defs>
+
+<!--
+To add roads, look at RoadDefs
+The layers are defined in RoadWorldLayersDefs and allow me to create custom layers (colours), must they must all be lines
+-->

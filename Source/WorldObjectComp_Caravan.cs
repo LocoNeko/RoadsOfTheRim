@@ -107,7 +107,7 @@ namespace RoadsOfTheRim
                 {
                     base.CompTick();
                     site.TryToSkipBetterRoads(caravan) ; // No need to work if there's a better road here
-                    if (getSite().GetComponent<WorldObjectComp_ConstructionSite>().doSomeWork(caravan))
+                    if (RoadsOfTheRim.doSomeWork(caravan, getSite(), out bool noMoreResources))
                     {
                         stopWorking() ;
                         unsetSite() ;

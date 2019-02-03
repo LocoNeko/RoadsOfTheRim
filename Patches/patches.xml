@@ -1,6 +1,94 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Patch>
-	<Operation Class="PatchOperationReplace">
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>/Defs/RoadDef</xpath>
+        <value>
+            <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
+            </li>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/RoadDef[defName = "DirtPath"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <value>
+            <built>false</built>
+            <costs>
+                <li>
+                    <key>Work</key>
+                    <value>600</value>
+                </li>
+            </costs>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>*/RoadDef[defName = "DirtRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <value>
+            <built>false</built>
+            <costs>
+                <li>
+                    <key>Work</key>
+                    <value>1200</value>
+                </li>
+                <li>
+                    <key>Wood</key>
+                    <value>120</value>
+                </li>
+            </costs>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>*/RoadDef[defName = "StoneRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <value>
+            <built>false</built>
+            <costs>
+                <li>
+                    <key>Work</key>
+                    <value>3600</value>
+                </li>
+                <li>
+                    <key>Wood</key>
+                    <value>240</value>
+                </li>
+                <li>
+                    <key>Stone</key>
+                    <value>1800</value>
+                </li>
+                <li>
+                    <key>Steel</key>
+                    <value>300</value>
+                </li>
+            </costs>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>*/RoadDef[defName = "AncientAsphaltRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <value>
+            <built>false</built>
+            <costs>
+                <li>
+                    <key>Work</key>
+                    <value>5400</value>
+                </li>
+                <li>
+                    <key>Stone</key>
+                    <value>3600</value>
+                </li>
+                <li>
+                    <key>Steel</key>
+                    <value>600</value>
+                </li>
+                <li>
+                    <key>Chemfuel</key>
+                    <value>300</value>
+                </li>
+            </costs>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationReplace">
 		<xpath>*/RoadDef[defName = "DirtPath"]/movementCostMultiplier</xpath>
 		<value>
 			<movementCostMultiplier>0.75</movementCostMultiplier>

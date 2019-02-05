@@ -134,7 +134,7 @@ namespace RoadsOfTheRim
                 // Resources amounts
                 Text.Font = GameFont.Small;
                 int i = 0;
-                foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
+                foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
                 {
                     Rect ResourceAmountRect = new Rect(0, 176f + i++ * 40f, 144f, 32f);
                     Widgets.Label(ResourceAmountRect, roadDefExtension.GetCost(resourceName).ToString());

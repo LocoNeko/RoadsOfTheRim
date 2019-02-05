@@ -186,23 +186,46 @@ namespace RoadsOfTheRim
         * - Construction speed (0.5 + 0.15 per level) times the construct success chance (0.75 to 1.13 - lvl 8 is 1)
         * - Pack animals help as well (see below)
         */
-        public static float CalculateConstruction(List<Pawn> pawns)
+        public float amountOfWork()
         {
+            List<Pawn> pawns = GetCaravan().PawnsListForReading ;
+            DefModExtension_RotR_RoadDef roadDefModExtension = null ;
+            try 
+            {
+                roadDefModExtension = site.roadDef.GetModExtension<DefModExtension_RotR_RoadDef>() ;
+            }
+            catch { /* Either there's no site, no roaddef, or no modextension. In any case, not much to do here */}
+            //site.roadDef.GetModExtension<DefModExtension_RotR_RoadDef>().minConstruction ;
             float totalConstruction = 0f;
+            float totalConstructionAboveMinLevel = 0f;
             float animalConstruction = 0f;
             StringBuilder str = new StringBuilder();
             foreach (Pawn pawn in pawns)
             {
-                if (pawn.IsColonist)
+                if (pawn.IsFreeColonist && pawn.health.State == PawnHealthState.Mobile)
                 {
                     totalConstruction += pawn.GetStatValue(StatDefOf.ConstructionSpeed) * pawn.GetStatValue(StatDefOf.ConstructSuccessChance);
+                    if (roadDefModExtension!=null && pawn.GetStatValue(StatDefOf.ConstructionSpeed) >= roadDefModExtension.minConstruction)
+                    {
+                        totalConstructionAboveMinLevel += pawn.GetStatValue(StatDefOf.ConstructionSpeed) * pawn.GetStatValue(StatDefOf.ConstructSuccessChance);
+                    }
                     str.Append(pawn.Name+" (Hmn) : "+ pawn.GetStatValue(StatDefOf.ConstructionSpeed)+"*"+ pawn.GetStatValue(StatDefOf.ConstructSuccessChance)+", ");
                 }
-                else if (pawn.RaceProps.packAnimal)
+                else if (pawn.RaceProps.packAnimal  && pawn.health.State == PawnHealthState.Mobile)
                 {
                     animalConstruction += pawn.GetStatValue(StatDefOf.ConstructionSpeed) * pawn.GetStatValue(StatDefOf.ConstructSuccessChance);
                     str.Append(pawn.Name + " (Ani) : " + pawn.GetStatValue(StatDefOf.ConstructionSpeed) + "*" + pawn.GetStatValue(StatDefOf.ConstructSuccessChance) + ", ");
                 }
+            }
+            // Check minimum construction level requirements if needed
+            if (roadDefModExtension!=null)
+            {
+                float ratioOfConstructionAboveMinLevel = totalConstructionAboveMinLevel / totalConstruction ;
+                if (ratioOfConstructionAboveMinLevel<1)
+                {
+                    totalConstruction *= ratioOfConstructionAboveMinLevel ;
+                }
+
             }
             // Pack animals can only add as much work as humans (i.e. : at best, pack animals double the amount of work)
             if (animalConstruction > totalConstruction)
@@ -214,11 +237,6 @@ namespace RoadsOfTheRim
             // Log.Message("[RofR] DEBUG : Calculate construction - "+str);
             // TO DO : the pawns should learn construction a little when actual construction is done
             return totalConstruction;
-        }
-
-        public float amountOfWork()
-        {
-            return CalculateConstruction(GetCaravan().PawnsListForReading);
         }
 
         public override void PostExposeData()

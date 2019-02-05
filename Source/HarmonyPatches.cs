@@ -111,27 +111,8 @@ namespace RoadsOfTheRim
     [HarmonyPatch(typeof(WorldGrid), "GetRoadMovementDifficultyMultiplier")]
     public static class Patch_WorldGrid_GetRoadMovementDifficultyMultiplier
     {
-        private static readonly MethodInfo DaMethod = AccessTools.Method(typeof(WorldPathGrid), "HillinessMovementDifficultyOffset", new Type[] { typeof(Hilliness) });
+        private static readonly MethodInfo HillinessMovementDifficultyOffset = AccessTools.Method(typeof(WorldPathGrid), "HillinessMovementDifficultyOffset", new Type[] { typeof(Hilliness) });
 
-        /* // This is private in WorldPathGrid. No choice but to copy that here
-        private static float HillinessMovementDifficultyOffset(Hilliness hilliness)
-        {
-            switch (hilliness)
-            {
-                case Hilliness.Flat:
-                    return 0f;
-                case Hilliness.SmallHills:
-                    return 0.5f;
-                case Hilliness.LargeHills:
-                    return 1.5f;
-                case Hilliness.Mountainous:
-                    return 3f;
-                case Hilliness.Impassable:
-                    return 1000f;
-                default:
-                    return 0f;
-            }
-        }*/
         [HarmonyPostfix]
         public static void Postifx(ref float __result , WorldGrid __instance, ref int fromTile, ref int toTile, ref StringBuilder explanation)
         {
@@ -144,7 +125,7 @@ namespace RoadsOfTheRim
 			{
 				toTile = __instance.FindMostReasonableAdjacentTileForDisplayedPathCost(fromTile);
 			}
-            float BiomeCoef = 0 ;
+            float biomeModifier = 0 ;
             float HillModifier = 0 ;
             for (int i = 0; i < roads.Count; i++)
 			{
@@ -156,17 +137,16 @@ namespace RoadsOfTheRim
                     float RoadModifier = RoadsOfTheRim.calculateRoadModifier(
                         roads[i].road , 
                         Find.WorldGrid[toTile].biome.movementDifficulty ,
-                        (float)DaMethod.Invoke(null , new object[] { Find.WorldGrid[toTile].hilliness }),
-                        /*HillinessMovementDifficultyOffset(Find.WorldGrid[toTile].hilliness) ,*/
+                        (float)HillinessMovementDifficultyOffset.Invoke(null , new object[] { Find.WorldGrid[toTile].hilliness }),
                         WorldPathGrid.GetCurrentWinterMovementDifficultyOffset(toTile) ,
-                        out BiomeCoef,
+                        out biomeModifier,
                         out HillModifier
                     );
 
                     __result *= RoadModifier ;
                     if (explanation != null) {
                         explanation.AppendLine ();
-                        explanation.Append(String.Format("The road cancels {0:P0} of the biome and {1:P0} of the hills movement cost", BiomeCoef, 1-HillModifier));
+                        explanation.Append(String.Format("The road cancels {0:P0} of the biome and {1:P0} of the hills movement cost", 1-biomeModifier, 1-HillModifier));
                     }
                 }
             }

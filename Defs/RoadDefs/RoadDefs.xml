@@ -105,6 +105,9 @@
     <modExtensions>
             <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
                 <built>true</built>
+				<biomeModifier>0.25</biomeModifier>
+				<hillinessModifier>0.2</hillinessModifier>
+				<winterModifier>0</winterModifier>
                 <costs>
                     <li>
                         <key>Work</key>
@@ -165,6 +168,9 @@
     <modExtensions>
             <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
                 <built>true</built>
+				<biomeModifier>0.75</biomeModifier>
+				<hillinessModifier>0.4</hillinessModifier>
+				<winterModifier>0</winterModifier>
                 <costs>
                     <li>
                         <key>Work</key>
@@ -234,7 +240,10 @@
         <worldTransitionGroup>Asphalt</worldTransitionGroup>
         <modExtensions>
                 <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
-                    <built>true</built>
+                    <built>true</built>				
+					<biomeModifier>1</biomeModifier>
+					<hillinessModifier>0.6</hillinessModifier>
+					<winterModifier>0</winterModifier>
                     <costs>
                         <li>
                             <key>Work</key>

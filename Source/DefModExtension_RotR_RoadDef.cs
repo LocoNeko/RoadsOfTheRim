@@ -36,6 +36,8 @@ namespace RoadsOfTheRim
 
         public static string[] allResources = new string[] {"Wood" , "Stone" , "Steel" , "Chemfuel"} ; // TO DO : Add all needed resources here later (plasteel, components, etc)
 
+        public static string[] allResourcesAndWork = new string[] {"Work" , "Wood" , "Stone" , "Steel" , "Chemfuel"} ;
+        
         public Dictionary<string , int> costs = new Dictionary<string, int>() ;
 
         /*

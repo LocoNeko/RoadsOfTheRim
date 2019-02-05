@@ -34,20 +34,21 @@ namespace RoadsOfTheRim
         public bool OverrideCosts = true;
         public float CostIncreaseElevationThreshold = 1000 ;
 
+        public float CostUpgradeRebate = 0.3f ;
+
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Values.Look<float>(ref BaseEffort, "BaseEffort", DefaultBaseEffort, true);
             Scribe_Values.Look<bool>(ref OverrideCosts, "OverrideCosts", true, true);
             Scribe_Values.Look<float>(ref CostIncreaseElevationThreshold, "CostIncreaseElevationThreshold", 1000 , true);
+            Scribe_Values.Look<float>(ref CostUpgradeRebate, "CostUpgradeRebate", 0.3f , true) ;
         }
     }
 
     public class RoadsOfTheRim : Mod
     {
         public static RoadsOfTheRimSettings settings;
-
-        public static string[] allResources = new string[] { "Wood", "Stone", "Steel", "Chemfuel" }; // TO DO : Add all needed resources here later (plasteel, components, etc)
 
         /*
         For construction help from ally , I will need a dictionary whenCanFactionHelp <Faction , int> that stores the ticks when that faction can help again 
@@ -136,27 +137,27 @@ namespace RoadsOfTheRim
             }
         }
         
-        public static float calculateRoadModifier(RoadDef roadDef, float BiomeMovementDifficulty , float HillinessOffset , float WinterOffset , out float biomeCoef, out float HillModifier)
+        public static float calculateRoadModifier(RoadDef roadDef, float BiomeMovementDifficulty , float HillinessOffset , float WinterOffset , out float biomeModifier, out float HillModifier)
         {
-            biomeCoef = 0f ;
-            HillModifier = 1f;
+            biomeModifier = 0f ;
+            HillModifier = 0f;
             if (roadDef.defName == "DirtRoad")
             {
-                biomeCoef = 0.25f;
-                HillModifier = 0.8f;
+                biomeModifier = 0.25f;
+                HillModifier = 0.2f;
             }
             if (roadDef.defName == "StoneRoad")
             {
-                biomeCoef = 0.75f;
-                HillModifier = 0.6f;
+                biomeModifier = 0.75f;
+                HillModifier = 0.4f;
             }
             if (roadDef.defName == "AncientAsphaltRoad" || roadDef.defName == "AncientAsphaltHighway")
             {
-                biomeCoef = 1f;
-                HillModifier = 0.4f;
+                biomeModifier = 1f;
+                HillModifier = 0.6f;
             }
-            float BiomeModifier = (1 + (BiomeMovementDifficulty-1) * (1-biomeCoef)) / BiomeMovementDifficulty ;
-            return ((BiomeModifier*BiomeMovementDifficulty) + (HillModifier*HillinessOffset) + WinterOffset ) / (BiomeMovementDifficulty + HillinessOffset + WinterOffset) ;
+            float BiomeCoef = (1 + (BiomeMovementDifficulty-1) * (1-biomeModifier)) / BiomeMovementDifficulty ;
+            return ((BiomeCoef*BiomeMovementDifficulty) + (HillModifier*(1-HillinessOffset)) + WinterOffset ) / (BiomeMovementDifficulty + HillinessOffset + WinterOffset) ;
         }
 
 
@@ -200,14 +201,14 @@ namespace RoadsOfTheRim
             }
 
             // calculate material present in the caravan
-            foreach (string resourceName in allResources)
+            foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
             {
                 available[resourceName] = 0;
             }
 
             foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
             {
-                foreach (string resourceName in allResources)
+                foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
                 {
                     if (isThis(aThing.def, resourceName))
                     {
@@ -221,7 +222,7 @@ namespace RoadsOfTheRim
 
             // The amount of each resource left to spend in total is : percentOfWorkLeftToDoAfter * {this resource cost}
             // Materials that would be needed to do that much work
-            foreach (string resourceName in allResources)
+            foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
             {
                 needed[resourceName] = (int)Math.Round(siteComp.GetLeft(resourceName) - (percentOfWorkLeftToDoAfter * siteComp.GetCost(resourceName)));
                 // Check if there's enough material to go through this batch. Materials with a cost of 0 are always OK
@@ -236,7 +237,7 @@ namespace RoadsOfTheRim
             if (ratio_final < 1f)
             {
                 Messages.Message("RoadsOfTheRim_CaravanNoResource".Translate(caravan.Name, site.roadDef.label), MessageTypeDefOf.RejectInput);
-                foreach (string resourceName in allResources)
+                foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
                 {
                     needed[resourceName] = (int)(needed[resourceName] * ratio_final);
                 }
@@ -246,7 +247,7 @@ namespace RoadsOfTheRim
             // Consume resources from the caravan 
             foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
             {
-                foreach (string resourceName in allResources)
+                foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
                 {
                     if (needed[resourceName] > 0 && isThis(aThing.def, resourceName))
                     {
@@ -263,7 +264,7 @@ namespace RoadsOfTheRim
             }
 
             // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
-            amountOfWork = ratio_final * amountOfWork;
+            amountOfWork = Math.Max(ratio_final * amountOfWork , 1); // Always do at least 1 work
             return siteComp.UpdateProgress(amountOfWork, caravan);
         }
 

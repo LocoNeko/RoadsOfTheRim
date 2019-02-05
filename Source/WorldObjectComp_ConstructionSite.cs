@@ -117,23 +117,39 @@ namespace RoadsOfTheRim
         }
 
         /*
-        Returns the amount of each resource that can be saved when building a road, based on existing roads
+         * For resources (including work) that are part of the cost of both the road to build and the best existing road, 
+         * grant CostUpgradeRebate% (default 30%) of the best existing road build costs as a rebate on the costs of the road to be built
+         * i.e. the exisitng road cost 300 stones, the new road cost 600 stones, the rebate is 300*30% = 90 stones
          */
-        /*
-        public static void GetUpgradeModifiers(int fromTile_int , int toTile_int , RoadBuildableDef roadToBuildBuildableDef ,  ref float workRebate , ref float woodRebate , ref float stoneRebate , ref float steelRebate , ref float chemfuelRebate)
+        public static void GetUpgradeModifiers(int fromTile_int , int toTile_int , RoadDef roadToBuild , out Dictionary<string , int> rebate)
         {
-            RoadDef bestExistingRoad = RoadsOfTheRim.BestExistingRoad(fromTile_int , toTile_int);
-
-            // There is already a road here & the one to be built is better
-            if (bestExistingRoad!=null && RoadsOfTheRim.isRoadBetter(DefDatabase<RoadDef>.GetNamed(roadToBuildBuildableDef.getRoadDef()) , bestExistingRoad))
+            rebate = new Dictionary<string , int>() ;
+            RoadDef bestExistingRoad = RoadsOfTheRim.BestExistingRoad(fromTile_int, toTile_int) ;
+            if (bestExistingRoad!=null)
             {
-                // Give X% of the cost of the orignal road as a rebate for the new road
-                string buildableDefName = "DirtPath" ;
-                RoadBuildableDef existingRoadBuildableDef = DefDatabase<RoadBuildableDef>.GetNamed(buildableDefName) ;
-
+                DefModExtension_RotR_RoadDef bestExistingRoadDefModExtension = bestExistingRoad.GetModExtension<DefModExtension_RotR_RoadDef>() ;
+                DefModExtension_RotR_RoadDef roadToBuildRoadDefModExtension = roadToBuild.GetModExtension<DefModExtension_RotR_RoadDef>() ;
+                if (bestExistingRoadDefModExtension!=null && roadToBuildRoadDefModExtension!=null && RoadsOfTheRim.isRoadBetter(roadToBuild , bestExistingRoad))
+                {
+                    foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
+                    {
+                        int existingCost = bestExistingRoadDefModExtension.GetCost(resourceName) ;
+                        int toBuildCost = roadToBuildRoadDefModExtension.GetCost(resourceName) ;
+                        if (existingCost!=0 && toBuildCost!=0)
+                        {
+                            if ( (int)(existingCost * RoadsOfTheRim.settings.CostUpgradeRebate) > toBuildCost)
+                            {
+                                rebate[resourceName] = toBuildCost ;
+                            }
+                            else
+                            {
+                                rebate[resourceName] = (int)(existingCost * RoadsOfTheRim.settings.CostUpgradeRebate) ; 
+                            }
+                        }
+                    }
+                }
             }
         }
-        */
 
         /*
          * Faction help must be handled here, since it's independent of whether or not a caravan is here.
@@ -165,7 +181,7 @@ namespace RoadsOfTheRim
 
         public bool resourcesAlreadyConsumed()
         {
-            foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
+            foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
             {
                 if (GetCost(resourceName) > 0 && GetLeft(resourceName) < GetCost(resourceName))
                 {
@@ -204,13 +220,27 @@ namespace RoadsOfTheRim
                 DefModExtension_RotR_RoadDef roadDefExtension = parentSite.roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
 
 
-                // TO DO once I have changed the roads to new road defs
-                // GetUpgradeModifiers(parentSite.Tile , parentSite.GetNextLeg().Tile , roadToBuild , ref workRebate , ref woodRebate , ref stoneRebate , ref steelRebate , ref chemfuelRebate) ;
-                // Those will have to be changed to a Dictionary of resources : Rebate[resourceName] 
-                foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
+                // Check existing roads for potential rebates when upgrading
+                GetUpgradeModifiers(parentSite.Tile , parentSite.GetNextLeg().Tile , parentSite.roadDef , out Dictionary<string , int> rebate) ;
+
+                foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
                 {
-                    costs[resourceName] = (int)(roadDefExtension.GetCost(resourceName) * totalCostModifier) ;
-                    // TO DO - rebates : costs[resourceName] = (int)( (roadDefExtension.GetCost(resourceName)-Rebate[resourceName]) * totalCostModifier);
+                    List<string> s = new List<string>() ;
+                    if (roadDefExtension.GetCost(resourceName)>0)
+                    {
+                        int thisRebate = 0;
+                        rebate.TryGetValue(resourceName, out thisRebate);
+                        costs[resourceName] = (int)((roadDefExtension.GetCost(resourceName) - thisRebate) * totalCostModifier);
+                        left[resourceName] = costs[resourceName];
+                        if (thisRebate>0)
+                        {
+                            s.Add("RoadsOfTheRim_UpgradeRebateDetail".Translate((int)(thisRebate * totalCostModifier) , resourceName));
+                        }
+                    }
+                    if (s.Count>0)
+                    {
+                        Messages.Message("RoadsOfTheRim_UpgradeRebate".Translate(string.Join(", ", s.ToArray())) , MessageTypeDefOf.PositiveEvent);
+                    }
                 }
                 parentSite.UpdateProgressBarMaterial();
             }
@@ -354,18 +384,17 @@ namespace RoadsOfTheRim
             float bridgeModifier = 0f;
             GetCostsModifiers(parentSite.Tile , parentSite.GetNextLeg().Tile , ref elevationModifier , ref hillinessModifier , ref swampinessModifier , ref bridgeModifier) ;
             stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_CostModifiers".Translate(
-                String.Format("{0:P}",elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier) ,
-                String.Format("{0:P}",elevationModifier) , String.Format("{0:P}",hillinessModifier) , String.Format("{0:P}",swampinessModifier) , String.Format("{0:P}",bridgeModifier)
+                String.Format("{0:P0}",elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier) ,
+                String.Format("{0:P0}",elevationModifier) , String.Format("{0:P0}",hillinessModifier) , String.Format("{0:P0}",swampinessModifier) , String.Format("{0:P0}",bridgeModifier)
             )) ;
 
             // Per resource : show costs & how much is left to do
-
-            foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
+            foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
             {
                 if (GetCost(resourceName) > 0)
                 {
                     stringBuilder.AppendLine();
-                    stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate("work", (int)GetLeft(resourceName), (int)GetCost(resourceName)));
+                    stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate(resourceName, (int)GetLeft(resourceName), (int)GetCost(resourceName)));
                 }
             }
             return stringBuilder.ToString();
@@ -378,8 +407,8 @@ namespace RoadsOfTheRim
 
         public override void PostExposeData()
         {
-            Scribe_Collections.Look<string, int>(ref costs, "RotR_site_costs", LookMode.Reference, LookMode.Value, ref costs_Keys , ref costs_Values);
-            Scribe_Collections.Look<string, int>(ref left, "RotR_site_left", LookMode.Reference, LookMode.Value, ref left_Keys, ref left_Values);
+            Scribe_Collections.Look<string, int>(ref costs, "RotR_site_costs", LookMode.Value, LookMode.Value, ref costs_Keys , ref costs_Values);
+            Scribe_Collections.Look<string, int>(ref left, "RotR_site_left", LookMode.Value, LookMode.Value, ref left_Keys, ref left_Values);
         }
     }
 }

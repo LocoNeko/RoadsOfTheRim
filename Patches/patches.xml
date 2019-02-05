@@ -25,6 +25,9 @@
         <xpath>*/RoadDef[defName = "DirtRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
         <value>
             <built>false</built>
+            <biomeModifier>0.25</biomeModifier>
+            <hillinessModifier>0.2</hillinessModifier>
+            <winterModifier>0</winterModifier>
             <costs>
                 <li>
                     <key>Work</key>
@@ -42,6 +45,9 @@
         <xpath>*/RoadDef[defName = "StoneRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
         <value>
             <built>false</built>
+            <biomeModifier>0.75</biomeModifier>
+            <hillinessModifier>0.4</hillinessModifier>
+            <winterModifier>0</winterModifier>
             <costs>
                 <li>
                     <key>Work</key>
@@ -67,6 +73,37 @@
         <xpath>*/RoadDef[defName = "AncientAsphaltRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
         <value>
             <built>false</built>
+            <biomeModifier>1</biomeModifier>
+            <hillinessModifier>0.6</hillinessModifier>
+            <winterModifier>0</winterModifier>
+            <costs>
+                <li>
+                    <key>Work</key>
+                    <value>5400</value>
+                </li>
+                <li>
+                    <key>Stone</key>
+                    <value>3600</value>
+                </li>
+                <li>
+                    <key>Steel</key>
+                    <value>600</value>
+                </li>
+                <li>
+                    <key>Chemfuel</key>
+                    <value>300</value>
+                </li>
+            </costs>
+        </value>
+    </Operation>
+    <!-- Should both the ancient asphalt road & highway really be the same in terms of costs & modifiers ? -->
+    <Operation Class="PatchOperationAdd">
+        <xpath>*/RoadDef[defName = "AncientAsphaltHighway"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <value>
+            <built>false</built>
+            <biomeModifier>1</biomeModifier>
+            <hillinessModifier>0.6</hillinessModifier>
+            <winterModifier>0</winterModifier>
             <costs>
                 <li>
                     <key>Work</key>
@@ -144,4 +181,12 @@
             </value>
         </match>
     </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/MapGeneratorDef[@Name="MapCommonBase"]/genSteps</xpath>
+        <value>
+            <li>RotR_CleanBuiltRoads</li>
+        </value>
+    </Operation>
+    
 </Patch>

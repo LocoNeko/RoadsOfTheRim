@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+<!--
+  <TerrainDef>
+    <defName>BrokenAsphalt</defName>
+    <label>broken asphalt</label>
+    <statBases>
+      <Beauty>-1</Beauty>
+      <Cleanliness>-1</Cleanliness>
+    </statBases>
+    <pathCost>0</pathCost>
+    <fertility>0.0</fertility>
+    <resourcesFractionWhenDeconstructed>0</resourcesFractionWhenDeconstructed>
+    <texturePath>Terrain/Surfaces/BrokenAsphalt</texturePath>
+    <edgeType>FadeRough</edgeType>
+    <renderPrecedence>370</renderPrecedence>
+    <affordances>
+      <li ListIndex="0">Light</li>
+      <li ListIndex="1">Heavy</li>
+    </affordances>
+    <layerable>true</layerable>
+    <scatterType>Rocky</scatterType>
+    <tags>
+      <li ListIndex="0">Road</li>
+    </tags>
+  </TerrainDef>
+-->
+  <TerrainDef>
+    <defName>AsphaltRecent</defName>
+    <label>recently built asphalt</label>
+    <statBases>
+      <Beauty>-1</Beauty>
+      <Cleanliness>-1</Cleanliness>
+    </statBases>
+    <pathCost>0</pathCost>
+    <fertility>0.0</fertility>
+    <resourcesFractionWhenDeconstructed>0</resourcesFractionWhenDeconstructed>
+	<!-- TO DO : Find a texture -->
+    <texturePath>Terrain/Surfaces/BrokenAsphalt</texturePath>
+    <edgeType>Hard</edgeType>
+	<renderPrecedence>380</renderPrecedence>
+    <affordances>
+      <li ListIndex="0">Light</li>
+      <li ListIndex="1">Heavy</li>
+    </affordances>
+    <layerable>true</layerable>
+    <scatterType>AbsolutelyNot</scatterType>
+    <tags>
+      <li ListIndex="0">Road</li>
+    </tags>
+  </TerrainDef>
+</Defs>

@@ -26,14 +26,28 @@ namespace RoadsOfTheRim
                 Log.Message(method.Name);
             }
             */
-            // DEBUG
-	    /*
-            Log.Message("[RotR] - Roads of the Rim loaded");
-            foreach (RoadDef aRoadDef in DefDatabase<RoadDef>.AllDefs)
+
+            // Initialise the list of terrains that are specific to built roads. Doing it here is hacky, but this is a quick way to use defs after they were loaded
+            foreach (RoadDef thisDef in DefDatabase<RoadDef>.AllDefs)
             {
-                Log.Message("[RotR] - RoadDef found : " + aRoadDef + ". Extension :" + aRoadDef.GetModExtension<DefModExtension_RotR_RoadDef>().Description());
+                RoadsOfTheRim.DebugLog("initiliasing roadDef " + thisDef);
+                if (thisDef.HasModExtension<DefModExtension_RotR_RoadDef>() && thisDef.GetModExtension<DefModExtension_RotR_RoadDef>().built) // Only add RoadDefs that are buildable, based on DefModExtension_RotR_RoadDef.built
+                {
+                    foreach (RoadDefGenStep_Place aStep in thisDef.roadGenSteps.OfType<RoadDefGenStep_Place>()) // Only get RoadDefGenStep_Place
+                    {
+                        TerrainDef t = (TerrainDef)aStep.place; // Cast the buildableDef into a TerrainDef
+                        if (!RoadsOfTheRim.builtRoadTerrains.Contains(t))
+                        {
+                            RoadsOfTheRim.builtRoadTerrains.Add(t);
+                        }
+                    }
+                }
             }
-	    */
+            foreach (TerrainDef t in RoadsOfTheRim.builtRoadTerrains)
+            {
+                RoadsOfTheRim.DebugLog("builtRoadTerrains - Adding : " + t);
+            }
+            RoadsOfTheRim.DebugLog("Roads of the Rim loaded");
         }
     }
 
@@ -107,33 +121,14 @@ namespace RoadsOfTheRim
     }
 
     /*
-     * Patching roads so they cancel all or part of the Tile.biome.movementDifficulty
-     * The actual rates are stored in static method RoadsOfTheRim.calculateBiomeModifier
+     * Patching roads so they cancel all or part of the Tile.biome.movementDifficulty and Hilliness
+     * The actual rates are stored in static method RoadsOfTheRim.calculateRoadModifier
      */
     [HarmonyPatch(typeof(WorldGrid), "GetRoadMovementDifficultyMultiplier")]
     public static class Patch_WorldGrid_GetRoadMovementDifficultyMultiplier
     {
-        private static readonly MethodInfo DaMethod = AccessTools.Method(typeof(WorldPathGrid), "HillinessMovementDifficultyOffset", new Type[] { typeof(Hilliness) });
+        private static readonly MethodInfo HillinessMovementDifficultyOffset = AccessTools.Method(typeof(WorldPathGrid), "HillinessMovementDifficultyOffset", new Type[] { typeof(Hilliness) });
 
-        /* // This is private in WorldPathGrid. No choice but to copy that here
-        private static float HillinessMovementDifficultyOffset(Hilliness hilliness)
-        {
-            switch (hilliness)
-            {
-                case Hilliness.Flat:
-                    return 0f;
-                case Hilliness.SmallHills:
-                    return 0.5f;
-                case Hilliness.LargeHills:
-                    return 1.5f;
-                case Hilliness.Mountainous:
-                    return 3f;
-                case Hilliness.Impassable:
-                    return 1000f;
-                default:
-                    return 0f;
-            }
-        }*/
         [HarmonyPostfix]
         public static void Postifx(ref float __result , WorldGrid __instance, ref int fromTile, ref int toTile, ref StringBuilder explanation)
         {
@@ -146,29 +141,27 @@ namespace RoadsOfTheRim
 			{
 				toTile = __instance.FindMostReasonableAdjacentTileForDisplayedPathCost(fromTile);
 			}
-            float BiomeCoef = 0 ;
+            float biomeModifier = 0 ;
             float HillModifier = 0 ;
             for (int i = 0; i < roads.Count; i++)
 			{
                 if (roads[i].neighbor == toTile)
 				{
 
-                    // Calculate biome modifier, update explanation &  multiply result by biome modifier
-                    //float biomeModifier = RoadsOfTheRim.calculateBiomeModifier(roads[i].road, Find.WorldGrid[toTile].biome.movementDifficulty, out biomeCancellation);
+                    // Calculate biome, Hillines & winter modifiers, update explanation &  multiply result by biome modifier
                     float RoadModifier = RoadsOfTheRim.calculateRoadModifier(
                         roads[i].road , 
                         Find.WorldGrid[toTile].biome.movementDifficulty ,
-                        (float)DaMethod.Invoke(null , new object[] { Find.WorldGrid[toTile].hilliness }),
-                        /*HillinessMovementDifficultyOffset(Find.WorldGrid[toTile].hilliness) ,*/
+                        (float)HillinessMovementDifficultyOffset.Invoke(null , new object[] { Find.WorldGrid[toTile].hilliness }),
                         WorldPathGrid.GetCurrentWinterMovementDifficultyOffset(toTile) ,
-                        out BiomeCoef,
+                        out biomeModifier,
                         out HillModifier
                     );
 
                     __result *= RoadModifier ;
                     if (explanation != null) {
                         explanation.AppendLine ();
-                        explanation.Append(String.Format("The road cancels {0:P0} of the biome and {1:P0} of the hills movement cost", BiomeCoef, 1-HillModifier));
+                        explanation.Append(String.Format("The road cancels {0:P0} of the biome and {1:P0} of the hills movement cost", 1-biomeModifier, 1-HillModifier));
                     }
                 }
             }

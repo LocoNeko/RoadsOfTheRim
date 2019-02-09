@@ -10,16 +10,28 @@ using Verse;
 
 namespace RoadsOfTheRim
 {
+    public class SettlementInfo // Convenience class to store Settlements and their distance to the Site
+    {
+        public Settlement settlement ;
+
+        public int distance ;
+
+        public SettlementInfo (Settlement s , int d)
+        {
+            settlement = s ;
+            distance = d ;
+        }
+    }
 
     public class RoadConstructionSite : WorldObject
     {
-        public RoadBuildableDef roadToBuild;
+        public RoadDef roadDef ; // TO DO as part of the phasing out of road buildable
 
         public static int maxTicksToNeighbour = 2 * GenDate.TicksPerDay ; // 2 days
 
         public static int maxNeighbourDistance = 100 ; // search 100 tiles away
 
-        public static int MaxSettlementsInDescription = 3;
+        public static int MaxSettlementsInDescription = 5 ;
 
         private static readonly Color ColorTransparent = new Color(0.0f, 0.0f, 0.0f, 0f);
 
@@ -29,7 +41,7 @@ namespace RoadsOfTheRim
 
         private Material ProgressBarMaterial;
 
-        public List<Settlement> listOfSettlements ;
+        public List<SettlementInfo> listOfSettlements ;
 
         public string NeighbouringSettlementsDescription ;
 
@@ -90,13 +102,13 @@ namespace RoadsOfTheRim
             List<string> s = new List<string>();
             if ((listOfSettlements != null) && (listOfSettlements.Count > 0))
             {
-                foreach (Settlement settlement in listOfSettlements.Take(MaxSettlementsInDescription))
+                foreach (SettlementInfo si in listOfSettlements.Take(MaxSettlementsInDescription))
                 {
-                    float nbDays = (float)CaravanArrivalTimeEstimator.EstimatedTicksToArrive(Tile, settlement.Tile, null)/GenDate.TicksPerDay;
-                    s.Add("RoadsOfTheRim_siteDescription".Translate(settlement.Name, string.Format("{0:0.00}",nbDays)));
+                    s.Add("RoadsOfTheRim_siteDescription".Translate(si.settlement.Name, string.Format("{0:0.00}" , (float)si.distance / (float)GenDate.TicksPerDay)));
                 }
             }
             NeighbouringSettlementsDescription = String.Join(", ", s.ToArray());
+            RoadsOfTheRim.DebugLog(NeighbouringSettlementsDescription);
             if (listOfSettlements.Count > MaxSettlementsInDescription)
             {
                 NeighbouringSettlementsDescription += "RoadsOfTheRim_siteDescriptionExtra".Translate(listOfSettlements.Count - MaxSettlementsInDescription);
@@ -111,7 +123,7 @@ namespace RoadsOfTheRim
                 populateDescription();
             }
             StringBuilder result = new StringBuilder();
-            result.Append("RoadsOfTheRim_siteFullName".Translate(roadToBuild.label));
+            result.Append("RoadsOfTheRim_siteFullName".Translate(roadDef.label));
             if (NeighbouringSettlementsDescription.Length>0)
             {
                 result.Append("RoadsOfTheRim_siteFullNameNeighbours".Translate(NeighbouringSettlementsDescription));
@@ -119,48 +131,49 @@ namespace RoadsOfTheRim
             return result.ToString();
         }
 
-        public List<Settlement> neighbouringSettlements()
+        public List<SettlementInfo> neighbouringSettlements()
         {
             if (this.Tile!=-1)
             {
-                List<Settlement> result = new List<Settlement>();
+                List<SettlementInfo> result = new List<SettlementInfo>();
                 List<int> tileSearched = new List<int>();
                 searchForSettlements(Tile, ref result);
-                return result;
+                return result.OrderBy(si => si.distance).ToList();
             }
             return null;
         }
 
-        public void searchForSettlements(int startTile, ref List<Settlement> settlementsSearched)
+        public void searchForSettlements(int startTile, ref List<SettlementInfo> settlementsSearched)
         {
             var timer = System.Diagnostics.Stopwatch.StartNew();
             WorldGrid worldGrid = Find.WorldGrid;
             foreach (Settlement s in Find.WorldObjects.Settlements)
             {
-                if ( (worldGrid.ApproxDistanceInTiles(startTile, s.Tile) <= maxNeighbourDistance) && (CaravanArrivalTimeEstimator.EstimatedTicksToArrive(startTile, s.Tile, null) <= maxTicksToNeighbour) )
+                int distance = CaravanArrivalTimeEstimator.EstimatedTicksToArrive(startTile, s.Tile, null) ;
+                if ( (worldGrid.ApproxDistanceInTiles(startTile, s.Tile) <= maxNeighbourDistance) && distance <= maxTicksToNeighbour )
                 {
-                    settlementsSearched.Add(s);
+                    settlementsSearched.Add(new SettlementInfo(s , distance));
                 }
             }
             timer.Stop();
             RoadsOfTheRim.DebugLog("Time spent searching for settlements : "+timer.ElapsedMilliseconds+"ms");
         }
 
-        public Settlement closestSettlementOfFaction(Faction faction)
+        public SettlementInfo closestSettlementOfFaction(Faction faction)
         {
             initListOfSettlements();
             int travelTicks = maxTicksToNeighbour;
-            Settlement closestSettlement = null;
+            SettlementInfo closestSettlement = null;
             if (listOfSettlements != null)
             {
-                foreach (Settlement settlement in listOfSettlements)
+                foreach (SettlementInfo si in listOfSettlements)
                 {
-                    if (settlement.Faction == faction)
+                    if (si.settlement.Faction == faction)
                     {
-                        int travelTicksFromHere = CaravanArrivalTimeEstimator.EstimatedTicksToArrive(settlement.Tile, Tile, null);
+                        int travelTicksFromHere = CaravanArrivalTimeEstimator.EstimatedTicksToArrive(si.settlement.Tile, Tile, null);
                         if (travelTicksFromHere < travelTicks)
                         {
-                            closestSettlement = settlement;
+                            closestSettlement = si;
                             travelTicks = travelTicksFromHere;
                         }
                     }
@@ -228,8 +241,7 @@ namespace RoadsOfTheRim
             {
                 RoadDef bestExistingRoad = RoadsOfTheRim.BestExistingRoad(Tile , nextLeg.Tile) ;
                 // We've found an existing road that is better than the one we intend to build : skip this leg and move to the next
-                RoadDef newRoadDef = DefDatabase<RoadDef>.GetNamed(roadToBuild.getRoadDef());
-                if (!RoadsOfTheRim.isRoadBetter(newRoadDef , bestExistingRoad))
+                if (!RoadsOfTheRim.isRoadBetter(roadDef , bestExistingRoad))
                 {
                     int currentTile = Tile;
                     Tile = nextLeg.Tile; // The construction site moves to the next leg
@@ -269,7 +281,7 @@ namespace RoadsOfTheRim
             {
                 stringBuilder.AppendLine();
             }
-            stringBuilder.Append("RoadsOfTheRim_siteInspectString".Translate(roadToBuild.label, string.Format("{0:0.0}",roadToBuild.movementCostMultiplier)));
+            stringBuilder.Append("RoadsOfTheRim_siteInspectString".Translate(roadDef.label, string.Format("{0:0.0}", roadDef.movementCostMultiplier)));
             stringBuilder.AppendLine();
             stringBuilder.Append(this.GetComponent<WorldObjectComp_ConstructionSite>().progressDescription()) ;
             return stringBuilder.ToString();
@@ -279,7 +291,7 @@ namespace RoadsOfTheRim
         {
             base.ExposeData();
 
-            Scribe_Defs.Look<RoadBuildableDef>(ref this.roadToBuild, "roadToBuild");
+            Scribe_Defs.Look<RoadDef>(ref this.roadDef, "roadToBuild");
             Scribe_References.Look<Faction>(ref helpFromFaction, "helpFromFaction");
             Scribe_Values.Look<int>(ref helpFromTick, "helpFromTick");
             Scribe_Values.Look<float>(ref helpAmount, "helpAmount");
@@ -322,7 +334,7 @@ namespace RoadsOfTheRim
          */
         public override void Draw()
         {
-            if (RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting!=this || this.roadToBuild==null) // Do not draw the site if it's not yet finalised or if we don't know the type of road to build yet
+            if (RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting!=this || this.roadDef==null) // Do not draw the site if it's not yet finalised or if we don't know the type of road to build yet
             {
                 base.Draw();
                 WorldGrid worldGrid = Find.WorldGrid;
@@ -373,7 +385,7 @@ namespace RoadsOfTheRim
                 {
                     Find.LetterStack.ReceiveLetter(
                         "RoadsOfTheRim_FactionStopsHelping".Translate(),
-                        "RoadsOfTheRim_FactionStopsHelpingText".Translate(helpFromFaction.Name , roadToBuild.label),
+                        "RoadsOfTheRim_FactionStopsHelpingText".Translate(helpFromFaction.Name , roadDef.label),
                         LetterDefOf.NegativeEvent,
                         new GlobalTargetInfo(this)
                     );

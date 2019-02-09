@@ -15,9 +15,10 @@
   <RoadsOfTheRim_commsAskHelp>Ask ally for help on road construction (cost: 10 goodwill)</RoadsOfTheRim_commsAskHelp>
   <RoadsOfTheRim_commsNoSites>No construction sites found</RoadsOfTheRim_commsNoSites>
   <RoadsOfTheRim_commsAlreadyHelping>This faction is already helping with road construction</RoadsOfTheRim_commsAlreadyHelping>
-  <RoadsOfTheRim_commsHasHelpedRecently>This faction has helped recently. It can help again in {0} days</RoadsOfTheRim_commsHasHelpedRecently>
+  <RoadsOfTheRim_commsHasHelpedRecently>This faction has helped road construction recently. It can help again in {0} days</RoadsOfTheRim_commsHasHelpedRecently>
   <RoadsOfTheRim_commsNotClose>{0} is not close enough to help on this construction site</RoadsOfTheRim_commsNotClose>
   <RoadsOfTheRim_commsAnotherFactionIsHelping>{0} is already helping with this construction site</RoadsOfTheRim_commsAnotherFactionIsHelping>
+  <RoadsOfTheRim_commsNotDevelopedEnough>{0} is not developed enough to build {1}</RoadsOfTheRim_commsNotDevelopedEnough>
   <RoadsOfTheRim_commsSitesList>Construction sites</RoadsOfTheRim_commsSitesList>
   <RoadsOfTheRim_commsCancel>Cancel - no goodwill cost</RoadsOfTheRim_commsCancel>
   <RoadsOfTheRim_FactionStartsHelping>Help with construction</RoadsOfTheRim_FactionStartsHelping>
@@ -26,6 +27,7 @@
   <RoadsOfTheRim_FactionStopsHelpingText>{0} is not your ally any more and has stopped helping on the construction of {1}</RoadsOfTheRim_FactionStopsHelpingText>
   <RoadsOfTheRimWorkOnSite>Work</RoadsOfTheRimWorkOnSite>
   <RoadsOfTheRimWorkOnSiteDescription>Work on road construction site</RoadsOfTheRimWorkOnSiteDescription>
+  <RoadsOfTheRim_InsufficientConstructionMinLevel>Road construction reduced to {0} : needed {1} of the workforce to have at least a Construction skill of {2}</RoadsOfTheRim_InsufficientConstructionMinLevel>
   <RoadsOfTheRimSettingsCategoryLabel>Roads of the Rim</RoadsOfTheRimSettingsCategoryLabel>
   <RoadsOfTheRimSettingsBaseEffort>Base multiplier to road building costs</RoadsOfTheRimSettingsBaseEffort>
   <RoadsOfTheRimSettingsOverrideCosts>Override standard movement multipliers (requires game restart)</RoadsOfTheRimSettingsOverrideCosts>
@@ -48,6 +50,8 @@
   <RoadsOfTheRim_siteFullName>Site constructing {0}</RoadsOfTheRim_siteFullName>
   <RoadsOfTheRim_siteFullNameNeighbours> near {0}</RoadsOfTheRim_siteFullNameNeighbours>
   <RoadsOfTheRim_CaravanNoResource>{0} has ran out of resources to build {1}. Work stopped.</RoadsOfTheRim_CaravanNoResource>
+  <RoadsOfTheRim_UpgradeRebate>The existing road has lowered the construction costs by {0}</RoadsOfTheRim_UpgradeRebate>
+  <RoadsOfTheRim_UpgradeRebateDetail>{0} {1}</RoadsOfTheRim_UpgradeRebateDetail>
   <RoadsOfTheRim_RoadBuilt>Road built</RoadsOfTheRim_RoadBuilt>
   <RoadsOfTheRim_RoadBuiltLetterText>{0} has been built by {1}</RoadsOfTheRim_RoadBuiltLetterText>
   <RoadsOfTheRim_RoadBuiltByAlly>your ally</RoadsOfTheRim_RoadBuiltByAlly>

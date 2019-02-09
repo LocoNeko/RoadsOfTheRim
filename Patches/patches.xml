@@ -4,157 +4,107 @@
         <xpath>/Defs/RoadDef</xpath>
         <value>
             <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
+                <built>false</built>
             </li>
         </value>
     </Operation>
-    
     <Operation Class="PatchOperationAdd">
         <xpath>/Defs/RoadDef[defName = "DirtPath"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
         <value>
-            <built>false</built>
             <costs>
-                <li>
-                    <key>Work</key>
-                    <value>600</value>
-                </li>
+                <Work>600</Work>
             </costs>
         </value>
     </Operation>
     
     <Operation Class="PatchOperationAdd">
-        <xpath>*/RoadDef[defName = "DirtRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <xpath>/Defs/RoadDef[defName = "DirtRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
         <value>
-            <built>false</built>
             <biomeModifier>0.25</biomeModifier>
             <hillinessModifier>0.2</hillinessModifier>
             <winterModifier>0</winterModifier>
             <costs>
-                <li>
-                    <key>Work</key>
-                    <value>1200</value>
-                </li>
-                <li>
-                    <key>Wood</key>
-                    <value>120</value>
-                </li>
+                <Work>1200</Work>
+                <Wood>120</Wood>
             </costs>
         </value>
     </Operation>
     
     <Operation Class="PatchOperationAdd">
-        <xpath>*/RoadDef[defName = "StoneRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <xpath>/Defs/RoadDef[defName = "StoneRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
         <value>
-            <built>false</built>
             <biomeModifier>0.75</biomeModifier>
             <hillinessModifier>0.4</hillinessModifier>
             <winterModifier>0</winterModifier>
             <costs>
-                <li>
-                    <key>Work</key>
-                    <value>3600</value>
-                </li>
-                <li>
-                    <key>Wood</key>
-                    <value>240</value>
-                </li>
-                <li>
-                    <key>Stone</key>
-                    <value>1800</value>
-                </li>
-                <li>
-                    <key>Steel</key>
-                    <value>300</value>
-                </li>
+                <Work>3600</Work>
+                <Wood>240</Wood>
+                <Stone>1800</Stone>
+                <Steel>300</Steel>
             </costs>
         </value>
     </Operation>
     
     <Operation Class="PatchOperationAdd">
-        <xpath>*/RoadDef[defName = "AncientAsphaltRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <xpath>/Defs/RoadDef[defName = "AncientAsphaltRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
         <value>
-            <built>false</built>
             <biomeModifier>1</biomeModifier>
             <hillinessModifier>0.6</hillinessModifier>
             <winterModifier>0</winterModifier>
             <costs>
-                <li>
-                    <key>Work</key>
-                    <value>5400</value>
-                </li>
-                <li>
-                    <key>Stone</key>
-                    <value>3600</value>
-                </li>
-                <li>
-                    <key>Steel</key>
-                    <value>600</value>
-                </li>
-                <li>
-                    <key>Chemfuel</key>
-                    <value>300</value>
-                </li>
+                <Work>5400</Work>
+                <Stone>3600</Stone>
+                <Steel>600</Steel>
+                <Chemfuel>300</Chemfuel>
             </costs>
         </value>
     </Operation>
-    <!-- Should both the ancient asphalt road & highway really be the same in terms of costs & modifiers ? -->
+    
     <Operation Class="PatchOperationAdd">
-        <xpath>*/RoadDef[defName = "AncientAsphaltHighway"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <xpath>/Defs/RoadDef[defName = "AncientAsphaltHighway"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
         <value>
-            <built>false</built>
             <biomeModifier>1</biomeModifier>
             <hillinessModifier>0.6</hillinessModifier>
             <winterModifier>0</winterModifier>
             <costs>
-                <li>
-                    <key>Work</key>
-                    <value>5400</value>
-                </li>
-                <li>
-                    <key>Stone</key>
-                    <value>3600</value>
-                </li>
-                <li>
-                    <key>Steel</key>
-                    <value>600</value>
-                </li>
-                <li>
-                    <key>Chemfuel</key>
-                    <value>300</value>
-                </li>
+                <Work>5400</Work>
+                <Stone>3600</Stone>
+                <Steel>600</Steel>
+                <Chemfuel>300</Chemfuel>
             </costs>
         </value>
     </Operation>
     
     <Operation Class="PatchOperationReplace">
-		<xpath>*/RoadDef[defName = "DirtPath"]/movementCostMultiplier</xpath>
+		<xpath>/Defs/RoadDef[defName = "DirtPath"]/movementCostMultiplier</xpath>
 		<value>
 			<movementCostMultiplier>0.75</movementCostMultiplier>
 		</value>
 	</Operation>
 
 	<Operation Class="PatchOperationReplace">
-		<xpath>*/RoadDef[defName = "DirtRoad"]/movementCostMultiplier</xpath>
+		<xpath>/Defs/RoadDef[defName = "DirtRoad"]/movementCostMultiplier</xpath>
 		<value>
 			<movementCostMultiplier>0.6</movementCostMultiplier>
 		</value>
 	</Operation>
 
     <Operation Class="PatchOperationReplace">
-        <xpath>*/RoadDef[defName = "StoneRoad"]/movementCostMultiplier</xpath>
+        <xpath>/Defs/RoadDef[defName = "StoneRoad"]/movementCostMultiplier</xpath>
         <value>
             <movementCostMultiplier>0.5</movementCostMultiplier>
         </value>
     </Operation>
     
     <Operation Class="PatchOperationReplace">
-        <xpath>*/RoadDef[defName = "AncientAsphaltRoad"]/movementCostMultiplier</xpath>
+        <xpath>/Defs/RoadDef[defName = "AncientAsphaltRoad"]/movementCostMultiplier</xpath>
         <value>
             <movementCostMultiplier>0.4</movementCostMultiplier>
         </value>
     </Operation>
 
     <Operation Class="PatchOperationReplace">
-        <xpath>*/RoadDef[defName = "AncientAsphaltHighway"]/movementCostMultiplier</xpath>
+        <xpath>/Defs/RoadDef[defName = "AncientAsphaltHighway"]/movementCostMultiplier</xpath>
         <value>
             <movementCostMultiplier>0.4</movementCostMultiplier>
         </value>

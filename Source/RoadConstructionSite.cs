@@ -10,6 +10,18 @@ using Verse;
 
 namespace RoadsOfTheRim
 {
+    public class SettlementInfo // Convenience class to store Settlements and their distance to the Site
+    {
+        public Settlement settlement ;
+
+        public int distance ;
+
+        public SettlementInfo (Settlement s , int d)
+        {
+            settlement = s ;
+            distance = d ;
+        }
+    }
 
     public class RoadConstructionSite : WorldObject
     {
@@ -19,7 +31,7 @@ namespace RoadsOfTheRim
 
         public static int maxNeighbourDistance = 100 ; // search 100 tiles away
 
-        public static int MaxSettlementsInDescription = 3;
+        public static int MaxSettlementsInDescription = 5 ;
 
         private static readonly Color ColorTransparent = new Color(0.0f, 0.0f, 0.0f, 0f);
 
@@ -29,7 +41,7 @@ namespace RoadsOfTheRim
 
         private Material ProgressBarMaterial;
 
-        public List<Settlement> listOfSettlements ;
+        public List<SettlementInfo> listOfSettlements ;
 
         public string NeighbouringSettlementsDescription ;
 
@@ -90,13 +102,13 @@ namespace RoadsOfTheRim
             List<string> s = new List<string>();
             if ((listOfSettlements != null) && (listOfSettlements.Count > 0))
             {
-                foreach (Settlement settlement in listOfSettlements.Take(MaxSettlementsInDescription))
+                foreach (SettlementInfo si in listOfSettlements.Take(MaxSettlementsInDescription))
                 {
-                    float nbDays = (float)CaravanArrivalTimeEstimator.EstimatedTicksToArrive(Tile, settlement.Tile, null)/GenDate.TicksPerDay;
-                    s.Add("RoadsOfTheRim_siteDescription".Translate(settlement.Name, string.Format("{0:0.00}",nbDays)));
+                    s.Add("RoadsOfTheRim_siteDescription".Translate(si.settlement.Name, string.Format("{0:0.00}" , (float)si.distance / (float)GenDate.TicksPerDay)));
                 }
             }
             NeighbouringSettlementsDescription = String.Join(", ", s.ToArray());
+            RoadsOfTheRim.DebugLog(NeighbouringSettlementsDescription);
             if (listOfSettlements.Count > MaxSettlementsInDescription)
             {
                 NeighbouringSettlementsDescription += "RoadsOfTheRim_siteDescriptionExtra".Translate(listOfSettlements.Count - MaxSettlementsInDescription);
@@ -119,48 +131,49 @@ namespace RoadsOfTheRim
             return result.ToString();
         }
 
-        public List<Settlement> neighbouringSettlements()
+        public List<SettlementInfo> neighbouringSettlements()
         {
             if (this.Tile!=-1)
             {
-                List<Settlement> result = new List<Settlement>();
+                List<SettlementInfo> result = new List<SettlementInfo>();
                 List<int> tileSearched = new List<int>();
                 searchForSettlements(Tile, ref result);
-                return result;
+                return result.OrderBy(si => si.distance).ToList();
             }
             return null;
         }
 
-        public void searchForSettlements(int startTile, ref List<Settlement> settlementsSearched)
+        public void searchForSettlements(int startTile, ref List<SettlementInfo> settlementsSearched)
         {
             var timer = System.Diagnostics.Stopwatch.StartNew();
             WorldGrid worldGrid = Find.WorldGrid;
             foreach (Settlement s in Find.WorldObjects.Settlements)
             {
-                if ( (worldGrid.ApproxDistanceInTiles(startTile, s.Tile) <= maxNeighbourDistance) && (CaravanArrivalTimeEstimator.EstimatedTicksToArrive(startTile, s.Tile, null) <= maxTicksToNeighbour) )
+                int distance = CaravanArrivalTimeEstimator.EstimatedTicksToArrive(startTile, s.Tile, null) ;
+                if ( (worldGrid.ApproxDistanceInTiles(startTile, s.Tile) <= maxNeighbourDistance) && distance <= maxTicksToNeighbour )
                 {
-                    settlementsSearched.Add(s);
+                    settlementsSearched.Add(new SettlementInfo(s , distance));
                 }
             }
             timer.Stop();
             RoadsOfTheRim.DebugLog("Time spent searching for settlements : "+timer.ElapsedMilliseconds+"ms");
         }
 
-        public Settlement closestSettlementOfFaction(Faction faction)
+        public SettlementInfo closestSettlementOfFaction(Faction faction)
         {
             initListOfSettlements();
             int travelTicks = maxTicksToNeighbour;
-            Settlement closestSettlement = null;
+            SettlementInfo closestSettlement = null;
             if (listOfSettlements != null)
             {
-                foreach (Settlement settlement in listOfSettlements)
+                foreach (SettlementInfo si in listOfSettlements)
                 {
-                    if (settlement.Faction == faction)
+                    if (si.settlement.Faction == faction)
                     {
-                        int travelTicksFromHere = CaravanArrivalTimeEstimator.EstimatedTicksToArrive(settlement.Tile, Tile, null);
+                        int travelTicksFromHere = CaravanArrivalTimeEstimator.EstimatedTicksToArrive(si.settlement.Tile, Tile, null);
                         if (travelTicksFromHere < travelTicks)
                         {
-                            closestSettlement = settlement;
+                            closestSettlement = si;
                             travelTicks = travelTicksFromHere;
                         }
                     }

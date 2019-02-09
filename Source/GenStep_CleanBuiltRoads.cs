@@ -28,17 +28,27 @@ namespace RoadsOfTheRim
                 List<Thing> thingList = current.GetThingList(map);
                 TerrainDef terrainDefHere = terrainGrid.TerrainAt(current) ;
                 //if (terrainDefHere.defName == "AsphaltRecent" && thingList.Count>0)
-                if (isBuiltRoad(terrainDefHere) && thingList.Count>0)
+                if (isBuiltRoad(terrainDefHere))
                 {
-                    //RoadsOfTheRim.DebugLog("Placed " + thingList.ToStringSafe() + " on top of a recently built Asphalt Road") ;
-                    RoadsOfTheRim.DebugLog("Placed " + thingList.ToStringSafe() + " on top of a Broken Asphalt Road") ;
+                    map.roofGrid.SetRoof(current, null) ; // remove any roof
+                    if (map.fogGrid.IsFogged(current))
+                    {
+                        map.fogGrid.Unfog(current); // no fog on road
+                    }
+
+                    if (thingList.Count > 0)
+                    {
+                        //RoadsOfTheRim.DebugLog("Placed " + thingList.ToStringSafe() + " on top of a recently built Asphalt Road") ;
+                        RoadsOfTheRim.DebugLog("Placed " + thingList.Count + " things on top of " + terrainDefHere.label);
+                        MoveThings(map, current);
+                    }
                 }
             }
         }
 
         public static bool isBuiltRoad(TerrainDef def)
         {
-            return (def.defName == "BrokenAsphalt") ;
+            return RoadsOfTheRim.builtRoadTerrains.Contains(def) ;
         }
 
         /*
@@ -48,8 +58,10 @@ namespace RoadsOfTheRim
         {
             List<Thing> thingList = cell.GetThingList(map);
             TerrainGrid terrainGrid = map.terrainGrid;
+            //thingList.RemoveAll(item => item !=null);
             foreach (Thing thingToMove in thingList) // Go through all things on that cell
             {
+                RoadsOfTheRim.DebugLog("Trying to move " + thingToMove.Label);
                 List<IntVec3> cellChecked = new List<IntVec3>() ;
                 cellChecked.Add(cell) ;
                 bool goodCellFound = false ;
@@ -63,6 +75,7 @@ namespace RoadsOfTheRim
                         List<Thing> thingList2 = c.GetThingList(map);
                         if ( !isBuiltRoad(terrainDefHere) && thingList2.Count==0)
                         {
+                            RoadsOfTheRim.DebugLog("Moved "+thingToMove.Label);
                             thingToMove.SetPositionDirect(c) ;
                             goodCellFound = true ;
                             break ;
@@ -86,7 +99,7 @@ namespace RoadsOfTheRim
                 {
                     expandedCells.Add(c) ;
                 }
-                foreach (IntVec3 c2 in GenAdjFast.AdjacentCells8Way(c)) // Add all the current cell's enighbours
+                foreach (IntVec3 c2 in GenAdjFast.AdjacentCells8Way(c)) // Add all the current cell's neighbours
                 {
                     if (!expandedCells.Contains(c2) && !cells.Contains(c2))
                     {

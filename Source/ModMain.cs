@@ -48,11 +48,9 @@ namespace RoadsOfTheRim
 
     public class RoadsOfTheRim : Mod
     {
-        public static RoadsOfTheRimSettings settings;
+        public static RoadsOfTheRimSettings settings ;
 
-        /*
-        For construction help from ally , I will need a dictionary whenCanFactionHelp <Faction , int> that stores the ticks when that faction can help again 
-         */
+        public static List<TerrainDef> builtRoadTerrains = new List<TerrainDef>();
 
         public RoadsOfTheRim(ModContentPack content) : base(content)
         {
@@ -93,6 +91,7 @@ namespace RoadsOfTheRim
 
         public static void DebugLog(String message = null , Exception e = null)
         {
+            #if DEBUG
             if (message!=null)
             {
                 Log.Warning("[RotR] - " + message);
@@ -105,38 +104,9 @@ namespace RoadsOfTheRim
                 "Data : " + e.Data
                 );
             }
+            #endif
         }
 
-        // TO DO : Phase out in favour of calculateRoadModifier
-        public static float calculateBiomeModifier(RoadDef roadDef, float biomeMovementDifficulty, out float biomeCancellation)
-        {
-            biomeCancellation = 0;
-            try
-            {
-                if (roadDef.defName == "DirtRoad")
-                {
-                    biomeCancellation = 0.25f;
-                }
-                if (roadDef.defName == "StoneRoad")
-                {
-                    biomeCancellation = 0.75f;
-                }
-                if (roadDef.defName == "AncientAsphaltRoad")
-                {
-                    biomeCancellation = 1f;
-                }
-                // Roads cancel biome movement difficulty
-                // e.g : Biome is at 3, effect is at 0.75 : we get a multiplier of .5, combined with the biome of 3, we'll only get 1.5 for biome
-                // i.e. : effect is at 0, we always get a multiplier of 1 (no effect)
-                // effect is at 1, we always get a multiplier of 1/biome, which effectively cancels biome effects
-                return (1 + (biomeMovementDifficulty - 1) * (1 - biomeCancellation)) / biomeMovementDifficulty;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-        
         public static float calculateRoadModifier(RoadDef roadDef, float BiomeMovementDifficulty , float HillinessOffset , float WinterOffset , out float biomeModifier, out float HillModifier)
         {
             biomeModifier = 0f ;
@@ -462,12 +432,6 @@ namespace RoadsOfTheRim
         {
             DiaOption dialog = new DiaOption("RoadsOfTheRim_commsAskHelp".Translate());
 
-            // If the faction is already helping, it must be disabled
-            if (RoadsOfTheRim.factionsHelp.getCurrentlyHelping(faction)) dialog.Disable("RoadsOfTheRim_commsAlreadyHelping".Translate());
-
-            // If the faction is in construction cooldown, it must be disabled
-            if (RoadsOfTheRim.factionsHelp.inCooldown(faction)) dialog.Disable("RoadsOfTheRim_commsHasHelpedRecently".Translate(string.Format("{0:0.0}", RoadsOfTheRim.factionsHelp.daysBeforeFactionCanHelp(faction))));
-
             // Find all construction sites on the world map
             IEnumerable<WorldObject> constructionSites = Find.WorldObjects.AllWorldObjects.Cast<WorldObject>().Where(site => site.def == DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true)).ToArray() ;
             // If none : option should be disabled
@@ -478,8 +442,6 @@ namespace RoadsOfTheRim
             {
                 DiaOption diaOption = new DiaOption(site.fullName())
                 {
-                    // TO DO  disable sites that already receive help (only one faction can help per site)
-
                     action = delegate
                     {
                         RoadsOfTheRim.factionsHelp.startHelping(faction , site , negotiator) ;
@@ -488,19 +450,36 @@ namespace RoadsOfTheRim
                 // Disable sites that do not have a settlement of this faction close enough (as defined by ConstructionSite.maxTicksToNeighbour)
                 if (site.closestSettlementOfFaction(faction)==null)
                 {
+                    dialog = new DiaOption("");
                     diaOption.Disable("RoadsOfTheRim_commsNotClose".Translate(faction.Name));
                 }
                 if (site.helpFromFaction!=null)
                 {
+                    dialog = new DiaOption("");
                     diaOption.Disable("RoadsOfTheRim_commsAnotherFactionIsHelping".Translate(site.helpFromFaction));
                 }
                 if (!factionsHelp.isDeveloppedEnough(faction , site.roadDef.GetModExtension<DefModExtension_RotR_RoadDef>()))
                 {
+                    dialog = new DiaOption("");
                     diaOption.Disable("RoadsOfTheRim_commsNotDevelopedEnough".Translate(faction.Name , site.roadDef.label));
                 }
                 diaNode.options.Add(diaOption);
                 diaOption.resolveTree = true ;
             }
+            // If the faction is already helping, it must be disabled
+            if (RoadsOfTheRim.factionsHelp.getCurrentlyHelping(faction))
+            {
+                dialog = new DiaOption("");
+                dialog.Disable("RoadsOfTheRim_commsAlreadyHelping".Translate());
+            }
+
+            // If the faction is in construction cooldown, it must be disabled
+            if (RoadsOfTheRim.factionsHelp.inCooldown(faction))
+            {
+                dialog = new DiaOption("");
+                dialog.Disable("RoadsOfTheRim_commsHasHelpedRecently".Translate(string.Format("{0:0.0}", RoadsOfTheRim.factionsHelp.daysBeforeFactionCanHelp(faction))));
+            }
+
             // Cancel option (needed when all sites are disabled for one of the above reason)
             DiaOption cancelOption = new DiaOption("(" + "RoadsOfTheRim_commsCancel".Translate() + ")");
             diaNode.options.Add(cancelOption);

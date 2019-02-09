@@ -1,52 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
-<!--
   <TerrainDef>
-    <defName>BrokenAsphalt</defName>
-    <label>broken asphalt</label>
+    <defName>DirtRecent</defName>
+    <label>Recently packed dirt</label>
+    <texturePath>Terrain/Surfaces/PackedDirt</texturePath><!-- TO DO : Find a texture -->
+    <edgeType>FadeRough</edgeType>
+    <renderPrecedence>360</renderPrecedence>
+    <pathCost>1</pathCost>
+		<description>Packed dirt for recently built paths and roads. Neither beautiful nor clean, they still make good surfaces for cheap roads. Deconstructing packed dirt yields no resources.</description>
+    <layerable>false</layerable><!-- Seems to mean this cannot be put on top of another terrain -->
+    <resourcesFractionWhenDeconstructed>0</resourcesFractionWhenDeconstructed>
     <statBases>
       <Beauty>-1</Beauty>
       <Cleanliness>-1</Cleanliness>
     </statBases>
-    <pathCost>0</pathCost>
     <fertility>0.0</fertility>
-    <resourcesFractionWhenDeconstructed>0</resourcesFractionWhenDeconstructed>
-    <texturePath>Terrain/Surfaces/BrokenAsphalt</texturePath>
-    <edgeType>FadeRough</edgeType>
-    <renderPrecedence>370</renderPrecedence>
     <affordances>
-      <li ListIndex="0">Light</li>
-      <li ListIndex="1">Heavy</li>
+      <li>Light</li>
+      <li>Medium</li>
+      <li>Heavy</li>
+      <!-- <li>Diggable</li> : I see no reason to keep this, it's used nowhere I can find -->
     </affordances>
-    <layerable>true</layerable>
+		<tags>
+			<li>Road</li>
+		</tags>
+
+    <!-- Not sure of any of the stuff below-->
     <scatterType>Rocky</scatterType>
-    <tags>
-      <li ListIndex="0">Road</li>
-    </tags>
+    <generatedFilth>Filth_Dirt</generatedFilth>
   </TerrainDef>
--->
+
+	<TerrainDef>
+		<defName>StoneRecent</defName>
+		<label>Recently built sandstone flagstone</label>
+		<texturePath>Terrain/Surfaces/Flagstone</texturePath><!-- TO DO : Find a texture -->
+		<!--<color>(126,104,94)</color>--><!-- TO DO : Will I even need a colour on top of the texture ? -->
+        <color>(64,64,64)</color>
+    <edgeType>FadeRough</edgeType>
+    <renderPrecedence>220</renderPrecedence>
+    <pathCost>0</pathCost>
+    <description>Roughly-cut stone recently built tiles. These are not beautiful, but they make good surfaces for roads and outdoor walkways. Deconstructing flagstone yields no resources.</description>
+    <layerable>true</layerable>
+    <resourcesFractionWhenDeconstructed>0</resourcesFractionWhenDeconstructed>
+		<statBases>
+			<!-- Removing this, I don't want it to be buildable on a map, only generated from a road on the WorldMap <WorkToBuild>500</WorkToBuild> -->
+			<Beauty>0</Beauty>
+		</statBases>
+    <fertility>0</fertility>
+    <affordances>
+      <li>Light</li>
+      <li>Medium</li>
+      <li>Heavy</li>
+    </affordances>
+    <tags>
+      <li>Road</li>
+    </tags>
+
+    <!-- Removing Construction-related tags : don't want to build those directly from a map
+    <designationCategory>Floors</designationCategory>
+		<costList>
+			<BlocksSandstone>4</BlocksSandstone>
+		</costList>
+    <designatorDropdown>Floor_Flagstone</designatorDropdown>
+    <constructEffect>ConstructDirt</constructEffect>
+    <acceptTerrainSourceFilth>True</acceptTerrainSourceFilth>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    -->
+	</TerrainDef>
+
   <TerrainDef>
     <defName>AsphaltRecent</defName>
     <label>recently built asphalt</label>
+    <texturePath>Terrain/Surfaces/AsphaltRecent</texturePath>
+    <color>(64,64,64)</color>
+    <edgeType>FadeRough</edgeType>
+  	<renderPrecedence>380</renderPrecedence>
+    <pathCost>0</pathCost>
+    <description>Recently built Asphalt. Excellent for roads. Deconstructing asphalt yields no resources.</description>
+    <layerable>true</layerable>
+    <resourcesFractionWhenDeconstructed>0</resourcesFractionWhenDeconstructed>
     <statBases>
       <Beauty>-1</Beauty>
-      <Cleanliness>-1</Cleanliness>
+      <Cleanliness>0</Cleanliness>
     </statBases>
-    <pathCost>0</pathCost>
     <fertility>0.0</fertility>
-    <resourcesFractionWhenDeconstructed>0</resourcesFractionWhenDeconstructed>
-	<!-- TO DO : Find a texture -->
-    <texturePath>Terrain/Surfaces/BrokenAsphalt</texturePath>
-    <edgeType>Hard</edgeType>
-	<renderPrecedence>380</renderPrecedence>
     <affordances>
-      <li ListIndex="0">Light</li>
-      <li ListIndex="1">Heavy</li>
+      <li>Light</li>
+      <li>Medium</li> <!-- The original BorkenApshalt didn't have medium, and had some weird indexes like <li ListIndex="0"> -->
+      <li>Heavy</li>
     </affordances>
-    <layerable>true</layerable>
-    <scatterType>AbsolutelyNot</scatterType>
+    <acceptFilth>false</acceptFilth>
     <tags>
-      <li ListIndex="0">Road</li>
+      <li>Road</li>
     </tags>
+
+    <!-- Not sure of any of the stuff below-->
   </TerrainDef>
 </Defs>

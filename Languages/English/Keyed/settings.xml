@@ -15,7 +15,7 @@
   <RoadsOfTheRim_commsAskHelp>Ask ally for help on road construction (cost: 10 goodwill)</RoadsOfTheRim_commsAskHelp>
   <RoadsOfTheRim_commsNoSites>No construction sites found</RoadsOfTheRim_commsNoSites>
   <RoadsOfTheRim_commsAlreadyHelping>This faction is already helping with road construction</RoadsOfTheRim_commsAlreadyHelping>
-  <RoadsOfTheRim_commsHasHelpedRecently>This faction has helped recently. It can help again in {0} days</RoadsOfTheRim_commsHasHelpedRecently>
+  <RoadsOfTheRim_commsHasHelpedRecently>This faction has helped road construction recently. It can help again in {0} days</RoadsOfTheRim_commsHasHelpedRecently>
   <RoadsOfTheRim_commsNotClose>{0} is not close enough to help on this construction site</RoadsOfTheRim_commsNotClose>
   <RoadsOfTheRim_commsAnotherFactionIsHelping>{0} is already helping with this construction site</RoadsOfTheRim_commsAnotherFactionIsHelping>
   <RoadsOfTheRim_commsNotDevelopedEnough>{0} is not developed enough to build {1}</RoadsOfTheRim_commsNotDevelopedEnough>
@@ -27,6 +27,7 @@
   <RoadsOfTheRim_FactionStopsHelpingText>{0} is not your ally any more and has stopped helping on the construction of {1}</RoadsOfTheRim_FactionStopsHelpingText>
   <RoadsOfTheRimWorkOnSite>Work</RoadsOfTheRimWorkOnSite>
   <RoadsOfTheRimWorkOnSiteDescription>Work on road construction site</RoadsOfTheRimWorkOnSiteDescription>
+  <RoadsOfTheRim_InsufficientConstructionMinLevel>Road construction reduced to {0} : needed {1} of the workforce to have at least a Construction skill of {2}</RoadsOfTheRim_InsufficientConstructionMinLevel>
   <RoadsOfTheRimSettingsCategoryLabel>Roads of the Rim</RoadsOfTheRimSettingsCategoryLabel>
   <RoadsOfTheRimSettingsBaseEffort>Base multiplier to road building costs</RoadsOfTheRimSettingsBaseEffort>
   <RoadsOfTheRimSettingsOverrideCosts>Override standard movement multipliers (requires game restart)</RoadsOfTheRimSettingsOverrideCosts>

@@ -16,8 +16,8 @@
       <li Class="RoadDefGenStep_Place">
         <chancePerPositionCurve>
           <points>
-            <li>(1.1, 1)</li>
-            <li>(1.1, 0)</li>
+            <li>(2, 1)</li>
+            <li>(2, 0)</li>
           </points>
         </chancePerPositionCurve>
         <place>Bridge</place>
@@ -31,7 +31,7 @@
             <li>(0.8, 0)</li>
           </points>
         </chancePerPositionCurve>
-        <place>PackedDirt</place>
+        <place>DirtRecent</place>
       </li>
     </roadGenSteps>
     <distortionFrequency>0.5</distortionFrequency>
@@ -48,16 +48,14 @@
     </worldRenderSteps>
     <worldTransitionGroup>Dirt</worldTransitionGroup>
     <modExtensions>
-            <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
-                <built>true</built>
-                <costs>
-                    <li>
-                        <key>Work</key>
-                        <value>600</value>
-                    </li>
-                </costs>
-            </li>
+        <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
+            <built>true</built>
+            <costs>
+                <Work>600</Work>
+            </costs>
+        </li>
     </modExtensions>    
+
   </RoadDef>
 
   <RoadDef>
@@ -82,11 +80,11 @@
       <li Class="RoadDefGenStep_Place">
         <chancePerPositionCurve>
           <points>
-            <li>(1.2, 1)</li>
-            <li>(1.4, 0)</li>
+            <li>(2.5, 1)</li>
+            <li>(2.5, 0)</li>
           </points>
         </chancePerPositionCurve>
-        <place>PackedDirt</place>
+        <place>DirtRecent</place>
       </li>
     </roadGenSteps>
     <distortionFrequency>0.5</distortionFrequency>
@@ -105,21 +103,15 @@
     <modExtensions>
             <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
                 <built>true</built>
-				<biomeModifier>0.25</biomeModifier>
-				<hillinessModifier>0.2</hillinessModifier>
-				<winterModifier>0</winterModifier>
+                <biomeModifier>0.25</biomeModifier>
+                <hillinessModifier>0.2</hillinessModifier>
+                <winterModifier>0</winterModifier>
                 <costs>
-                    <li>
-                        <key>Work</key>
-                        <value>1200</value>
-                    </li>
-                    <li>
-                        <key>Wood</key>
-                        <value>120</value>
-                    </li>
+                  <Work>1200</Work>
+                  <Wood>120</Wood>
                 </costs>
             </li>
-    </modExtensions>    
+    </modExtensions>
   </RoadDef>
 
   <RoadDef>
@@ -144,12 +136,12 @@
       <li Class="RoadDefGenStep_Place">
         <chancePerPositionCurve>
           <points>
-            <li>(1.8, 1)</li>
-            <li>(1.8, 0)</li>
+            <li>(3, 1)</li>
+            <li>(3, 0)</li>
           </points>
         </chancePerPositionCurve>
         <antialiasingMultiplier>0</antialiasingMultiplier>
-        <place>FlagstoneSandstone</place>
+        <place>StoneRecent</place>
       </li>
     </roadGenSteps>
     <distortionFrequency>0.2</distortionFrequency>
@@ -168,26 +160,14 @@
     <modExtensions>
             <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
                 <built>true</built>
-				<biomeModifier>0.75</biomeModifier>
-				<hillinessModifier>0.4</hillinessModifier>
-				<winterModifier>0</winterModifier>
+                <biomeModifier>0.75</biomeModifier>
+                <hillinessModifier>0.4</hillinessModifier>
+                <winterModifier>0</winterModifier>
                 <costs>
-                    <li>
-                        <key>Work</key>
-                        <value>3600</value>
-                    </li>
-                    <li>
-                        <key>Wood</key>
-                        <value>240</value>
-                    </li>
-                    <li>
-                        <key>Stone</key>
-                        <value>1800</value>
-                    </li>
-                    <li>
-                        <key>Steel</key>
-                        <value>300</value>
-                    </li>
+                  <Work>3600</Work>
+                  <Wood>240</Wood>
+                  <Stone>1800</Stone>
+                  <Steel>300</Steel>
                 </costs>
             </li>
     </modExtensions>    
@@ -205,8 +185,8 @@
           <li Class="RoadDefGenStep_Place">
             <chancePerPositionCurve>
               <points>
-                <li>(1.8, 1)</li>
-                <li>(1.8, 0)</li>
+                <li>(3, 1)</li>
+                <li>(3, 0)</li>
               </points>
             </chancePerPositionCurve>
             <place>Bridge</place>
@@ -216,11 +196,11 @@
           <li Class="RoadDefGenStep_Place">
             <chancePerPositionCurve>
               <points>
-                <li>(1.8, 1)</li>
-                <li>(1.8, 0)</li>
+                <li>(3, 1)</li>
+                <li>(3.1, 0)</li>
               </points>
             </chancePerPositionCurve>
-            <place>BrokenAsphalt</place>
+            <place>AsphaltRecent</place>
           </li>
         </roadGenSteps>
         <worldRenderSteps>
@@ -241,26 +221,14 @@
         <modExtensions>
                 <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
                     <built>true</built>				
-					<biomeModifier>1</biomeModifier>
-					<hillinessModifier>0.6</hillinessModifier>
-					<winterModifier>0</winterModifier>
+                    <biomeModifier>1</biomeModifier>
+                    <hillinessModifier>0.6</hillinessModifier>
+                    <winterModifier>0</winterModifier>
                     <costs>
-                        <li>
-                            <key>Work</key>
-                            <value>5400</value>
-                        </li>
-                        <li>
-                            <key>Stone</key>
-                            <value>3600</value>
-                        </li>
-                        <li>
-                            <key>Steel</key>
-                            <value>600</value>
-                        </li>
-                        <li>
-                            <key>Chemfuel</key>
-                            <value>300</value>
-                        </li>
+                      <Work>5400</Work>
+                      <Stone>3600</Stone>
+                      <Steel>600</Steel>
+                      <Chemfuel>300</Chemfuel>
                     </costs>
                 </li>
         </modExtensions>    

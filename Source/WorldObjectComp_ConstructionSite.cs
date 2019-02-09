@@ -181,12 +181,19 @@ namespace RoadsOfTheRim
 
         public bool resourcesAlreadyConsumed()
         {
-            foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
+            try
             {
-                if (GetCost(resourceName) > 0 && GetLeft(resourceName) < GetCost(resourceName))
+                foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
                 {
-                    return true;
+                    if (GetCost(resourceName) > 0 && GetLeft(resourceName) < GetCost(resourceName))
+                    {
+                        return true;
+                    }
                 }
+            }
+            catch
+            {
+                RoadsOfTheRim.DebugLog("resourcesAlreadyConsumed failed. This will happen after upgrading to the 20190207 version") ;
             }
             return false;
         }

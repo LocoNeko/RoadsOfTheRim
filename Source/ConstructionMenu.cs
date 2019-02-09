@@ -52,7 +52,7 @@ namespace RoadsOfTheRim
         {
             foreach (RoadDef thisDef in DefDatabase<RoadDef>.AllDefs)
             {
-                if (thisDef.GetModExtension<DefModExtension_RotR_RoadDef>().built) // Only add RoadDefs that are buildable, based on DefModExtension_RotR_RoadDef.built
+                if (thisDef.HasModExtension<DefModExtension_RotR_RoadDef>() && thisDef.GetModExtension<DefModExtension_RotR_RoadDef>().built) // Only add RoadDefs that are buildable, based on DefModExtension_RotR_RoadDef.built
                 {
                     buildableRoads.Add(thisDef);
                 }

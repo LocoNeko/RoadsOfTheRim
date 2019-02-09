@@ -96,18 +96,8 @@ namespace RoadsOfTheRim
             //Log.Message(String.Format("[RotR] - Negotiation for road construction help : negotiation value = {0:0.00} , fail chance = {1:P} , roll = {2:0.00} , help = {3:0.00}", negotiationValue , failChance, roll , amountOfHelp));
 
             // Calculate how long the faction needs to start helping
-            Settlement closestSettlement = site.closestSettlementOfFaction(faction);
-            /*
-            if (closestSettlement!=null)
-            {
-                Log.Message(String.Format("[RotR] - The closest settlement is {0}" , closestSettlement.Name));
-            }
-            else
-            {
-                Log.Message(String.Format("[RotR] - The closest settlement is NULL"));
-            }
-            */
-            int tick = Find.TickManager.TicksGame + CaravanArrivalTimeEstimator.EstimatedTicksToArrive(closestSettlement.Tile, site.Tile, null);
+            SettlementInfo closestSettlement = site.closestSettlementOfFaction(faction);
+            int tick = Find.TickManager.TicksGame + closestSettlement.distance ;
 
             // Determine amount of help per tick
             float amountPerTick = Math.Max(Rand.Gaussian(helpPerTickMedian, helpPerTickVariance), helpPerTickMin);

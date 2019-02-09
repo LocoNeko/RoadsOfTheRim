@@ -112,20 +112,10 @@ namespace RoadsOfTheRim
         {
             biomeModifier = 0f ;
             HillModifier = 0f;
-            if (roadDef.defName == "DirtRoad")
+            if (roadDef.HasModExtension<DefModExtension_RotR_RoadDef>())
             {
-                biomeModifier = 0.25f;
-                HillModifier = 0.2f;
-            }
-            if (roadDef.defName == "StoneRoad")
-            {
-                biomeModifier = 0.75f;
-                HillModifier = 0.4f;
-            }
-            if (roadDef.defName == "AncientAsphaltRoad" || roadDef.defName == "AncientAsphaltHighway")
-            {
-                biomeModifier = 1f;
-                HillModifier = 0.6f;
+                biomeModifier = roadDef.GetModExtension<DefModExtension_RotR_RoadDef>().biomeModifier ;
+                HillModifier = roadDef.GetModExtension<DefModExtension_RotR_RoadDef>().hillinessModifier ;
             }
             float BiomeCoef = (1 + (BiomeMovementDifficulty-1) * (1-biomeModifier)) / BiomeMovementDifficulty ;
             return ((BiomeCoef*BiomeMovementDifficulty) + (HillModifier*(1-HillinessOffset)) + WinterOffset ) / (BiomeMovementDifficulty + HillinessOffset + WinterOffset) ;

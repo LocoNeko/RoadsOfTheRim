@@ -161,7 +161,7 @@ namespace RoadsOfTheRim
                     __result *= RoadModifier ;
                     if (explanation != null) {
                         explanation.AppendLine ();
-                        explanation.Append(String.Format("The road cancels {0:P0} of the biome and {1:P0} of the hills movement cost", 1-biomeModifier, 1-HillModifier));
+                        explanation.Append(String.Format("The road cancels {0:P0} of the biome and {1:P0} of the hills movement cost", biomeModifier, HillModifier));
                     }
                 }
             }

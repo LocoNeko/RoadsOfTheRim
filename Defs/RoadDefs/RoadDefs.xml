@@ -186,7 +186,7 @@
             <chancePerPositionCurve>
               <points>
                 <li>(3, 1)</li>
-                <li>(3, 0)</li>
+                <li>(3.1, 0)</li>
               </points>
             </chancePerPositionCurve>
             <place>Bridge</place>

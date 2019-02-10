@@ -205,7 +205,8 @@ namespace RoadsOfTheRim
                 if (pawn.IsFreeColonist && pawn.health.State == PawnHealthState.Mobile)
                 {
                     totalConstruction += pawn.GetStatValue(StatDefOf.ConstructionSpeed) * pawn.GetStatValue(StatDefOf.ConstructSuccessChance);
-                    if (roadDefModExtension!=null && pawn.GetStatValue(StatDefOf.ConstructionSpeed) >= roadDefModExtension.minConstruction)
+
+                    if (roadDefModExtension!=null && pawn.skills.GetSkill(SkillDefOf.Construction).levelInt >= roadDefModExtension.minConstruction)
                     {
                         totalConstructionAboveMinLevel += pawn.GetStatValue(StatDefOf.ConstructionSpeed) * pawn.GetStatValue(StatDefOf.ConstructSuccessChance);
                     }

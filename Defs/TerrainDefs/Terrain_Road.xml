@@ -33,8 +33,7 @@
 	<TerrainDef>
 		<defName>StoneRecent</defName>
 		<label>Recently built sandstone flagstone</label>
-		<texturePath>Terrain/Surfaces/Flagstone</texturePath><!-- TO DO : Find a texture -->
-		<!--<color>(126,104,94)</color>--><!-- TO DO : Will I even need a colour on top of the texture ? -->
+		<texturePath>Terrain/Surfaces/Flagstone</texturePath>
         <color>(64,64,64)</color>
     <edgeType>FadeRough</edgeType>
     <renderPrecedence>220</renderPrecedence>
@@ -95,5 +94,64 @@
     </tags>
 
     <!-- Not sure of any of the stuff below-->
+  </TerrainDef>
+  
+   <TerrainDef>
+    <defName>BridgeRecent</defName>
+    <label>recently built bridge</label>
+    <description>A flat wooden surface on supportive beams which can be built over water. You can build non-heavy structures on bridges, but be careful - bridges are fragile. If a bridge falls, buildings on top of it fall as well.</description>
+    <texturePath>Terrain/Surfaces/Bridge</texturePath>
+    <layerable>true</layerable>
+    <affordances>
+      <li>Light</li>
+      <li>Medium</li>
+    </affordances>
+    <designationCategory>Structure</designationCategory>
+    <fertility>0</fertility>
+    <constructEffect>ConstructWood</constructEffect>
+      <acceptTerrainSourceFilth>True</acceptTerrainSourceFilth>
+    <terrainAffordanceNeeded>Bridgeable</terrainAffordanceNeeded>
+    <edgeType>Hard</edgeType>
+    <renderPrecedence>400</renderPrecedence>
+    <statBases>
+      <WorkToBuild>1500</WorkToBuild>
+      <Flammability>0.8</Flammability>
+    </statBases>
+    <costList>
+      <WoodLog>12</WoodLog>
+    </costList>
+    <designationHotKey>Misc4</designationHotKey>
+    <destroyOnBombDamageThreshold>35</destroyOnBombDamageThreshold>
+    <destroyBuildingsOnDestroyed>true</destroyBuildingsOnDestroyed>
+    <destroyEffect>Bridge_Collapse</destroyEffect>
+    <destroyEffectWater>Bridge_CollapseWater</destroyEffectWater>
+  </TerrainDef>
+
+  <TerrainDef>
+    <defName>StoneBridgeRecent</defName>
+    <label>recently built stone bridge</label>
+    <description>A stone structure which can be built over water. You can build any structures on stone bridges, but be careful - they can still be destroyed. If a bridge falls, buildings on top of it fall as well.</description>
+    <texturePath>Terrain/Surfaces/Bridge</texturePath>
+    <layerable>true</layerable>
+    <affordances>
+      <li>Light</li>
+      <li>Medium</li>
+      <li>Heavy</li>
+    </affordances>
+    <designationCategory>Structure</designationCategory>
+    <fertility>0</fertility>
+    <constructEffect>ConstructWood</constructEffect>
+      <acceptTerrainSourceFilth>True</acceptTerrainSourceFilth>
+    <terrainAffordanceNeeded>Bridgeable</terrainAffordanceNeeded>
+    <edgeType>Hard</edgeType>
+    <renderPrecedence>400</renderPrecedence>
+    <statBases>
+      <WorkToBuild>4500</WorkToBuild>
+      <Flammability>0</Flammability>
+    </statBases>
+    <destroyOnBombDamageThreshold>350</destroyOnBombDamageThreshold>
+    <destroyBuildingsOnDestroyed>true</destroyBuildingsOnDestroyed>
+    <destroyEffect>Bridge_Collapse</destroyEffect>
+    <destroyEffectWater>Bridge_CollapseWater</destroyEffectWater>
   </TerrainDef>
 </Defs>

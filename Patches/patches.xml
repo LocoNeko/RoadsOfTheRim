@@ -50,7 +50,7 @@
         <value>
             <biomeModifier>1</biomeModifier>
             <hillinessModifier>0.6</hillinessModifier>
-            <winterModifier>0</winterModifier>
+            <winterModifier>0.2</winterModifier>
             <costs>
                 <Work>5400</Work>
                 <Stone>3600</Stone>
@@ -65,7 +65,7 @@
         <value>
             <biomeModifier>1</biomeModifier>
             <hillinessModifier>0.6</hillinessModifier>
-            <winterModifier>0</winterModifier>
+            <winterModifier>0.2</winterModifier>
             <costs>
                 <Work>5400</Work>
                 <Stone>3600</Stone>

@@ -223,7 +223,12 @@
                     <built>true</built>				
                     <biomeModifier>1</biomeModifier>
                     <hillinessModifier>0.6</hillinessModifier>
-                    <winterModifier>0</winterModifier>
+                    <winterModifier>0.2</winterModifier>
+                    <canBuildOnImpassable>true</canBuildOnImpassable>
+                    <canBuildOnWater>false</canBuildOnWater>
+                    <minConstruction>6</minConstruction>
+                    <percentageOfminConstruction>0.25</percentageOfminConstruction>
+                    <techlevelToBuild>Industrial</techlevelToBuild>
                     <costs>
                       <Work>5400</Work>
                       <Stone>3600</Stone>

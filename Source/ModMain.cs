@@ -108,17 +108,19 @@ namespace RoadsOfTheRim
             #endif
         }
 
-        public static float calculateRoadModifier(RoadDef roadDef, float BiomeMovementDifficulty , float HillinessOffset , float WinterOffset , out float biomeModifier, out float HillModifier)
+        public static float calculateRoadModifier(RoadDef roadDef, float BiomeMovementDifficulty , float HillinessOffset , float WinterOffset , out float BiomeModifier, out float HillModifier, out float WinterModifier)
         {
-            biomeModifier = 0f ;
+            BiomeModifier = 0f ;
             HillModifier = 0f;
+            WinterModifier = 0f;
             if (roadDef.HasModExtension<DefModExtension_RotR_RoadDef>())
             {
-                biomeModifier = roadDef.GetModExtension<DefModExtension_RotR_RoadDef>().biomeModifier ;
+                BiomeModifier = roadDef.GetModExtension<DefModExtension_RotR_RoadDef>().biomeModifier ;
                 HillModifier = roadDef.GetModExtension<DefModExtension_RotR_RoadDef>().hillinessModifier ;
+                WinterModifier = roadDef.GetModExtension<DefModExtension_RotR_RoadDef>().winterModifier ;
             }
-            float BiomeCoef = (1 + (BiomeMovementDifficulty-1) * (1-biomeModifier)) / BiomeMovementDifficulty ;
-            return ((BiomeCoef*BiomeMovementDifficulty) + (HillModifier*(1-HillinessOffset)) + WinterOffset ) / (BiomeMovementDifficulty + HillinessOffset + WinterOffset) ;
+            float BiomeCoef = (1 + (BiomeMovementDifficulty-1) * (1-BiomeModifier)) / BiomeMovementDifficulty ;
+            return ((BiomeCoef*BiomeMovementDifficulty) + ((1-HillModifier)*HillinessOffset) + ((1-WinterModifier)*WinterOffset) ) / (BiomeMovementDifficulty + HillinessOffset + WinterOffset) ;
         }
 
 
@@ -441,17 +443,17 @@ namespace RoadsOfTheRim
                 // Disable sites that do not have a settlement of this faction close enough (as defined by ConstructionSite.maxTicksToNeighbour)
                 if (site.closestSettlementOfFaction(faction)==null)
                 {
-                    dialog = new DiaOption("");
+                    diaOption = new DiaOption("Invalid site");
                     diaOption.Disable("RoadsOfTheRim_commsNotClose".Translate(faction.Name));
                 }
                 if (site.helpFromFaction!=null)
                 {
-                    dialog = new DiaOption("");
+                    diaOption = new DiaOption("Invalid site");
                     diaOption.Disable("RoadsOfTheRim_commsAnotherFactionIsHelping".Translate(site.helpFromFaction));
                 }
                 if (!factionsHelp.isDeveloppedEnough(faction , site.roadDef.GetModExtension<DefModExtension_RotR_RoadDef>()))
                 {
-                    dialog = new DiaOption("");
+                    diaOption = new DiaOption("Invalid site");
                     diaOption.Disable("RoadsOfTheRim_commsNotDevelopedEnough".Translate(faction.Name , site.roadDef.label));
                 }
                 diaNode.options.Add(diaOption);
@@ -460,14 +462,14 @@ namespace RoadsOfTheRim
             // If the faction is already helping, it must be disabled
             if (RoadsOfTheRim.factionsHelp.getCurrentlyHelping(faction))
             {
-                dialog = new DiaOption("");
+                dialog = new DiaOption("Can't help build roads");
                 dialog.Disable("RoadsOfTheRim_commsAlreadyHelping".Translate());
             }
 
             // If the faction is in construction cooldown, it must be disabled
             if (RoadsOfTheRim.factionsHelp.inCooldown(faction))
             {
-                dialog = new DiaOption("");
+                dialog = new DiaOption("Can't help build roads");
                 dialog.Disable("RoadsOfTheRim_commsHasHelpedRecently".Translate(string.Format("{0:0.0}", RoadsOfTheRim.factionsHelp.daysBeforeFactionCanHelp(faction))));
             }
 

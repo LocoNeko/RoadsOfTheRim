@@ -141,8 +141,9 @@ namespace RoadsOfTheRim
 			{
 				toTile = __instance.FindMostReasonableAdjacentTileForDisplayedPathCost(fromTile);
 			}
-            float biomeModifier = 0 ;
+            float BiomeModifier = 0 ;
             float HillModifier = 0 ;
+            float WinterModifier = 0;
             for (int i = 0; i < roads.Count; i++)
 			{
                 if (roads[i].neighbor == toTile)
@@ -154,14 +155,15 @@ namespace RoadsOfTheRim
                         Find.WorldGrid[toTile].biome.movementDifficulty ,
                         (float)HillinessMovementDifficultyOffset.Invoke(null , new object[] { Find.WorldGrid[toTile].hilliness }),
                         WorldPathGrid.GetCurrentWinterMovementDifficultyOffset(toTile) ,
-                        out biomeModifier,
-                        out HillModifier
+                        out BiomeModifier,
+                        out HillModifier ,
+                        out WinterModifier
                     );
 
                     __result *= RoadModifier ;
                     if (explanation != null) {
                         explanation.AppendLine ();
-                        explanation.Append(String.Format("The road cancels {0:P0} of the biome and {1:P0} of the hills movement cost", biomeModifier, HillModifier));
+                        explanation.Append(String.Format("The road cancels {0:P0} of the biome, {1:P0} of the hills & {2:P0} of winter movement costs", BiomeModifier, HillModifier , WinterModifier));
                     }
                 }
             }

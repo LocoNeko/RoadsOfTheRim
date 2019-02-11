@@ -151,12 +151,12 @@ namespace RoadsOfTheRim
 
             if (!(caravanComp.CaravanCurrentState() == CaravanState.ReadyToWork))
             {
-                Log.Message("[RotR] DEBUG : doSomeWork() failed because the caravan can't work.");
+                RoadsOfTheRim.DebugLog("[RotR] DEBUG : doSomeWork() failed because the caravan can't work.");
                 return false;
             }
 
             // Percentage of total work that can be done in this batch
-            float amountOfWork = caravanComp.amountOfWork();
+            float amountOfWork = caravanComp.amountOfWork(true);
 
             if (amountOfWork > siteComp.GetLeft("Work"))
             {

@@ -186,7 +186,7 @@ namespace RoadsOfTheRim
         * - Construction speed (0.5 + 0.15 per level) times the construct success chance (0.75 to 1.13 - lvl 8 is 1)
         * - Pack animals help as well (see below)
         */
-        public float amountOfWork()
+        public float amountOfWork(bool verbose = false)
         {
             List<Pawn> pawns = GetCaravan().PawnsListForReading ;
             DefModExtension_RotR_RoadDef roadDefModExtension = null ;
@@ -228,7 +228,10 @@ namespace RoadsOfTheRim
                 {
                     ratioActuallyWorked = (ratioOfConstructionAboveMinLevel/roadDefModExtension.percentageOfminConstruction) ; // Reduce total construction by the shortage of skill, expressed as a ratio 
                     totalConstruction *= ratioActuallyWorked ;
-                    Messages.Message("RoadsOfTheRim_InsufficientConstructionMinLevel".Translate(totalConstruction , roadDefModExtension.percentageOfminConstruction.ToString("P0") , roadDefModExtension.minConstruction) , MessageTypeDefOf.NegativeEvent) ;
+                    if (verbose)
+                    {
+                        Messages.Message("RoadsOfTheRim_InsufficientConstructionMinLevel".Translate(totalConstruction, roadDefModExtension.percentageOfminConstruction.ToString("P0"), roadDefModExtension.minConstruction), MessageTypeDefOf.NegativeEvent);
+                    }
                 }
             }
 

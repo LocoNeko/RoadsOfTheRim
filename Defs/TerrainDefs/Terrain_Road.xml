@@ -138,10 +138,8 @@
       <li>Medium</li>
       <li>Heavy</li>
     </affordances>
-    <designationCategory>Structure</designationCategory>
     <fertility>0</fertility>
-    <constructEffect>ConstructWood</constructEffect>
-      <acceptTerrainSourceFilth>True</acceptTerrainSourceFilth>
+    <acceptTerrainSourceFilth>True</acceptTerrainSourceFilth>
     <terrainAffordanceNeeded>Bridgeable</terrainAffordanceNeeded>
     <edgeType>Hard</edgeType>
     <renderPrecedence>400</renderPrecedence>

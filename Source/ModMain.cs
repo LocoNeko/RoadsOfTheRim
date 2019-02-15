@@ -235,6 +235,7 @@ namespace RoadsOfTheRim
 
             // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
             amountOfWork = Math.Max(ratio_final * amountOfWork , 1); // Always do at least 1 work
+            caravanComp.teachPawns(ratio_final); // Pawns learn some construction
             return siteComp.UpdateProgress(amountOfWork, caravan);
         }
 

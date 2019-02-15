@@ -139,4 +139,18 @@
         </value>
     </Operation>
     
+    <Operation Class="PatchOperationRemove">
+        <xpath>/Defs/TerrainDef[@Name="WaterDeepBase"]/changeable</xpath>
+    </Operation>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/TerrainDef[@Name="WaterDeepBase"]</xpath>
+        <value>
+            <affordances>
+                <li>BridgeableAny</li>
+            </affordances>
+        </value>
+    </Operation>
+
+    
 </Patch>

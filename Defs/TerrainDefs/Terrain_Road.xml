@@ -72,7 +72,7 @@
     <defName>AsphaltRecent</defName>
     <label>recently built asphalt</label>
     <texturePath>Terrain/Surfaces/AsphaltRecent</texturePath>
-    <color>(64,64,64)</color>
+    <color>(96,96,96)</color>
     <edgeType>FadeRough</edgeType>
   	<renderPrecedence>380</renderPrecedence>
     <pathCost>0</pathCost>
@@ -93,7 +93,47 @@
     <tags>
       <li>Road</li>
     </tags>
-
-    <!-- Not sure of any of the stuff below-->
   </TerrainDef>
+    
+  <TerrainDef>
+    <defName>ConcreteBridge</defName>
+    <label>concrete bridge</label>
+    <texturePath>Terrain/Surfaces/AsphaltRecent</texturePath> <!-- TO CHANGE -->
+    <color>(128,128,128)</color> <!-- LIGHTER COLOUR-->
+    <edgeType>Hard</edgeType>
+    <renderPrecedence>400</renderPrecedence>
+    <description>A concrete bridge to be built over water. Heavy structures can be built on these bridges, but they can still be destroyed. If a bridge falls, buildings on top of it fall as well.</description>
+    <layerable>true</layerable>
+    <resourcesFractionWhenDeconstructed>0</resourcesFractionWhenDeconstructed>
+    <statBases>
+        <WorkToBuild>4500</WorkToBuild>
+        <Flammability>0.1</Flammability>
+    </statBases>
+    <fertility>0</fertility>
+    <affordances>
+        <li>Light</li>
+        <li>Medium</li>
+        <li>Heavy</li>
+    </affordances>
+    <uiIconPath>Terrain/Surfaces/ConcreteBridge_MenuIcon</uiIconPath>
+    <acceptTerrainSourceFilth>True</acceptTerrainSourceFilth>
+    <constructEffect>ConstructMetal</constructEffect>
+    <destroyBuildingsOnDestroyed>true</destroyBuildingsOnDestroyed>
+    <destroyEffect>Bridge_Collapse</destroyEffect>
+    <destroyEffectWater>Bridge_CollapseWater</destroyEffectWater>
+    <destroyOnBombDamageThreshold>105</destroyOnBombDamageThreshold>
+    <costList>
+        <Steel>25</Steel>
+    </costList>
+    <designationCategory>Structure</designationCategory>
+    <terrainAffordanceNeeded>BridgeableAny</terrainAffordanceNeeded>
+    <!--
+    <researchPrerequisites>
+        <li>DeepWaterBridges</li>
+    </researchPrerequisites>
+    -->
+    </TerrainDef>
+
+    
+    
 </Defs>

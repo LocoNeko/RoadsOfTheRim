@@ -243,19 +243,23 @@ namespace RoadsOfTheRim
             totalConstruction += animalConstruction;
             str.Append(" Total = "+totalConstruction);
 
-            /*
-             * TO DO : This should be in a separate function that checks whether actual work was done           
-            // The pawns learn alittle construction when actual construction is done
+            return totalConstruction;
+        }
+
+        public void teachPawns(float ratio) // The pawns learn a little construction
+        {
+            ratio = Math.Max(Math.Min(1,ratio), 0);
+            List<Pawn> pawns = GetCaravan().PawnsListForReading;
+            RoadsOfTheRim.DebugLog("Teaching Construction to pawns");
             foreach (Pawn pawn in pawns)
             {
                 if (pawn.IsFreeColonist && pawn.health.State == PawnHealthState.Mobile && !pawn.RaceProps.packAnimal)
                 {
-                    pawn.skills.Learn(SkillDefOf.Construction , 0.1f * ratioActuallyWorked , false) ;
+                    pawn.skills.Learn(SkillDefOf.Construction, ratio, false);
+                    RoadsOfTheRim.DebugLog(pawn.Name+" learned " + ratio + " Xp = "+pawn.skills.GetSkill(SkillDefOf.Construction).XpTotalEarned);
                 }
             }
-            */
 
-            return totalConstruction;
         }
 
         public override void PostExposeData()

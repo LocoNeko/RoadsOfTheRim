@@ -38,9 +38,24 @@ namespace RoadsOfTheRim
 
                     if (thingList.Count > 0)
                     {
-                        //RoadsOfTheRim.DebugLog("Placed " + thingList.ToStringSafe() + " on top of a recently built Asphalt Road") ;
-                        RoadsOfTheRim.DebugLog("Placed " + thingList.Count + " things on top of " + terrainDefHere.label);
+                        //RoadsOfTheRim.DebugLog("Placed " + thingList.Count + " things on top of " + terrainDefHere.label);
                         MoveThings(map, current);
+                    }
+
+                    /*
+                     * Quick and dirty hack because classes in the Bridge.cs file do not handla all cases properly. Terrain needs to be set again over water & MarshyTerrain as below.
+                     */                   
+                    if (map.terrainGrid.UnderTerrainAt(current).IsWater)
+                    {
+                        map.terrainGrid.SetTerrain(current, TerrainDefOf.ConcreteBridge);
+                    }
+                    if (map.terrainGrid.UnderTerrainAt(current) == TerrainDefOf.MarshyTerrain && terrainDefHere == TerrainDefOf.AsphaltRecent)
+                    {
+                        map.terrainGrid.SetTerrain(current, TerrainDefOf.AsphaltRecent);
+                    }
+                    if (map.terrainGrid.UnderTerrainAt(current) == TerrainDefOf.MarshyTerrain && terrainDefHere == TerrainDefOf.StoneRecent)
+                    {
+                        map.terrainGrid.SetTerrain(current, TerrainDefOf.StoneRecent);
                     }
                 }
             }
@@ -61,21 +76,21 @@ namespace RoadsOfTheRim
             //thingList.RemoveAll(item => item !=null);
             foreach (Thing thingToMove in thingList) // Go through all things on that cell
             {
-                RoadsOfTheRim.DebugLog("Trying to move " + thingToMove.Label);
+                //RoadsOfTheRim.DebugLog("Trying to move " + thingToMove.Label);
                 List<IntVec3> cellChecked = new List<IntVec3>() ;
                 cellChecked.Add(cell) ;
                 bool goodCellFound = false ;
                 while (!goodCellFound) // Keep doing this as long as I haven't found a good cell (empty, and not a road)
                 {
                     List<IntVec3> newCells = cellChecked ;
-                    expandNeighbouringCells(ref newCells) ;
+                    expandNeighbouringCells(ref newCells , map) ;
                     foreach (IntVec3 c in newCells)
                     {
                         TerrainDef terrainDefHere = terrainGrid.TerrainAt(c) ;
                         List<Thing> thingList2 = c.GetThingList(map);
                         if ( !isBuiltRoad(terrainDefHere) && thingList2.Count==0)
                         {
-                            RoadsOfTheRim.DebugLog("Moved "+thingToMove.Label);
+                            //RoadsOfTheRim.DebugLog("Moved "+thingToMove.Label);
                             thingToMove.SetPositionDirect(c) ;
                             goodCellFound = true ;
                             break ;
@@ -90,7 +105,7 @@ namespace RoadsOfTheRim
             }
         }
 
-        public static void expandNeighbouringCells(ref List<IntVec3> cells)
+        public static void expandNeighbouringCells(ref List<IntVec3> cells , Map map)
         {
             List<IntVec3> expandedCells = new List<IntVec3>() ;
             foreach (IntVec3 c in cells)
@@ -101,7 +116,7 @@ namespace RoadsOfTheRim
                 }
                 foreach (IntVec3 c2 in GenAdjFast.AdjacentCells8Way(c)) // Add all the current cell's neighbours
                 {
-                    if (!expandedCells.Contains(c2) && !cells.Contains(c2))
+                    if (!expandedCells.Contains(c2) && !cells.Contains(c2) && c.InBounds(map))
                     {
                         expandedCells.Add(c2) ;
                     }

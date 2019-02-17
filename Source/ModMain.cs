@@ -24,13 +24,13 @@ namespace RoadsOfTheRim
     public class RoadsOfTheRimSettings : ModSettings
     {
         // Constants
-        public const float MinBaseEffort = .1f;
-        public const float DefaultBaseEffort = 1f;
-        public const float MaxBaseEffort = 1f;
+        public const int MinBaseEffort = 1 ;
+        public const int DefaultBaseEffort = 10 ;
+        public const int MaxBaseEffort = 10;
         public const float ElevationCostDouble = 2000f ;
         public const float HillinessCostDouble = 4f;
         public const float SwampinessCostDouble = 0.5f;
-        public float BaseEffort = DefaultBaseEffort;
+        public int BaseEffort = DefaultBaseEffort;
         public bool OverrideCosts = true;
         public float CostIncreaseElevationThreshold = 1000 ;
 
@@ -39,7 +39,7 @@ namespace RoadsOfTheRim
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look<float>(ref BaseEffort, "BaseEffort", DefaultBaseEffort, true);
+            Scribe_Values.Look<int>(ref BaseEffort, "BaseEffort", DefaultBaseEffort, true);
             Scribe_Values.Look<bool>(ref OverrideCosts, "OverrideCosts", true, true);
             Scribe_Values.Look<float>(ref CostIncreaseElevationThreshold, "CostIncreaseElevationThreshold", 1000 , true);
             Scribe_Values.Look<float>(ref CostUpgradeRebate, "CostUpgradeRebate", 0.3f , true) ;
@@ -244,9 +244,9 @@ namespace RoadsOfTheRim
             bool CurrentOverOverrideCosts = settings.OverrideCosts;
             Listing_Standard listing_Standard = new Listing_Standard();
             listing_Standard.Begin(rect);
-            listing_Standard.Label("RoadsOfTheRimSettingsBaseEffort".Translate() + ": " + string.Format("{0:0%}", settings.BaseEffort));
+            listing_Standard.Label("RoadsOfTheRimSettingsBaseEffort".Translate() + ": " + string.Format("{0:0%}", (float)settings.BaseEffort / 10));
             listing_Standard.Gap();
-            settings.BaseEffort = (float)listing_Standard.Slider(settings.BaseEffort, RoadsOfTheRimSettings.MinBaseEffort, RoadsOfTheRimSettings.MaxBaseEffort);
+            settings.BaseEffort = (int)listing_Standard.Slider(settings.BaseEffort, RoadsOfTheRimSettings.MinBaseEffort, RoadsOfTheRimSettings.MaxBaseEffort);
             listing_Standard.Gap();
             listing_Standard.CheckboxLabeled("RoadsOfTheRimSettingsOverrideCosts".Translate() + ": ", ref settings.OverrideCosts);
             listing_Standard.End();
@@ -503,29 +503,25 @@ namespace RoadsOfTheRim
         }
 
         /*
-        Tells me whether or not a ThingDef is Wood, Stone, Steel, or Chemfuel
-        TO DO : make this ugly hack better
+        Tells me whether or not a ThingDef is what I want
         */
         public static bool isThis(ThingDef def, string name)
         {
-            // TO DO : Switch is better
-            if (name == "Wood" && def.ToString() == "WoodLog")
+            if (name == "Stone" && def.IsWithinCategory(ThingCategoryDefOf.StoneBlocks))
             {
                 return true;
             }
-            else if (name == "Stone" && (def.FirstThingCategory != null) && (def.FirstThingCategory.ToString() == "StoneBlocks"))
+            else
             {
-                return true;
+                try
+                {
+                    return def.Equals(DefDatabase<ThingDef>.GetNamed(name , false));
+                }
+                catch
+                {
+                    return false;
+                }
             }
-            else if (name == "Steel" && def.IsMetal)
-            {
-                return true;
-            }
-            else if (name == "Chemfuel" && def.ToString() == "Chemfuel")
-            {
-                return true;
-            }
-            return false;
         }
 
         /*

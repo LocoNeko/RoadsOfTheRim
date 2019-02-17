@@ -133,4 +133,30 @@
     -->
     </TerrainDef>
 
+    <TerrainDef>
+        <defName>GlitterRoad</defName>
+        <label>glitter road</label>
+        <texturePath>Terrain/Surfaces/GlitterRoad</texturePath>
+        <edgeType>Hard</edgeType>
+        <renderPrecedence>380</renderPrecedence>
+        <pathCost>0</pathCost>
+        <description>Spacer level actively supported roads. Deconstructing glitter roads yields no resources.</description>
+        <layerable>true</layerable>
+        <resourcesFractionWhenDeconstructed>0</resourcesFractionWhenDeconstructed>
+        <statBases>
+          <Beauty>0</Beauty>
+          <Cleanliness>0</Cleanliness>
+        </statBases>
+        <fertility>0.0</fertility>
+        <affordances>
+          <li>Light</li>
+          <li>Medium</li>
+          <li>Heavy</li>
+        </affordances>
+        <acceptFilth>false</acceptFilth>
+        <tags>
+          <li>Road</li>
+        </tags>
+    </TerrainDef>
+
 </Defs>

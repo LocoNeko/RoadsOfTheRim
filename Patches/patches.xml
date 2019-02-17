@@ -140,17 +140,28 @@
     </Operation>
     
     <Operation Class="PatchOperationRemove">
+        <success>Always</success>
         <xpath>/Defs/TerrainDef[@Name="WaterDeepBase"]/changeable</xpath>
     </Operation>
-
-    <Operation Class="PatchOperationAdd">
-        <xpath>/Defs/TerrainDef[@Name="WaterDeepBase"]</xpath>
-        <value>
-            <affordances>
+    
+    <Operation Class="PatchOperationConditional">
+        <xpath>/Defs/TerrainDef[@Name="WaterDeepBase"]/affordances</xpath>
+        <nomatch Class="PatchOperationAdd">
+            <xpath>/Defs/TerrainDef[@Name="WaterDeepBase"]</xpath>
+            <value>
+                <affordances>
+                    <li>BridgeableAny</li>
+                </affordances>
+            </value>
+        </nomatch>
+        <match Class="PatchOperationAdd">
+            <xpath>/Defs/TerrainDef[@Name="WaterDeepBase"]/affordances</xpath>
+            <value>
                 <li>BridgeableAny</li>
-            </affordances>
-        </value>
+            </value>
+        </match>
     </Operation>
 
+    
     
 </Patch>

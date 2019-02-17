@@ -212,7 +212,7 @@ namespace RoadsOfTheRim
                 GetCostsModifiers(parentSite.Tile , parentSite.GetNextLeg().Tile , ref elevationModifier , ref hillinessModifier , ref swampinessModifier , ref bridgeModifier) ;
 
                 // Total cost modifier
-                float totalCostModifier = (1 + elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier) * settings.BaseEffort;
+                float totalCostModifier = (1 + elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier) * ((float)settings.BaseEffort / 10);
 
                 /* TO DO : This debug info should be shown properly on the site and/or caravan working on it
                 Log.Message( string.Format(

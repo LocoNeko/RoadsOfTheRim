@@ -16,10 +16,11 @@ namespace RoadsOfTheRim
     - The name of the road below
     - A list of costs, one per line :
     > Work
-    > Wood
+    > WoodLog
     > Stone
     > Steel
     > Chemfuel
+    > etc..   
     Each line starts with the icon of the resource (work uses the construction site icon)
     Upon clicking outside, the cartridge is closed with no further actions
     Upon clicking on a road icon, we set the roaddef of the site to that road and start targeting the map to add legs
@@ -32,7 +33,7 @@ namespace RoadsOfTheRim
     {
         private readonly RoadConstructionSite site;
         private readonly List<RoadDef> buildableRoads;
-        public override Vector2 InitialSize => new Vector2(676, 544);
+        public override Vector2 InitialSize => new Vector2(676+128, 544+128);
 
         // TO DO : Use the below to dynamically draw the window based on number of buildable roads (which could include technolcogy limits)
         // public bool resizeable = true ;
@@ -69,7 +70,7 @@ namespace RoadsOfTheRim
             }
 
             //Resources icons
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 9; i++)
             {
                 // Icon
                 Rect ResourceRect = new Rect(0, 202f + i * 40f, 32f, 32f);
@@ -88,8 +89,20 @@ namespace RoadsOfTheRim
                     case 3:
                         theDef = ThingDefOf.Steel;
                         break;
-                    default:
+                    case 4:
                         theDef = ThingDefOf.Chemfuel;
+                        break;
+                    case 5:
+                        theDef = ThingDefOf.Plasteel;
+                        break;
+                    case 6:
+                        theDef = ThingDefOf.Uranium;
+                        break;
+                    case 7:
+                        theDef = ThingDefOf.ComponentIndustrial;
+                        break;
+                    default:
+                        theDef = ThingDefOf.ComponentSpacer;
                         break;
                 }
                 if (i==0)
@@ -104,7 +117,7 @@ namespace RoadsOfTheRim
 
             // Sections : one per type of buildable road
             int nbOfSections = 0;
-            Vector2 groupSize = new Vector2(144 , 512);
+            Vector2 groupSize = new Vector2(144 , 512+128);
             foreach (RoadDef aDef in buildableRoads)
             {
                 DefModExtension_RotR_RoadDef roadDefExtension = aDef.GetModExtension<DefModExtension_RotR_RoadDef>();
@@ -137,7 +150,9 @@ namespace RoadsOfTheRim
                 foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
                 {
                     Rect ResourceAmountRect = new Rect(0, 176f + i++ * 40f, 144f, 32f);
-                    Widgets.Label(ResourceAmountRect, roadDefExtension.GetCost(resourceName).ToString());
+                    Widgets.Label(ResourceAmountRect,
+                        (roadDefExtension.GetCost(resourceName) > 0) ? (roadDefExtension.GetCost(resourceName) * ((float)RoadsOfTheRim.settings.BaseEffort / 10)).ToString() : "-" 
+                    );
                 }
                 GUI.EndGroup();
                 nbOfSections++;

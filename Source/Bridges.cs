@@ -7,18 +7,15 @@ using Harmony;
  */
 namespace RoadsOfTheRim
 {
-    public class ConcreteBridge : TerrainDef
-    {
-
-    }
-
     [DefOf]
     public static class TerrainDefOf
     {
         public static TerrainDef StoneRecent;
         public static TerrainDef AsphaltRecent ;
+        public static TerrainDef GlitterRoad;
         public static TerrainDef ConcreteBridge ;
         public static TerrainDef MarshyTerrain;
+        public static TerrainDef Mud;
     }
 
     [DefOf]
@@ -63,6 +60,11 @@ namespace RoadsOfTheRim
     [HarmonyPatch(typeof(RoadDefGenStep_Place), "Place")]
     public static class Patch_RoadDefGenStep_Place_Place
     {
+        public static bool isGoodTerrain(TerrainDef terrain)
+        {
+            return ((terrain == TerrainDefOf.Mud) || (terrain == TerrainDefOf.MarshyTerrain));
+        }
+
         [HarmonyPostfix]
         public static void Postfix(ref RoadDefGenStep_Place __instance, Map map, IntVec3 position, TerrainDef rockDef, IntVec3 origin, GenStep_Roads.DistanceElement[,] distance)
         {
@@ -70,11 +72,15 @@ namespace RoadsOfTheRim
             {
                 map.terrainGrid.SetTerrain(position, TerrainDefOf.ConcreteBridge) ;
             }
-            if (__instance.place == TerrainDefOf.AsphaltRecent && position.GetTerrain(map) == TerrainDefOf.MarshyTerrain)
+            if (__instance.place == TerrainDefOf.GlitterRoad && (isGoodTerrain(position.GetTerrain(map)) || position.GetTerrain(map).IsWater))
+            {
+                map.terrainGrid.SetTerrain(position, TerrainDefOf.GlitterRoad);
+            }
+            if (__instance.place == TerrainDefOf.AsphaltRecent && isGoodTerrain(position.GetTerrain(map)))
             {
                 map.terrainGrid.SetTerrain(position, TerrainDefOf.AsphaltRecent);
             }
-            if (__instance.place == TerrainDefOf.StoneRecent && position.GetTerrain(map) == TerrainDefOf.MarshyTerrain)
+            if (__instance.place == TerrainDefOf.StoneRecent && isGoodTerrain(position.GetTerrain(map)))
             {
                 map.terrainGrid.SetTerrain(position, TerrainDefOf.StoneRecent);
             }
@@ -87,7 +93,7 @@ namespace RoadsOfTheRim
         [HarmonyPostfix]
         public static void Postfix (ref bool __result , BuildableDef entDef, IntVec3 c, Map map)
         {
-            if (entDef == TerrainDefOf.ConcreteBridge || entDef == TerrainDefOf.AsphaltRecent)
+            if (entDef == TerrainDefOf.ConcreteBridge || entDef == TerrainDefOf.AsphaltRecent || entDef == TerrainDefOf.GlitterRoad)
             {
                 if (map.terrainGrid.TerrainAt(c).IsWater)
                 {

@@ -27,7 +27,6 @@ namespace RoadsOfTheRim
 			{
                 List<Thing> thingList = current.GetThingList(map);
                 TerrainDef terrainDefHere = terrainGrid.TerrainAt(current) ;
-                //if (terrainDefHere.defName == "AsphaltRecent" && thingList.Count>0)
                 if (isBuiltRoad(terrainDefHere))
                 {
                     map.roofGrid.SetRoof(current, null) ; // remove any roof
@@ -43,19 +42,38 @@ namespace RoadsOfTheRim
                     }
 
                     /*
-                     * Quick and dirty hack because classes in the Bridge.cs file do not handla all cases properly. Terrain needs to be set again over water & MarshyTerrain as below.
+                     * Quick and dirty hack because classes in the Bridge.cs file do not handle all cases properly. Terrain needs to be set again over water & MarshyTerrain as below.
                      */                   
                     if (map.terrainGrid.UnderTerrainAt(current).IsWater)
                     {
-                        map.terrainGrid.SetTerrain(current, TerrainDefOf.ConcreteBridge);
+                        if (terrainDefHere == TerrainDefOf.GlitterRoad)
+                        {
+                            map.terrainGrid.SetTerrain(current, TerrainDefOf.GlitterRoad);
+                        }
+                        if (terrainDefHere == TerrainDefOf.AsphaltRecent)
+                        {
+                            map.terrainGrid.SetTerrain(current, TerrainDefOf.ConcreteBridge);
+                        }
+                        if (terrainDefHere == TerrainDefOf.StoneRecent)
+                        {
+                            map.terrainGrid.SetTerrain(current, TerrainDefOf.ConcreteBridge);
+                        }
                     }
-                    if (map.terrainGrid.UnderTerrainAt(current) == TerrainDefOf.MarshyTerrain && terrainDefHere == TerrainDefOf.AsphaltRecent)
+
+                    if (map.terrainGrid.UnderTerrainAt(current) == TerrainDefOf.MarshyTerrain)
                     {
-                        map.terrainGrid.SetTerrain(current, TerrainDefOf.AsphaltRecent);
-                    }
-                    if (map.terrainGrid.UnderTerrainAt(current) == TerrainDefOf.MarshyTerrain && terrainDefHere == TerrainDefOf.StoneRecent)
-                    {
-                        map.terrainGrid.SetTerrain(current, TerrainDefOf.StoneRecent);
+                        if (terrainDefHere == TerrainDefOf.GlitterRoad)
+                        {
+                            map.terrainGrid.SetTerrain(current, TerrainDefOf.GlitterRoad);
+                        }
+                        if (terrainDefHere == TerrainDefOf.AsphaltRecent)
+                        {
+                            map.terrainGrid.SetTerrain(current, TerrainDefOf.AsphaltRecent);
+                        }
+                        if (terrainDefHere == TerrainDefOf.StoneRecent)
+                        {
+                            map.terrainGrid.SetTerrain(current, TerrainDefOf.StoneRecent);
+                        }
                     }
                 }
             }

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
-using System.Text;
-using System ;
 
 namespace RoadsOfTheRim
 {
@@ -66,10 +66,12 @@ namespace RoadsOfTheRim
             {
                 return CaravanState.Moving ;
             }
+            /* Remove as this should not prevent the caravan from working (Issue #38)
             if (caravan.ImmobilizedByMass)
             {
                 return CaravanState.ImmobilizedByMass ;
             }
+            */
             if (caravan.AllOwnersDowned)
             {
                 return CaravanState.AllOwnersDowned ;
@@ -77,10 +79,6 @@ namespace RoadsOfTheRim
             if (caravan.AllOwnersHaveMentalBreak)
             {
                 return CaravanState.AllOwnersHaveMentalBreak ;
-            }
-            if (caravan.ImmobilizedByMass)
-            {
-                return CaravanState.ImmobilizedByMass ;
             }
             if (caravan.NightResting)
             {
@@ -199,7 +197,6 @@ namespace RoadsOfTheRim
             float totalConstruction = 0f;
             float totalConstructionAboveMinLevel = 0f;
             float animalConstruction = 0f;
-            StringBuilder str = new StringBuilder();
             foreach (Pawn pawn in pawns)
             {
                 if (pawn.IsFreeColonist && pawn.health.State == PawnHealthState.Mobile)
@@ -210,12 +207,10 @@ namespace RoadsOfTheRim
                     {
                         totalConstructionAboveMinLevel += pawn.GetStatValue(StatDefOf.ConstructionSpeed) * pawn.GetStatValue(StatDefOf.ConstructSuccessChance);
                     }
-                    str.Append(pawn.Name+" (Hmn) : "+ pawn.GetStatValue(StatDefOf.ConstructionSpeed)+"*"+ pawn.GetStatValue(StatDefOf.ConstructSuccessChance)+", ");
                 }
                 else if (pawn.RaceProps.packAnimal  && pawn.health.State == PawnHealthState.Mobile)
                 {
                     animalConstruction += pawn.GetStatValue(StatDefOf.ConstructionSpeed) * pawn.GetStatValue(StatDefOf.ConstructSuccessChance);
-                    str.Append(pawn.Name + " (Ani) : " + pawn.GetStatValue(StatDefOf.ConstructionSpeed) + "*" + pawn.GetStatValue(StatDefOf.ConstructSuccessChance) + ", ");
                 }
             }
 
@@ -241,8 +236,6 @@ namespace RoadsOfTheRim
                 animalConstruction = totalConstruction;
             }
             totalConstruction += animalConstruction;
-            str.Append(" Total = "+totalConstruction);
-
             return totalConstruction;
         }
 

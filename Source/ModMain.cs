@@ -280,7 +280,7 @@ namespace RoadsOfTheRim
                 constructionSite.Tile = caravan.Tile;
                 Find.WorldObjects.Add(constructionSite);
 
-                ConstructionMenu menu = new ConstructionMenu(constructionSite);
+                ConstructionMenu menu = new ConstructionMenu(constructionSite , caravan);
                 if (menu.CountBuildableRoads() == 0)
                 {
                     Find.WorldObjects.Remove(constructionSite);
@@ -317,10 +317,10 @@ namespace RoadsOfTheRim
 
         public static void FinaliseConstructionSite(RoadConstructionSite site)
         {
-            // Log.Warning("[RotR] - FinaliseConstructionSite");
             if (site.GetNextLeg()!=null)
             {
                 site.GetComponent<WorldObjectComp_ConstructionSite>().setCosts();
+                RoadsOfTheRim.RoadBuildingState.Caravan.GetComponent<WorldObjectComp_Caravan>().startWorking();
             }
             else
             {

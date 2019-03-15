@@ -74,7 +74,6 @@ namespace RoadsOfTheRim
         // No -> create a new Leg
         public static bool ActionOnTile(RoadConstructionSite site , int tile)
         {
-            // The RoadConstructionSite given is somehow wrong
             if (site.def != DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true))
             {
                 Log.Error("[RotR] - The RoadConstructionSite given is somehow wrong");

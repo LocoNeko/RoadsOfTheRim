@@ -32,6 +32,7 @@ namespace RoadsOfTheRim
     public class ConstructionMenu : Window
     {
         private readonly RoadConstructionSite site;
+        private readonly Caravan caravan;
         private readonly List<RoadDef> buildableRoads;
         public override Vector2 InitialSize => new Vector2(676+128, 544+128);
 
@@ -41,9 +42,10 @@ namespace RoadsOfTheRim
         // private Rect resizeLaterRect ;
 
 
-        public ConstructionMenu(RoadConstructionSite site)
+        public ConstructionMenu(RoadConstructionSite site , Caravan caravan)
         {
-            this.site = site;
+            this.site = site ;
+            this.caravan = caravan ;
             buildableRoads = new List<RoadDef>() ;
             // TO DO : COunt number of buildable roads, set the resize later rect based on that
             
@@ -134,6 +136,7 @@ namespace RoadsOfTheRim
                         site.roadDef = aDef;
                         Close();
                         RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting = site ;
+                        RoadsOfTheRim.RoadBuildingState.Caravan = caravan ;
                         RoadConstructionLeg.Target(site);
                     }
                 }

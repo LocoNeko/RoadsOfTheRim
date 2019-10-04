@@ -281,6 +281,7 @@ namespace RoadsOfTheRim
                 Find.WorldObjects.Add(constructionSite);
 
                 ConstructionMenu menu = new ConstructionMenu(constructionSite , caravan);
+
                 if (menu.CountBuildableRoads() == 0)
                 {
                     Find.WorldObjects.Remove(constructionSite);

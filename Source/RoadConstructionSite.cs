@@ -149,10 +149,13 @@ namespace RoadsOfTheRim
             WorldGrid worldGrid = Find.WorldGrid;
             foreach (Settlement s in Find.WorldObjects.Settlements)
             {
-                int distance = CaravanArrivalTimeEstimator.EstimatedTicksToArrive(startTile, s.Tile, null) ;
-                if ( (worldGrid.ApproxDistanceInTiles(startTile, s.Tile) <= maxNeighbourDistance) && distance <= maxTicksToNeighbour )
+                if (worldGrid.ApproxDistanceInTiles(startTile, s.Tile) <= maxNeighbourDistance )
                 {
-                    settlementsSearched.Add(new SettlementInfo(s , distance));
+                    int distance = CaravanArrivalTimeEstimator.EstimatedTicksToArrive(startTile, s.Tile, null);
+                    if (distance <= maxTicksToNeighbour)
+                    {
+                        settlementsSearched.Add(new SettlementInfo(s, distance));
+                    }
                 }
             }
             timer.Stop();

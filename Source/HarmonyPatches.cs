@@ -30,7 +30,7 @@ namespace RoadsOfTheRim
             // Initialise the list of terrains that are specific to built roads. Doing it here is hacky, but this is a quick way to use defs after they were loaded
             foreach (RoadDef thisDef in DefDatabase<RoadDef>.AllDefs)
             {
-                RoadsOfTheRim.DebugLog("initiliasing roadDef " + thisDef);
+                RoadsOfTheRim.DebugLog("initialising roadDef " + thisDef);
                 if (thisDef.HasModExtension<DefModExtension_RotR_RoadDef>() && thisDef.GetModExtension<DefModExtension_RotR_RoadDef>().built) // Only add RoadDefs that are buildable, based on DefModExtension_RotR_RoadDef.built
                 {
                     foreach (RoadDefGenStep_Place aStep in thisDef.roadGenSteps.OfType<RoadDefGenStep_Place>()) // Only get RoadDefGenStep_Place
@@ -47,7 +47,7 @@ namespace RoadsOfTheRim
             {
                 RoadsOfTheRim.DebugLog("builtRoadTerrains - Adding : " + t);
             }
-            RoadsOfTheRim.DebugLog("Roads of the Rim loaded");
+            RoadsOfTheRim.DebugLog("[RofR] - Roads of the Rim loaded v20191010");
         }
     }
 

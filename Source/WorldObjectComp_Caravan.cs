@@ -17,10 +17,83 @@ namespace RoadsOfTheRim
         ReadyToWork
     }
 
-    public class WorldObjectComp_Caravan : WorldObjectComp
+    public static class PawnBuildingUtility
+    {
+        public static bool HealthyColonist(Pawn p)
+        {
+            return (p.IsFreeColonist && p.health.State == PawnHealthState.Mobile);
+        }
+
+        public static bool HealthyPackAnimal(Pawn p)
+        {
+            return (p.RaceProps.packAnimal && p.health.State == PawnHealthState.Mobile);
+        }
+
+        public static float ConstructionValue(Pawn p)
+        {
+            return (p.GetStatValue(StatDefOf.ConstructionSpeed) * p.GetStatValue(StatDefOf.ConstructSuccessChance));
+        }
+
+        public static int ConstructionLevel(Pawn p)
+        {
+            return (p.skills.GetSkill(SkillDefOf.Construction).levelInt);
+        }
+
+        public static string ShowConstructionValue(Pawn p)
+        {
+            if (PawnBuildingUtility.HealthyColonist(p))
+            {
+                return String.Format("{0:0.##}", PawnBuildingUtility.ConstructionValue(p));
+            }
+            if (PawnBuildingUtility.HealthyPackAnimal(p))
+            {
+                return String.Format("+{0:0.##}", PawnBuildingUtility.ConstructionValue(p));
+            }
+            return "-";
+        }
+
+        public static string ShowSkill(Pawn p)
+        {
+            if (PawnBuildingUtility.HealthyColonist(p))
+            {
+                return String.Format("{0:0}", PawnBuildingUtility.ConstructionLevel(p));
+            }
+            return "-";
+        }
+
+        public static string ShowBestRoad(Pawn p)
+        {
+            RoadDef BestRoadDef = null;
+            if (PawnBuildingUtility.HealthyColonist(p))
+            { 
+                foreach (RoadDef thisDef in DefDatabase<RoadDef>.AllDefs)
+                {
+                    if (thisDef.HasModExtension<DefModExtension_RotR_RoadDef>() && thisDef.GetModExtension<DefModExtension_RotR_RoadDef>().built) // Only add RoadDefs that are buildable, based on DefModExtension_RotR_RoadDef.built
+                    {
+                        DefModExtension_RotR_RoadDef RoadDefMod = thisDef.GetModExtension<DefModExtension_RotR_RoadDef>();
+                        if (PawnBuildingUtility.ConstructionLevel(p) >= RoadDefMod.minConstruction)
+                        {
+                            if ((BestRoadDef == null) || (thisDef.movementCostMultiplier < BestRoadDef.movementCostMultiplier))
+                            {
+                                BestRoadDef = thisDef;
+                            }
+                        }
+                    }
+                }
+                if (BestRoadDef != null)
+                {
+                    return BestRoadDef.label;
+                }
+            }
+            return "-";
+        }
+    }
+
+        public class WorldObjectComp_Caravan : WorldObjectComp
     {
         public bool currentlyWorkingOnSite = false;
 
+        // workOnWakeUp must be more than just working when waking up, it must tell the caravan to work as long as the site is not finished
         public bool workOnWakeUp = false;
 
         private RoadConstructionSite site ;
@@ -124,6 +197,8 @@ namespace RoadsOfTheRim
                 {
                     stopWorking();
                     string stoppedReason = "";
+                    // More general use of workOnWakeUp : set it to true if the caravan was working on a site but stopped working for any reason listed in CaravanState
+                    this.workOnWakeUp = true;
                     if (CaravanCurrentState() == CaravanState.AllOwnersDowned)
                     {
                         stoppedReason = "Everyone is down";
@@ -136,17 +211,19 @@ namespace RoadsOfTheRim
                     {
                         stoppedReason = "Too heavy to move";
                     }
-                    // If the caravan is resting, stop working but remember to restart working on wake up
                     if (CaravanCurrentState() == CaravanState.NightResting)
                     {
-                        this.workOnWakeUp = true;
                         stoppedReason = " resting at night. Work will resume in the morning.";
                     }
                     if (stoppedReason != "")
                     {
                         Messages.Message("Caravan stopped working on site : " + stoppedReason, MessageTypeDefOf.RejectInput);
                     }
-
+                    // This should not happen ?
+                    else
+                    {
+                        this.workOnWakeUp = false;
+                    }
                 }
 
                 if (!isThereAConstructionSiteHere())
@@ -199,6 +276,7 @@ namespace RoadsOfTheRim
             float animalConstruction = 0f;
             foreach (Pawn pawn in pawns)
             {
+                /*
                 if (pawn.IsFreeColonist && pawn.health.State == PawnHealthState.Mobile)
                 {
                     totalConstruction += pawn.GetStatValue(StatDefOf.ConstructionSpeed) * pawn.GetStatValue(StatDefOf.ConstructSuccessChance);
@@ -211,6 +289,23 @@ namespace RoadsOfTheRim
                 else if (pawn.RaceProps.packAnimal  && pawn.health.State == PawnHealthState.Mobile)
                 {
                     animalConstruction += pawn.GetStatValue(StatDefOf.ConstructionSpeed) * pawn.GetStatValue(StatDefOf.ConstructSuccessChance);
+                }
+                */
+                float PawnConstructionValue = PawnBuildingUtility.ConstructionValue(pawn);
+
+                if (PawnBuildingUtility.HealthyColonist(pawn))
+                {
+                    totalConstruction += PawnConstructionValue ;
+
+                    if (roadDefModExtension != null && PawnBuildingUtility.ConstructionLevel(pawn) >= roadDefModExtension.minConstruction)
+                    {
+                        totalConstructionAboveMinLevel += PawnConstructionValue;
+                    }
+                }
+
+                else if (PawnBuildingUtility.HealthyPackAnimal(pawn))
+                {
+                    animalConstruction += PawnConstructionValue;
                 }
             }
 

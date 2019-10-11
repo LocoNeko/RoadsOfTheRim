@@ -6,12 +6,13 @@
   <RoadsOfTheRim_BiomePreventsConstruction>Roads cannot be built in the {0} biome</RoadsOfTheRim_BiomePreventsConstruction>
   <RoadsOfTheRimRemoveConstructionSite>Cancel construction</RoadsOfTheRimRemoveConstructionSite>
   <RoadsOfTheRimRemoveConstructionSiteDescription>Remove road construction site</RoadsOfTheRimRemoveConstructionSiteDescription>
-  <RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>Can't remove the site : some resources already consumed</RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed>
+  <RoadsOfTheRim_ConfirmDestroyResourcesAlreadyConsumed>By removing this site, you will lose all resources already consumed: {0}</RoadsOfTheRim_ConfirmDestroyResourcesAlreadyConsumed>
   <RoadsOfTheRim_ConstructionSiteDescription_Main>Construction {0} done</RoadsOfTheRim_ConstructionSiteDescription_Main>
   <RoadsOfTheRim_ConstructionSiteDescription_Help>, helped by {0} [{1} work@{2}/sec]</RoadsOfTheRim_ConstructionSiteDescription_Help>
   <RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen> starting in {0} days</RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen>
   <RoadsOfTheRim_ConstructionSiteDescription_CostModifiers>. Work cost increased by {0} because of Elevation({1}), Hills({2}), Swamps({3}) and bridges({4})</RoadsOfTheRim_ConstructionSiteDescription_CostModifiers>
   <RoadsOfTheRim_ConstructionSiteDescription_Resource>{1} {0} left of {2}</RoadsOfTheRim_ConstructionSiteDescription_Resource>
+  <RoadsOfTheRim_WITab_Caravan_Build>Build</RoadsOfTheRim_WITab_Caravan_Build>
   <RoadsOfTheRim_commsAskHelp>Ask ally for help on road construction (cost: 10 goodwill)</RoadsOfTheRim_commsAskHelp>
   <RoadsOfTheRim_commsNoSites>No construction sites found</RoadsOfTheRim_commsNoSites>
   <RoadsOfTheRim_commsAlreadyHelping>This faction is already helping with road construction</RoadsOfTheRim_commsAlreadyHelping>
@@ -39,8 +40,6 @@
   <RoadsOfTheRim_MustPickNeighbouringTile>Must choose a neighbouring tile</RoadsOfTheRim_MustPickNeighbouringTile>
   <RoadsOfTheRim_SameRoadAlreadyExists>A similar road already exists between those two tiles</RoadsOfTheRim_SameRoadAlreadyExists>
   <RoadsOfTheRim_BuildToHere>Build road to here</RoadsOfTheRim_BuildToHere>
-  <RoadsOfTheRimWorkOnSite>Work</RoadsOfTheRimWorkOnSite>
-  <RoadsOfTheRimWorkOnSiteDescription>Work on construction site</RoadsOfTheRimWorkOnSiteDescription>
   <RoadsOfTheRimStopWorkingOnSite>Stop</RoadsOfTheRimStopWorkingOnSite>
   <RoadsOfTheRimStopWorkingOnSiteDescription>Stop working on construction site</RoadsOfTheRimStopWorkingOnSiteDescription>
   <RoadsOfTheRimBuildWorkOnSiteCantWork>Caravan unable to work right now</RoadsOfTheRimBuildWorkOnSiteCantWork>
@@ -50,7 +49,8 @@
   <RoadsOfTheRim_siteFullName>Site constructing {0}</RoadsOfTheRim_siteFullName>
   <RoadsOfTheRim_siteFullNameNeighbours> near {0}</RoadsOfTheRim_siteFullNameNeighbours>
   <RoadsOfTheRim_CaravanNoResource>{0} has ran out of resources to build {1}. Work stopped.</RoadsOfTheRim_CaravanNoResource>
-  <RoadsOfTheRim_UpgradeRebate>The existing road has lowered the construction costs by {0}</RoadsOfTheRim_UpgradeRebate>
+  <RoadsOfTheRim_CaravanNoWork>{0} has no pawn able to build {1}. Work stopped.</RoadsOfTheRim_CaravanNoWork>
+  <RoadsOfTheRim_UpgradeRebate>Existing road reduces costs to build {0} by {1}</RoadsOfTheRim_UpgradeRebate>
   <RoadsOfTheRim_UpgradeRebateDetail>{0} {1}</RoadsOfTheRim_UpgradeRebateDetail>
   <RoadsOfTheRim_RoadBuilt>Road built</RoadsOfTheRim_RoadBuilt>
   <RoadsOfTheRim_RoadBuiltLetterText>{0} has been built by {1}</RoadsOfTheRim_RoadBuiltLetterText>

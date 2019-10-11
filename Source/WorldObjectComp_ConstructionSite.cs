@@ -179,15 +179,16 @@ namespace RoadsOfTheRim
             }
         }
 
-        public bool resourcesAlreadyConsumed()
+        public string ResourcesAlreadyConsumed()
         {
+            List<String> l = new List<string>() ;
             try
             {
                 foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
                 {
                     if (GetCost(resourceName) > 0 && GetLeft(resourceName) < GetCost(resourceName))
                     {
-                        return true;
+                        l.Add(String.Format("{0} {1}", GetCost(resourceName) - GetLeft(resourceName), resourceName));
                     }
                 }
             }
@@ -195,7 +196,7 @@ namespace RoadsOfTheRim
             {
                 RoadsOfTheRim.DebugLog("resourcesAlreadyConsumed failed. This will happen after upgrading to the 20190207 version") ;
             }
-            return false;
+            return String.Join(", " , l.ToArray());
         }
 
         public void setCosts()
@@ -230,9 +231,9 @@ namespace RoadsOfTheRim
                 // Check existing roads for potential rebates when upgrading
                 GetUpgradeModifiers(parentSite.Tile , parentSite.GetNextLeg().Tile , parentSite.roadDef , out Dictionary<string , int> rebate) ;
 
+                List<string> s = new List<string>();
                 foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
                 {
-                    List<string> s = new List<string>() ;
                     if (roadDefExtension.GetCost(resourceName)>0)
                     {
                         int thisRebate = 0;
@@ -244,11 +245,13 @@ namespace RoadsOfTheRim
                             s.Add("RoadsOfTheRim_UpgradeRebateDetail".Translate((int)(thisRebate * totalCostModifier) , resourceName));
                         }
                     }
-                    if (s.Count>0)
-                    {
-                        Messages.Message("RoadsOfTheRim_UpgradeRebate".Translate(string.Join(", ", s.ToArray())) , MessageTypeDefOf.PositiveEvent);
-                    }
                 }
+
+                if (s.Count > 0)
+                {
+                    Messages.Message("RoadsOfTheRim_UpgradeRebate".Translate(parentSite.roadDef.label, string.Join(", ", s.ToArray())), MessageTypeDefOf.PositiveEvent);
+                }
+
                 parentSite.UpdateProgressBarMaterial();
             }
             catch (Exception e)

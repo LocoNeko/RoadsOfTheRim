@@ -155,8 +155,16 @@ namespace RoadsOfTheRim
                 return false;
             }
 
-            // Percentage of total work that can be done in this batch
+            // Percentage of total work that can be done in this batch, might be 0 if no pawn was found with enough skill
             float amountOfWork = caravanComp.amountOfWork(true);
+
+            // Work was 0 (not enough skill)
+            if (Math.Abs(amountOfWork) < Double.Epsilon)
+            {
+                Messages.Message("RoadsOfTheRim_CaravanNoWork".Translate(caravan.Name, site.roadDef.label), MessageTypeDefOf.RejectInput);
+                caravanComp.stopWorking();
+                return false ;
+            }
 
             if (amountOfWork > siteComp.GetLeft("Work"))
             {
@@ -400,27 +408,36 @@ namespace RoadsOfTheRim
             return command_Action;
         }
 
-        /*
-        Delete Construction Site
-         */
+        /*Delete Construction Site    */
         public static void DeleteConstructionSite(int tile)
         {
-            RoadConstructionSite ConstructionSite = (RoadConstructionSite) Find.WorldObjects.WorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), tile) ;
-            if (ConstructionSite!=null)
+            RoadConstructionSite ConstructionSite = (RoadConstructionSite)Find.WorldObjects.WorldObjectOfDefAt(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true), tile);
+            if (ConstructionSite != null)
             {
-                if (ConstructionSite.resourcesAlreadyConsumed())
+                // Confirm construction site deletion if resources were already consumed
+                string s = ConstructionSite.ResourcesAlreadyConsumed();
+                if (!s.NullOrEmpty())
                 {
-                    Messages.Message("RoadsOfTheRim_CantDestroyResourcesAlreadyConsumed".Translate(), MessageTypeDefOf.RejectInput);
+                    Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("RoadsOfTheRim_ConfirmDestroyResourcesAlreadyConsumed".Translate(s), delegate
+                        {
+                            DeleteConstructionSiteConfirmed(ConstructionSite);
+                        }, false, null));
                 }
                 else
                 {
-                    if (ConstructionSite.helpFromFaction != null)
-                    {
-                        RoadsOfTheRim.factionsHelp.helpFinished(ConstructionSite.helpFromFaction);
-                    }
-                    RoadConstructionSite.DeleteSite(ConstructionSite);
+                    DeleteConstructionSiteConfirmed(ConstructionSite);
                 }
             }
+        }
+
+        /*Delete Cosntruction Site once it's been confirmed, or no confirmation was necessary */
+        public static void DeleteConstructionSiteConfirmed(RoadConstructionSite ConstructionSite)
+        {
+            if (ConstructionSite.helpFromFaction != null)
+            {
+                RoadsOfTheRim.factionsHelp.helpFinished(ConstructionSite.helpFromFaction);
+            }
+            RoadConstructionSite.DeleteSite(ConstructionSite);
         }
 
         public static DiaOption HelpRoadConstruction(Faction faction, Pawn negotiator)

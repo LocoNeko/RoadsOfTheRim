@@ -133,6 +133,13 @@
     </Operation>
     
     <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/WorldObjectDef[defName="Caravan"]/inspectorTabs</xpath>
+        <value>
+            <li>RoadsOfTheRim.WITab_Caravan_Build</li>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
         <xpath>/Defs/MapGeneratorDef[@Name="MapCommonBase"]/genSteps</xpath>
         <value>
             <li>RotR_CleanBuiltRoads</li>

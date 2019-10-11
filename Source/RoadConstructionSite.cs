@@ -271,9 +271,9 @@ namespace RoadsOfTheRim
         }
         */
 
-        public bool resourcesAlreadyConsumed()
+        public string ResourcesAlreadyConsumed()
         {
-            return this.GetComponent<WorldObjectComp_ConstructionSite>().resourcesAlreadyConsumed() ;
+            return this.GetComponent<WorldObjectComp_ConstructionSite>().ResourcesAlreadyConsumed() ;
         }
 
         public override string GetInspectString()

@@ -148,12 +148,14 @@ namespace RoadsOfTheRim
 			{
                 if (roads[i].neighbor == toTile)
 				{
+                    float HillinessOffset = (float)HillinessMovementDifficultyOffset.Invoke(null, new object[] { Find.WorldGrid[toTile].hilliness });
+                    if (HillinessOffset>12f) { HillinessOffset = 12f; }
 
                     // Calculate biome, Hillines & winter modifiers, update explanation &  multiply result by biome modifier
                     float RoadModifier = RoadsOfTheRim.calculateRoadModifier(
                         roads[i].road , 
                         Find.WorldGrid[toTile].biome.movementDifficulty ,
-                        (float)HillinessMovementDifficultyOffset.Invoke(null , new object[] { Find.WorldGrid[toTile].hilliness }),
+                        HillinessOffset,
                         WorldPathGrid.GetCurrentWinterMovementDifficultyOffset(toTile) ,
                         out BiomeModifier,
                         out HillModifier ,
@@ -163,7 +165,11 @@ namespace RoadsOfTheRim
                     __result *= RoadModifier ;
                     if (explanation != null) {
                         explanation.AppendLine ();
-                        explanation.Append(String.Format("The road cancels {0:P0} of the biome, {1:P0} of the hills & {2:P0} of winter movement costs", BiomeModifier, HillModifier , WinterModifier));
+                        explanation.Append(String.Format(
+                            "The road cancels {0:P0} of the biome ({3:##.###}), {1:P0} of the hills ({4:##.###}) & {2:P0} of winter movement costs",
+                            BiomeModifier, HillModifier , WinterModifier ,
+                            Find.WorldGrid[toTile].biome.movementDifficulty , HillinessOffset
+                        ));
                     }
                 }
             }

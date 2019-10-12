@@ -170,6 +170,63 @@ namespace RoadsOfTheRim
         }
     }
 
+    [HarmonyPatch(typeof(WorldPathGrid), "CalculatedMovementDifficultyAt")]
+    static class Patch_WorldPathGrid_CalculatedMovementDifficultyAt
+    {
+        [HarmonyPostfix]
+        public static void PostFix(ref float __result, int tile , bool perceivedStatic , int? ticksAbs , StringBuilder explanation)
+        {
+            if (__result > 999f)
+            {
+                try
+                {
+                    if (Find.WorldGrid.InBounds(tile))
+                    {
+                        Tile tile2 = Find.WorldGrid.tiles[tile];
+                        List<Tile.RoadLink> roads = tile2.Roads;
+                        if (roads?.Count>0)
+                        {
+                            RoadDef BestRoad = null;
+                            for (int i = 0; i < roads.Count; i++)
+                            {
+                                if (BestRoad == null)
+                                {
+                                    BestRoad = roads[i].road;
+                                }
+                                else
+                                {
+                                    if (BestRoad.movementCostMultiplier < roads[i].road.movementCostMultiplier)
+                                    {
+                                        BestRoad = roads[i].road;
+                                    }
+                                }
+                            }
+                            if (BestRoad != null)
+                            {
+                                DefModExtension_RotR_RoadDef roadDefExtension = BestRoad.GetModExtension<DefModExtension_RotR_RoadDef>();
+                                if (roadDefExtension != null && ((tile2.biome.impassable && roadDefExtension.biomeModifier > 0) || (tile2.hilliness == Hilliness.Impassable)))
+                                {
+                                    __result = 12f;
+                                    RoadsOfTheRim.DebugLog(String.Format("[RotR] - Impassable Tile {0} movement difficulty patched" , tile));
+                                }
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        RoadsOfTheRim.DebugLog("[RotR] - CalculatedMovementDifficultyAt Patch - Tile out of bounds");
+                    }
+                }
+                catch (Exception e)
+                {
+                    RoadsOfTheRim.DebugLog("[RotR] - CalculatedMovementDifficultyAt Patch - Catastrophic failure", e);
+                    return;
+                }
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(WorldTargeter), "StopTargeting")]
     public static class Patch_WorldTargeter_StopTargeting
     {

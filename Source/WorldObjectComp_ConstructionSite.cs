@@ -325,10 +325,12 @@ namespace RoadsOfTheRim
             {
                 Find.World.renderer.SetDirty<WorldLayer_Roads>();
                 Find.World.renderer.SetDirty<WorldLayer_Paths>();
+                Find.WorldPathGrid.RecalculatePerceivedMovementDifficultyAt(fromTile_int);
+                Find.WorldPathGrid.RecalculatePerceivedMovementDifficultyAt(toTile_int);
             }
             catch (Exception e)
             {
-                Log.Error("[RotR] Exception : "+e);
+                RoadsOfTheRim.DebugLog("[RotR] Exception : ", e);
             }
 
             // The Construction site and the caravan can move to the next leg

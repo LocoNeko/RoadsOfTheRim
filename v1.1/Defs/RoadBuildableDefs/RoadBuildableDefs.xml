@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <RoadsOfTheRim.RoadBuildableDef>
+        <defName>RoadsOfTheRim_DirtPath</defName>
+        <label>Dirt path</label>
+        <movementCostMultiplier>0.75</movementCostMultiplier>
+        <roadDef>DirtPath</roadDef>
+        <biomeMovementDifficultyEffect>0</biomeMovementDifficultyEffect>
+        <work>600</work>
+        <wood>0</wood>
+        <stone>0</stone>
+        <steel>0</steel>
+        <chemfuel>0</chemfuel>
+    </RoadsOfTheRim.RoadBuildableDef>
+    
+    <RoadsOfTheRim.RoadBuildableDef>
+        <defName>RoadsOfTheRim_DirtRoad</defName>
+        <label>Dirt road</label>
+        <movementCostMultiplier>0.6</movementCostMultiplier>
+        <roadDef>DirtRoad</roadDef>
+        <biomeMovementDifficultyEffect>0.25</biomeMovementDifficultyEffect>
+        <work>1200</work>
+        <wood>120</wood>
+        <stone>0</stone>
+        <steel>0</steel>
+        <chemfuel>0</chemfuel>
+    </RoadsOfTheRim.RoadBuildableDef>
+
+    <RoadsOfTheRim.RoadBuildableDef>
+        <defName>RoadsOfTheRim_StoneRoad</defName>
+        <label>Stone road</label>
+        <movementCostMultiplier>0.5</movementCostMultiplier>
+        <roadDef>StoneRoad</roadDef>
+        <biomeMovementDifficultyEffect>0.75</biomeMovementDifficultyEffect>
+        <work>3600</work>
+        <wood>240</wood>
+        <stone>1800</stone>
+        <steel>300</steel>
+        <chemfuel>0</chemfuel>
+    </RoadsOfTheRim.RoadBuildableDef>
+
+    <RoadsOfTheRim.RoadBuildableDef>
+        <defName>RoadsOfTheRim_AsphaltRoad</defName>
+        <label>Asphalt road</label>
+        <movementCostMultiplier>0.4</movementCostMultiplier>
+        <biomeMovementDifficultyEffect>1</biomeMovementDifficultyEffect>
+        <roadDef>AncientAsphaltRoad</roadDef>
+        <work>5400</work>
+        <wood>0</wood>
+        <stone>3600</stone>
+        <steel>600</steel>
+        <chemfuel>300</chemfuel>
+    </RoadsOfTheRim.RoadBuildableDef>
+
+</Defs>
+
+<!--
+To add roads, look at RoadDefs
+The layers are defined in RoadWorldLayersDefs and allow me to create custom layers (colours), must they must all be lines
+-->

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <TerrainDef>
+    <defName>DirtRecent</defName>
+    <label>Recently packed dirt</label>
+    <texturePath>Terrain/Surfaces/PackedDirt</texturePath><!-- TO DO : Find a texture -->
+    <edgeType>FadeRough</edgeType>
+    <renderPrecedence>360</renderPrecedence>
+    <pathCost>1</pathCost>
+		<description>Packed dirt for recently built paths and roads. Neither beautiful nor clean, they still make good surfaces for cheap roads. Deconstructing packed dirt yields no resources.</description>
+    <layerable>false</layerable><!-- Seems to mean this cannot be put on top of another terrain -->
+    <resourcesFractionWhenDeconstructed>0</resourcesFractionWhenDeconstructed>
+    <statBases>
+      <Beauty>-1</Beauty>
+      <Cleanliness>-1</Cleanliness>
+    </statBases>
+    <fertility>0.0</fertility>
+    <affordances>
+      <li>Light</li>
+      <li>Medium</li>
+      <li>Heavy</li>
+      <!-- <li>Diggable</li> : I see no reason to keep this, it's used nowhere I can find -->
+    </affordances>
+		<tags>
+			<li>Road</li>
+		</tags>
+
+    <!-- Not sure of any of the stuff below-->
+    <scatterType>Rocky</scatterType>
+    <generatedFilth>Filth_Dirt</generatedFilth>
+  </TerrainDef>
+
+	<TerrainDef>
+		<defName>StoneRecent</defName>
+		<label>Recently built sandstone flagstone</label>
+		<texturePath>Terrain/Surfaces/Flagstone</texturePath>
+        <color>(64,64,64)</color>
+    <edgeType>FadeRough</edgeType>
+    <renderPrecedence>220</renderPrecedence>
+    <pathCost>0</pathCost>
+    <description>Roughly-cut stone recently built tiles. These are not beautiful, but they make good surfaces for roads and outdoor walkways. Deconstructing flagstone yields no resources.</description>
+    <layerable>true</layerable>
+    <resourcesFractionWhenDeconstructed>0</resourcesFractionWhenDeconstructed>
+		<statBases>
+			<!-- Removing this, I don't want it to be buildable on a map, only generated from a road on the WorldMap <WorkToBuild>500</WorkToBuild> -->
+			<Beauty>0</Beauty>
+		</statBases>
+    <fertility>0</fertility>
+    <affordances>
+      <li>Light</li>
+      <li>Medium</li>
+      <li>Heavy</li>
+    </affordances>
+    <tags>
+      <li>Road</li>
+    </tags>
+
+    <!-- Removing Construction-related tags : don't want to build those directly from a map
+    <designationCategory>Floors</designationCategory>
+		<costList>
+			<BlocksSandstone>4</BlocksSandstone>
+		</costList>
+    <designatorDropdown>Floor_Flagstone</designatorDropdown>
+    <constructEffect>ConstructDirt</constructEffect>
+    <acceptTerrainSourceFilth>True</acceptTerrainSourceFilth>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    -->
+	</TerrainDef>
+
+  <TerrainDef ParentName="TerrainRoadBase">
+    <defName>AsphaltRecent</defName>
+    <label>recently built asphalt</label>
+    <texturePath>Terrain/Surfaces/AsphaltRecent</texturePath>
+    <color>(96,96,96)</color>
+    <edgeType>FadeRough</edgeType>
+  	<renderPrecedence>380</renderPrecedence>
+    <pathCost>0</pathCost>
+    <description>Recently built Asphalt. Excellent for roads. Deconstructing asphalt yields no resources.</description>
+    <layerable>true</layerable>
+    <resourcesFractionWhenDeconstructed>0</resourcesFractionWhenDeconstructed>
+    <statBases>
+      <Beauty>-1</Beauty>
+      <Cleanliness>0</Cleanliness>
+    </statBases>
+    <fertility>0.0</fertility>
+    <affordances>
+      <li>Light</li>
+      <li>Medium</li> <!-- The original BorkenApshalt didn't have medium, and had some weird indexes like <li ListIndex="0"> -->
+      <li>Heavy</li>
+    </affordances>
+    
+    <tags>
+      <li>Road</li>
+    </tags>
+  </TerrainDef>
+    
+  <TerrainDef>
+    <defName>ConcreteBridge</defName>
+    <label>concrete bridge</label>
+    <texturePath>Terrain/Surfaces/AsphaltRecent</texturePath> <!-- TO CHANGE -->
+    <color>(128,128,128)</color> <!-- LIGHTER COLOUR-->
+    <edgeType>Hard</edgeType>
+    <renderPrecedence>400</renderPrecedence>
+    <description>A concrete bridge to be built over water. Heavy structures can be built on these bridges, but they can still be destroyed. If a bridge falls, buildings on top of it fall as well.</description>
+    <layerable>true</layerable>
+    <resourcesFractionWhenDeconstructed>0</resourcesFractionWhenDeconstructed>
+    <statBases>
+        <WorkToBuild>4500</WorkToBuild>
+        <Flammability>0.1</Flammability>
+    </statBases>
+    <fertility>0</fertility>
+    <affordances>
+        <li>Light</li>
+        <li>Medium</li>
+        <li>Heavy</li>
+    </affordances>
+    <uiIconPath>Terrain/Surfaces/ConcreteBridge_MenuIcon</uiIconPath>
+    <filthAcceptanceMask>
+      <li>Terrain</li>
+      <li>Unnatural</li>
+      <li>Natural</li>
+    </filthAcceptanceMask>
+    <constructEffect>ConstructMetal</constructEffect>
+    <destroyBuildingsOnDestroyed>true</destroyBuildingsOnDestroyed>
+    <destroyEffect>Bridge_Collapse</destroyEffect>
+    <destroyEffectWater>Bridge_CollapseWater</destroyEffectWater>
+    <destroyOnBombDamageThreshold>105</destroyOnBombDamageThreshold>
+    <costList>
+        <Steel>25</Steel>
+    </costList>
+    <designationCategory>Structure</designationCategory>
+    <terrainAffordanceNeeded>BridgeableAny</terrainAffordanceNeeded>
+    <!--
+    <researchPrerequisites>
+        <li>DeepWaterBridges</li>
+    </researchPrerequisites>
+    -->
+    </TerrainDef>
+
+    <TerrainDef ParentName="TerrainRoadBase">
+        <defName>GlitterRoad</defName>
+        <label>glitter road</label>
+        <texturePath>Terrain/Surfaces/GlitterRoad</texturePath>
+        <edgeType>Hard</edgeType>
+        <renderPrecedence>380</renderPrecedence>
+        <pathCost>0</pathCost>
+        <description>Spacer level actively supported roads. Deconstructing glitter roads yields no resources.</description>
+        <layerable>true</layerable>
+        <resourcesFractionWhenDeconstructed>0</resourcesFractionWhenDeconstructed>
+        <statBases>
+          <Beauty>0</Beauty>
+          <Cleanliness>0</Cleanliness>
+        </statBases>
+        <fertility>0.0</fertility>
+        <affordances>
+          <li>Light</li>
+          <li>Medium</li>
+          <li>Heavy</li>
+        </affordances>
+      <filthAcceptanceMask Inherit="False">
+        <li>None</li>
+      </filthAcceptanceMask>
+        <tags>
+          <li>Road</li>
+        </tags>
+    </TerrainDef>
+
+</Defs>

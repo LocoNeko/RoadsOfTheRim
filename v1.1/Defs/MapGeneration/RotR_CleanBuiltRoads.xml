@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <GenStepDef>
+    <defName>RotR_CleanBuiltRoads</defName>
+    <order>850</order>
+    <genStep Class="RoadsOfTheRim.GenStep_CleanBuiltRoads"/>
+  </GenStepDef>
+</Defs>

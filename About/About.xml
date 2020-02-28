@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ModMetaData>
-    <name>Roads of the Rim</name>
-    <author>Loconeko</author>
-    <url>https://github.com/LocoNeko/RoadsOfTheRim</url>
-    <supportedVersions>
-        <li>1.0</li>
-    </supportedVersions>
-    <description>
-        This is still BETA - use at your own risk
-        
-        Caravans can now create road construction sites to build roads between two neighbouring tiles on the world map. By using the "Work" action, caravans provide work and resources to the site until completion.
-        
-        Building costs are based on the type of road to be built &amp; the terrain of both tiles. Roads cost wood, stones, steel &amp; chemfuel. If deemed too high, base costs can be reduced in the settings (but that's definitely OP).
-        
-        Roads of the Rim changes the movement multipliers for existing roads as indicated in the "Terrain" tab under Movement difficulty. This can be switched off in the settings as well.
-        
-        Feedback welcome on Steam and in the Forum thread : https://ludeon.com/forums/index.php?topic=47205.0
-        
-        Changelog
-        
-        2019-01-05 : Added conditional patching of Caravan comp for other mod compatibility (thanks Mehni for the tip)
-        
-    </description>
+  <name>Roads of the Rim</name>
+  <author>Loconeko</author>
+  <url>https://github.com/LocoNeko/RoadsOfTheRim</url>
+  <supportedVersions>
+    <li>1.1</li>
+  </supportedVersions>
+  <packageId>loconeko73.RoadsOfTheRim</packageId>
+  <description>
+    This is still BETA - use at your own risk
+
+    Caravans can now create road construction sites to build roads between two neighbouring tiles on the world map. By using the "Work" action, caravans provide work and resources to the site until completion.
+
+    Building costs are based on the type of road to be built &amp; the terrain of both tiles. Roads cost wood, stones, steel &amp; chemfuel. If deemed too high, base costs can be reduced in the settings (but that's definitely OP).
+
+    Roads of the Rim changes the movement multipliers for existing roads as indicated in the "Terrain" tab under Movement difficulty. This can be switched off in the settings as well.
+
+    Feedback welcome on Steam and in the Forum thread : https://ludeon.com/forums/index.php?topic=47205.0
+
+    Changelog
+
+    2019-01-05 : Added conditional patching of Caravan comp for other mod compatibility (thanks Mehni for the tip)
+
+  </description>
 </ModMetaData>

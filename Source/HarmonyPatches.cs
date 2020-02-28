@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using RimWorld;
 using Verse;
 using RimWorld.Planet;
@@ -17,7 +17,7 @@ namespace RoadsOfTheRim
 
         static HarmonyPatches()
         {
-            var harmony = HarmonyInstance.Create("Loconeko.Rimworld.RoadsOfTheRim");
+            var harmony = new Harmony("Loconeko.Rimworld.RoadsOfTheRim");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
             /* How I found the hidden methods :
             var methods = typeof(Tile).GetMethods();

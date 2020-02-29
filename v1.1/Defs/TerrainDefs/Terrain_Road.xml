@@ -21,6 +21,9 @@
       <li>Heavy</li>
       <!-- <li>Diggable</li> : I see no reason to keep this, it's used nowhere I can find -->
     </affordances>
+    <filthAcceptanceMask>
+      <li>Unnatural</li>
+    </filthAcceptanceMask>
 		<tags>
 			<li>Road</li>
 		</tags>
@@ -137,7 +140,7 @@
     -->
     </TerrainDef>
 
-    <TerrainDef ParentName="TerrainRoadBase">
+    <TerrainDef>
         <defName>GlitterRoad</defName>
         <label>glitter road</label>
         <texturePath>Terrain/Surfaces/GlitterRoad</texturePath>
@@ -157,7 +160,7 @@
           <li>Medium</li>
           <li>Heavy</li>
         </affordances>
-      <filthAcceptanceMask Inherit="False">
+      <filthAcceptanceMask>
         <li>None</li>
       </filthAcceptanceMask>
         <tags>

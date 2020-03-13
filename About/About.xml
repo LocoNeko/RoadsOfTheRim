@@ -5,9 +5,10 @@
   <author>Loconeko</author>
   <url>https://github.com/LocoNeko/RoadsOfTheRim</url>
   <supportedVersions>
+    <li>1.0</li>
     <li>1.1</li>
   </supportedVersions>
-  <packageId>loconeko73.RoadsOfTheRim</packageId>
+  <packageId>Loconeko.RoadsOfTheRim</packageId>
   <description>
     This is still BETA - use at your own risk
 
@@ -21,6 +22,7 @@
 
     Changelog
 
+    2020-03-13 : Updated for RimWorld 1.1
     2019-01-05 : Added conditional patching of Caravan comp for other mod compatibility (thanks Mehni for the tip)
 
   </description>

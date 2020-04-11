@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Concrete bridges can be built here -->
+	<TerrainAffordanceDef>
+		<defName>BridgeableAny</defName>
+		<label>bridgeable any</label>
+		<order>2600</order>
+	</TerrainAffordanceDef>
+
+</Defs>

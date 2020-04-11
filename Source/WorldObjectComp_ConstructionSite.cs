@@ -363,7 +363,7 @@ namespace RoadsOfTheRim
             // On the last leg, send letter & remove the construction site
             Find.LetterStack.ReceiveLetter(
                 "RoadsOfTheRim_RoadBuilt".Translate(),
-                "RoadsOfTheRim_RoadBuiltLetterText".Translate(parentSite.roadDef.label, (caravan != null ? caravan.Label : "RoadsOfTheRim_RoadBuiltByAlly".Translate())),
+                "RoadsOfTheRim_RoadBuiltLetterText".Translate(parentSite.roadDef.label, (caravan != null ? (TaggedString)caravan.Label : "RoadsOfTheRim_RoadBuiltByAlly".Translate())),
                 LetterDefOf.PositiveEvent,
                 new GlobalTargetInfo(parentSite.Tile)
             );

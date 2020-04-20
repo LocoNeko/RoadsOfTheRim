@@ -173,20 +173,6 @@ namespace RoadsOfTheRim
                 amountOfWork = siteComp.GetLeft("Work");
             }
 
-            // Check if ISR2G is present and should be used
-            if (settings.useISR2G)
-            {
-                if (CaravanInventoryUtility.HasThings(caravan, DefDatabase<ThingDef>.GetNamed("RotR_ISR2G", true), 1))
-                {
-                    useISR2G = 1;
-                }
-                if (CaravanInventoryUtility.HasThings(caravan, DefDatabase<ThingDef>.GetNamed("RotR_AISR2G", true), 1))
-                {
-                    useISR2G = 2;
-                }
-                RoadsOfTheRim.DebugLog("[RotR] DEBUG : useISR2G = " + useISR2G);
-            }
-
             // calculate material present in the caravan
             foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
             {
@@ -205,12 +191,12 @@ namespace RoadsOfTheRim
                 // Setting the caravan to use ISR2G or AISR2G is present and settings allow it
                 if (settings.useISR2G)
                 {
-                    if (useISR2G == 0 && isThis(aThing.def, "RotR_ISR2G"))
+                    if (useISR2G <1 && aThing.Label == "ISR2G")
                     {
                         useISR2G = 1;
                         RoadsOfTheRim.DebugLog("[RotR] DEBUG : using ISR2G");
                     }
-                    if (useISR2G < 2 && isThis(aThing.def, "RotR_AISR2G"))
+                    if (useISR2G <2 && aThing.Label == "AISR2G")
                     {
                         useISR2G = 2;
                         RoadsOfTheRim.DebugLog("[RotR] DEBUG : using AISR2G");

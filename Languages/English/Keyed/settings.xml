@@ -33,8 +33,8 @@
   <RoadsOfTheRimSettingsBaseEffort>Base multiplier to road building costs</RoadsOfTheRimSettingsBaseEffort>
   <RoadsOfTheRimSettingsOverrideCosts>Override standard movement multipliers (requires game restart)</RoadsOfTheRimSettingsOverrideCosts>
   <RoadsOfTheRimSettingsElevationThreshold>Elevation at which costs increase starts</RoadsOfTheRimSettingsElevationThreshold>
-  <RoadsOfTheRimSettingsUpgradeRebate>Percentage of resources salavged from existing roads</RoadsOfTheRimSettingsUpgradeRebate>
-  <RoadsOfTheRimSettingsUseISR2G>Use In Situ Road Ressource gatherer</RoadsOfTheRimSettingsUseISR2G>
+  <RoadsOfTheRimSettingsUpgradeRebate>Percentage of resources salvaged from existing roads</RoadsOfTheRimSettingsUpgradeRebate>
+  <RoadsOfTheRimSettingsUseISR2G>Use In Situ Road Ressource Gatherer</RoadsOfTheRimSettingsUseISR2G>
   <RoadsOfTheRim_CaravanInspectStringWorkingOn>Working on : {0} [{1} work/sec]</RoadsOfTheRim_CaravanInspectStringWorkingOn>
   <RoadsOfTheRimBuildConstructionSiteAlreadyHere>There is already a construction site here</RoadsOfTheRimBuildConstructionSiteAlreadyHere>
   <RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>There is no construction site here</RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>

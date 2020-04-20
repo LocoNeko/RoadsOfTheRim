@@ -140,6 +140,7 @@ namespace RoadsOfTheRim
             WorldObjectComp_ConstructionSite siteComp = site.GetComponent<WorldObjectComp_ConstructionSite>();
             DefModExtension_RotR_RoadDef roadDefExtension = site.roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
             noMoreResources = false;
+            int useISR2G = 0;
             Dictionary<string, int> available = new Dictionary<string, int>();
             Dictionary<string, int> needed = new Dictionary<string, int>();
             Dictionary<string, float> ratio = new Dictionary<string, float>();
@@ -170,6 +171,20 @@ namespace RoadsOfTheRim
             if (amountOfWork > siteComp.GetLeft("Work"))
             {
                 amountOfWork = siteComp.GetLeft("Work");
+            }
+
+            // Check if ISR2G is present and should be used
+            if (settings.useISR2G)
+            {
+                if (CaravanInventoryUtility.HasThings(caravan, DefDatabase<ThingDef>.GetNamed("RotR_ISR2G", true), 1))
+                {
+                    useISR2G = 1;
+                }
+                if (CaravanInventoryUtility.HasThings(caravan, DefDatabase<ThingDef>.GetNamed("RotR_AISR2G", true), 1))
+                {
+                    useISR2G = 2;
+                }
+                RoadsOfTheRim.DebugLog("[RotR] DEBUG : useISR2G = " + useISR2G);
             }
 
             // calculate material present in the caravan
@@ -265,7 +280,7 @@ namespace RoadsOfTheRim
             listing_Standard.Gap();
             listing_Standard.Label("RoadsOfTheRimSettingsUpgradeRebate".Translate() + ": " + string.Format("{0:0%}", (float)settings.CostUpgradeRebate / 10));
             listing_Standard.Gap();
-            settings.CostUpgradeRebate = (int)listing_Standard.Slider(settings.CostUpgradeRebate, 0, 100);
+            settings.CostUpgradeRebate = (int)listing_Standard.Slider(settings.CostUpgradeRebate, 0, 10);
             listing_Standard.Gap();
             listing_Standard.CheckboxLabeled("RoadsOfTheRimSettingsUseISR2G".Translate() + ": ", ref settings.useISR2G);
             listing_Standard.End();

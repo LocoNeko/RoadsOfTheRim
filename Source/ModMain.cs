@@ -187,6 +187,11 @@ namespace RoadsOfTheRim
                 RoadsOfTheRim.DebugLog("[RotR] DEBUG : useISR2G = " + useISR2G);
             }
 
+            foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
+            {
+                RoadsOfTheRim.DebugLog("[RotR] DEBUG : trying to find ISR2G : " + aThing.Label);
+            }
+
             // calculate material present in the caravan
             foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
             {

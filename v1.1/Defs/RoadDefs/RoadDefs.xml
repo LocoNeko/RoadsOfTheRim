@@ -231,7 +231,6 @@
                     <minConstruction>6</minConstruction>
                     <percentageOfminConstruction>0.25</percentageOfminConstruction>
                     <techlevelToBuild>Industrial</techlevelToBuild>
-					<techNeededToBuild>ResearchProject_RotRAsphaltRoad</techNeededToBuild>
                     <costs>
                       <Work>5400</Work>
                       <Stone>3600</Stone>
@@ -287,7 +286,6 @@
                     <minConstruction>8</minConstruction>
                     <percentageOfminConstruction>0.25</percentageOfminConstruction>
                     <techlevelToBuild>Spacer</techlevelToBuild>
-					<techNeededToBuild>ResearchProject_RotRGlitterRoad</techNeededToBuild>
 					<costs>
                       <Work>10800</Work>
                       <Stone>3600</Stone>

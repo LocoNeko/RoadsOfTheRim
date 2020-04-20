@@ -157,6 +157,9 @@
       </li>
     </worldRenderSteps>
     <worldTransitionGroup>Stone</worldTransitionGroup>
+    <researchPrerequisites>
+        <li>ResearchProject_RotRStoneRoad</li>
+    </researchPrerequisites>
     <modExtensions>
             <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
                 <built>true</built>
@@ -297,9 +300,7 @@
                 </li>
         </modExtensions>    
     </RoadDef>
-        <!--
-    TO DO : Glitter roads
-    -->
+
 </Defs>
 
 

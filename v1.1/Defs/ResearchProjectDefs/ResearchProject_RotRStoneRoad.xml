@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<ResearchProjectDef>
+		<defName>ResearchProject_RotRStoneRoad</defName>
+		<label>Stone road building</label>
+		<description>
+			Allows construction of Stone Roads on the World map
+		</description>
+		<baseCost>500</baseCost>
+		<techLevel>Medieval</techLevel>
+		<requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+		<tab>LocoNekoMods</tab>
+		<researchViewX>1</researchViewX>
+		<researchViewY>0</researchViewY>
+	</ResearchProjectDef>
+
+</Defs>

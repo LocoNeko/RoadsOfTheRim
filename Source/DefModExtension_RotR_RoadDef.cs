@@ -48,6 +48,8 @@ namespace RoadsOfTheRim
 
         public TechLevel techlevelToBuild = TechLevel.Neolithic;
 
+        public ResearchProjectDef techNeededToBuild = null ;
+
         public static string[] allResources = new string[] { "WoodLog", "Stone", "Steel", "Chemfuel" , "Plasteel" , "Uranium" , "ComponentIndustrial" , "ComponentSpacer" };
 
         public static string[] allResourcesAndWork = new string[] { "Work", "WoodLog", "Stone", "Steel", "Chemfuel" , "Plasteel" , "Uranium" , "ComponentIndustrial" , "ComponentSpacer"};

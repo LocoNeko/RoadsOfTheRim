@@ -157,16 +157,15 @@
       </li>
     </worldRenderSteps>
     <worldTransitionGroup>Stone</worldTransitionGroup>
-    <researchPrerequisites>
-        <li>ResearchProject_RotRStoneRoad</li>
-    </researchPrerequisites>
     <modExtensions>
             <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
                 <built>true</built>
                 <biomeModifier>0.75</biomeModifier>
                 <hillinessModifier>0.4</hillinessModifier>
                 <winterModifier>0</winterModifier>
-                <costs>
+				<techlevelToBuild>Medieval</techlevelToBuild>
+				<techNeededToBuild>ResearchProject_RotRStoneRoad</techNeededToBuild>
+				<costs>
                   <Work>3600</Work>
                   <Wood>240</Wood>
                   <Stone>1800</Stone>
@@ -232,6 +231,7 @@
                     <minConstruction>6</minConstruction>
                     <percentageOfminConstruction>0.25</percentageOfminConstruction>
                     <techlevelToBuild>Industrial</techlevelToBuild>
+					<techNeededToBuild>ResearchProject_RotRAsphaltRoad</techNeededToBuild>
                     <costs>
                       <Work>5400</Work>
                       <Stone>3600</Stone>
@@ -287,7 +287,8 @@
                     <minConstruction>8</minConstruction>
                     <percentageOfminConstruction>0.25</percentageOfminConstruction>
                     <techlevelToBuild>Spacer</techlevelToBuild>
-                    <costs>
+					<techNeededToBuild>ResearchProject_RotRGlitterRoad</techNeededToBuild>
+					<costs>
                       <Work>10800</Work>
                       <Stone>3600</Stone>
                       <Steel>900</Steel>

@@ -7,7 +7,6 @@
 		<description>Allows construction of Stone roads on the world map</description>
 		<baseCost>500</baseCost>
 		<techLevel>Medieval</techLevel>
-		<requiredResearchBuilding>SimpleResearchBench</requiredResearchBuilding>
 		<tab>LocoNekoMods</tab>
 		<researchViewX>1</researchViewX>
 		<researchViewY>0</researchViewY>
@@ -19,7 +18,6 @@
 		<description>Allows construction of Asphalt roads on the world map</description>
 		<baseCost>2000</baseCost>
 		<techLevel>Industrial</techLevel>
-		<requiredResearchBuilding>SimpleResearchBench</requiredResearchBuilding>
 		<prerequisites>
 			<li>ResearchProject_RotRStoneRoad</li>
 		</prerequisites>
@@ -42,5 +40,35 @@
 		<researchViewX>3</researchViewX>
 		<researchViewY>0</researchViewY>
 	</ResearchProjectDef>
+
+	<ResearchProjectDef>
+		<defName>ResearchProject_RotRISR2G</defName>
+		<label>ISR2G</label>
+		<description>Allows construction of the In Situ Road Ressource Gatherer (ISR2G)</description>
+		<baseCost>2000</baseCost>
+		<techLevel>Industrial</techLevel>
+		<prerequisites>
+			<li>ResearchProject_RotRStoneRoad</li>
+		</prerequisites>
+		<tab>LocoNekoMods</tab>
+		<researchViewX>2</researchViewX>
+		<researchViewY>1</researchViewY>
+	</ResearchProjectDef>
+
+	<ResearchProjectDef>
+		<defName>ResearchProject_RotRAISR2G</defName>
+		<label>ISR2G</label>
+		<description>Allows construction of the Advanced In Situ Road Ressource Gatherer (AISR2G)</description>
+		<baseCost>4000</baseCost>
+		<techLevel>Spacer</techLevel>
+		<requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+		<prerequisites>
+			<li>ResearchProject_RotRAsphaltRoad</li>
+		</prerequisites>
+		<tab>LocoNekoMods</tab>
+		<researchViewX>2</researchViewX>
+		<researchViewY>1</researchViewY>
+	</ResearchProjectDef>
+
 
 </Defs>

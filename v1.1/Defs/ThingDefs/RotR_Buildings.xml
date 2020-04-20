@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+	<ThingDef>
+		<defName>RotR_ISR2G</defName>
+		<label>ISR2G</label>
+		<description>In Situ Road Ressources Gatherer</description>
+		<designationCategory>Production</designationCategory>
+		<category>Items</category>
+		<thingClass>Items</thingClass>
+		<graphicData>
+			<texPath>Buildings/ISR2G</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+			<drawSize>(2,2)</drawSize>
+			<damageData>
+				<rect>(0.3, 0.3, 1.2, 1.2)</rect>
+			</damageData>
+		</graphicData>
+		<uiIconPath>Buildings/ISR2G</uiIconPath>
+		<drawerType>MapMeshAndRealTime</drawerType>
+		<repairEffect>Repair</repairEffect>
+		<constructEffect>ConstructMetal</constructEffect>
+		<soundImpactDefault>BulletImpactMetal</soundImpactDefault>
+		<filthLeaving>BuildingRubble</filthLeaving>
+		<castEdgeShadows>false</castEdgeShadows>
+		<size>(2,2)</size>
+		<researchPrerequisites>
+			<li>ResearchProject_RotRISR2G</li>
+		</researchPrerequisites>
+		
+		<leaveResourcesWhenKilled>True</leaveResourcesWhenKilled>
+		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+		<altitudeLayer>Building</altitudeLayer>
+		<passability>PassThroughOnly</passability>
+		<selectable>True</selectable>
+		<rotatable>False</rotatable>
+		<fillPercent>0.30</fillPercent>
+		<pathCost>50</pathCost>
+		<statBases>
+			<MaxHitPoints>200</MaxHitPoints>
+			<WorkToBuild>8000</WorkToBuild>
+			<Flammability>1.0</Flammability>
+			<Beauty>-10</Beauty>
+		</statBases>
+		<costList>
+			<Steel>180</Steel>
+			<Component>10</Component>
+		</costList>
+	</ThingDef>
+
+</Defs>

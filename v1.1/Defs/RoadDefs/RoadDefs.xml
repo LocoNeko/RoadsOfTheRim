@@ -295,8 +295,8 @@
                       <Chemfuel>300</Chemfuel>
                       <Plasteel>580</Plasteel>
                       <Uranium>70</Uranium>
-                      <componentIndustrial>50</componentIndustrial>
-                      <componentSpacer>50</componentSpacer>
+                      <ComponentIndustrial>50</ComponentIndustrial>
+                      <ComponentSpacer>50</ComponentSpacer>
                     </costs>
                 </li>
         </modExtensions>    

@@ -9,7 +9,7 @@
 		</description>
 		<baseCost>500</baseCost>
 		<techLevel>Medieval</techLevel>
-		<requiredResearchBuilding>ResearchBench</requiredResearchBuilding>
+		<requiredResearchBuilding>SimpleResearchBench</requiredResearchBuilding>
 		<tab>LocoNekoMods</tab>
 		<researchViewX>1</researchViewX>
 		<researchViewY>0</researchViewY>
@@ -23,7 +23,7 @@
 		</description>
 		<baseCost>2000</baseCost>
 		<techLevel>Industrial</techLevel>
-		<requiredResearchBuilding>ResearchBench</requiredResearchBuilding>
+		<requiredResearchBuilding>SimpleResearchBench</requiredResearchBuilding>
 		<prerequisites>
 			<li>ResearchProject_RotRStoneRoad</li>
 		</prerequisites>

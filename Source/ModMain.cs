@@ -187,11 +187,6 @@ namespace RoadsOfTheRim
                 RoadsOfTheRim.DebugLog("[RotR] DEBUG : useISR2G = " + useISR2G);
             }
 
-            foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
-            {
-                RoadsOfTheRim.DebugLog("[RotR] DEBUG : trying to find ISR2G : " + aThing.Label);
-            }
-
             // calculate material present in the caravan
             foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
             {
@@ -207,6 +202,21 @@ namespace RoadsOfTheRim
                         available[resourceName] += aThing.stackCount;
                     }
                 }
+                // Setting the caravan to use ISR2G or AISR2G is present and settings allow it
+                if (settings.useISR2G)
+                {
+                    if (useISR2G == 0 && isThis(aThing.def, "RotR_ISR2G"))
+                    {
+                        useISR2G = 1;
+                        RoadsOfTheRim.DebugLog("[RotR] DEBUG : using ISR2G");
+                    }
+                    if (useISR2G < 2 && isThis(aThing.def, "RotR_AISR2G"))
+                    {
+                        useISR2G = 2;
+                        RoadsOfTheRim.DebugLog("[RotR] DEBUG : using AISR2G");
+                    }
+                }
+
             }
 
             // What percentage of work will remain after amountOfWork is done ?

@@ -6,8 +6,15 @@
 		<label>ISR2G</label>
 		<description>In Situ Road Ressources Gatherer</description>
 		<designationCategory>Production</designationCategory>
-		<category>Items</category>
-		<thingClass>Items</thingClass>
+		<tickerType>Normal</tickerType>
+
+		<category>Building</category>
+		<thingClass>Building</thingClass>
+		<minifiedDef>MinifiedThing</minifiedDef>
+		<thingCategories>
+			<li>BuildingsPower</li>
+		</thingCategories>
+
 		<graphicData>
 			<texPath>Buildings/ISR2G</texPath>
 			<graphicClass>Graphic_Single</graphicClass>
@@ -20,14 +27,14 @@
 		<drawerType>MapMeshAndRealTime</drawerType>
 		<repairEffect>Repair</repairEffect>
 		<constructEffect>ConstructMetal</constructEffect>
-		<soundImpactDefault>BulletImpactMetal</soundImpactDefault>
-		<filthLeaving>BuildingRubble</filthLeaving>
+		<soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
+		<filthLeaving>Filth_RubbleBuilding</filthLeaving>
 		<castEdgeShadows>false</castEdgeShadows>
+
 		<size>(2,2)</size>
 		<researchPrerequisites>
 			<li>ResearchProject_RotRISR2G</li>
 		</researchPrerequisites>
-		
 		<leaveResourcesWhenKilled>True</leaveResourcesWhenKilled>
 		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
 		<altitudeLayer>Building</altitudeLayer>
@@ -41,10 +48,11 @@
 			<WorkToBuild>8000</WorkToBuild>
 			<Flammability>1.0</Flammability>
 			<Beauty>-10</Beauty>
+			<Mass>70</Mass>
 		</statBases>
 		<costList>
 			<Steel>180</Steel>
-			<Component>10</Component>
+			<ComponentIndustrial>10</ComponentIndustrial>
 		</costList>
 	</ThingDef>
 

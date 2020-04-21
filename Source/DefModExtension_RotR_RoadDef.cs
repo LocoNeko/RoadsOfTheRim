@@ -72,5 +72,34 @@ namespace RoadsOfTheRim
             RotR_cost aCost = costs.Find(c => c.name == name) ;
             return (aCost==null) ? 0 : aCost.count ;
         }
+
+        public bool GetInSituModifier(string name , int ISR2G)
+        {
+            bool result = false;
+            switch (name)
+            {
+                case "WoodLog":
+                    result = ISR2G > 0;
+                    break;
+                case "Stone":
+                    result = ISR2G > 0;
+                    break;
+                case "Steel":
+                    result = ISR2G > 1;
+                    break;
+                case "Chemfuel":
+                    result = ISR2G > 1;
+                    break;
+                case "Plasteel":
+                    result = ISR2G > 1;
+                    break;
+                case "Uranium":
+                    result = ISR2G > 1;
+                    break;
+                default:
+                    break;
+            }
+            return result;
+        }
     }
 }

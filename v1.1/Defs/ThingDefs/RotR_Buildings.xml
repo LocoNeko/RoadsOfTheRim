@@ -4,7 +4,7 @@
 	<ThingDef ParentName="BuildingBase">
 		<defName>RotR_ISR2G</defName>
 		<label>ISR2G</label>
-		<description>In Situ Road Ressources Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood and stone</description>
+		<description>In Situ Road Ressources Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood and stone at the cost of 4 times the work.</description>
 		<graphicData>
 			<texPath>Buildings/ISR2G</texPath>
 			<graphicClass>Graphic_Multi</graphicClass>
@@ -23,7 +23,7 @@
 		<castEdgeShadows>true</castEdgeShadows>
 		<fillPercent>0.40</fillPercent>
 		<tickerType>Normal</tickerType>
-		<minifiedDef>RotR_ISR2G</minifiedDef>
+		<minifiedDef>MinifiedThing</minifiedDef>
 		<thingCategories>
 			<li>BuildingsPower</li>
 		</thingCategories>
@@ -52,7 +52,7 @@
 	<ThingDef ParentName="BuildingBase">
 		<defName>RotR_AISR2G</defName>
 		<label>AISR2G</label>
-		<description>Advanced In Situ Road Ressources Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood, stone and steel, as well as reducing chemfuel needs by two thirds.</description>
+		<description>Advanced In Situ Road Ressources Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood, stone , steel, Chemfuel , Plasteel and Uranium  at the cost of twice the work..</description>
 		<graphicData>
 			<texPath>Buildings/AISR2G</texPath>
 			<graphicClass>Graphic_Multi</graphicClass>
@@ -71,7 +71,7 @@
 		<castEdgeShadows>true</castEdgeShadows>
 		<fillPercent>0.40</fillPercent>
 		<tickerType>Normal</tickerType>
-		<minifiedDef>RotR_AISR2G</minifiedDef>
+		<minifiedDef>MinifiedThing</minifiedDef>
 		<thingCategories>
 			<li>BuildingsPower</li>
 		</thingCategories>

@@ -293,10 +293,10 @@
                       <Stone>3600</Stone>
                       <Steel>900</Steel>
                       <Chemfuel>300</Chemfuel>
-                      <Plasteel>580</Plasteel>
-                      <Uranium>70</Uranium>
-                      <ComponentIndustrial>50</ComponentIndustrial>
-                      <ComponentSpacer>50</ComponentSpacer>
+                      <Plasteel>290</Plasteel>
+                      <Uranium>35</Uranium>
+                      <ComponentIndustrial>20</ComponentIndustrial>
+                      <ComponentSpacer>10</ComponentSpacer>
                     </costs>
                 </li>
         </modExtensions>    

@@ -12,10 +12,10 @@
   <RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen> starting in {0} days</RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen>
   <RoadsOfTheRim_ConstructionSiteDescription_CostModifiers>. + {0} : Elevation {1}, Hills {2}, Swamps {3}, bridges {4}</RoadsOfTheRim_ConstructionSiteDescription_CostModifiers>
   <RoadsOfTheRim_ConstructionSiteDescription_Resource>{1} {0} left of {2}{3}</RoadsOfTheRim_ConstructionSiteDescription_Resource>
-  <RoadsOfTheRim_ConstructionSiteDescription_ISR2Gwork>ISR2G makes work 4 times slower</RoadsOfTheRim_ConstructionSiteDescription_ISR2Gwork>
-  <RoadsOfTheRim_ConstructionSiteDescription_AISR2Gwork>AISR2G makes work 2 times slower</RoadsOfTheRim_ConstructionSiteDescription_AISR2Gwork>
-  <RoadsOfTheRim_ConstructionSiteDescription_ISR2GFree>Gathered for free by ISR2G</RoadsOfTheRim_ConstructionSiteDescription_ISR2GFree>
-  <RoadsOfTheRim_ConstructionSiteDescription_AISR2GFree>Gathered for free by AISR2G</RoadsOfTheRim_ConstructionSiteDescription_AISR2GFree>
+  <RoadsOfTheRim_ConstructionSiteDescription_ISR2Gwork>, ISR2G makes work 4 times slower</RoadsOfTheRim_ConstructionSiteDescription_ISR2Gwork>
+  <RoadsOfTheRim_ConstructionSiteDescription_AISR2Gwork>, AISR2G makes work 2 times slower</RoadsOfTheRim_ConstructionSiteDescription_AISR2Gwork>
+  <RoadsOfTheRim_ConstructionSiteDescription_ISR2GFree>, Gathered for free by ISR2G</RoadsOfTheRim_ConstructionSiteDescription_ISR2GFree>
+  <RoadsOfTheRim_ConstructionSiteDescription_AISR2GFree>, Gathered for free by AISR2G</RoadsOfTheRim_ConstructionSiteDescription_AISR2GFree>
   <RoadsOfTheRim_WITab_Caravan_Build>Build</RoadsOfTheRim_WITab_Caravan_Build>
   <RoadsOfTheRim_commsAskHelp>Ask ally for help on road construction (cost: 10 goodwill)</RoadsOfTheRim_commsAskHelp>
   <RoadsOfTheRim_commsNoSites>No construction sites found</RoadsOfTheRim_commsNoSites>

@@ -112,10 +112,10 @@ namespace RoadsOfTheRim
     public static class Patch_Alert_CaravanIdle
     {
         [HarmonyPostfix]
-        public static void Postfix(ref List<Caravan> __result)
+        public static void Postfix(ref List<Caravan> ___result)
         {
             // Go through the list of Caravans, remove those that are working on a road
-            foreach (Caravan caravan in __result)
+            foreach (Caravan caravan in ___result)
             {
                 /*
                 WorldObjectComp_Caravan caravanComp = caravan.GetComponent<WorldObjectComp_Caravan>();

@@ -39,6 +39,8 @@ namespace RoadsOfTheRim
         public override void ExposeData()
         {
             base.ExposeData();
+            // Costs are always 100% when using ISR2G
+            if (useISR2G) { BaseEffort = MaxBaseEffort;  }
             Scribe_Values.Look<int>(ref BaseEffort, "BaseEffort", DefaultBaseEffort, true);
             Scribe_Values.Look<bool>(ref OverrideCosts, "OverrideCosts", true, true);
             Scribe_Values.Look<float>(ref CostIncreaseElevationThreshold, "CostIncreaseElevationThreshold", 1000f , true);
@@ -276,8 +278,8 @@ namespace RoadsOfTheRim
             }
 
             caravanComp.teachPawns(ratio_final); // Pawns learn some construction
-            // HARDCODED : ISR2G divides work done by 4 , AISR2G by 2
-            if (useISR2G>0)
+            // HARDCODED : ISR2G divides work done by 4 , AISR2G by 2 for all but 2 lowest tier roads
+            if (useISR2G> 0 && site.roadDef.defName != "DirtPathBuilt" && site.roadDef.defName != "DirtRoadBuilt")
             {
                 amountOfWork = amountOfWork * 0.25f * useISR2G;
             }
@@ -314,6 +316,8 @@ namespace RoadsOfTheRim
             listing_Standard.Gap();
             listing_Standard.CheckboxLabeled("RoadsOfTheRimSettingsUseISR2G".Translate() + ": ", ref settings.useISR2G);
             listing_Standard.End();
+            // Always make sure to set costs to 100% when using ISR2G
+            if (settings.useISR2G) { settings.BaseEffort = RoadsOfTheRimSettings.MaxBaseEffort;  }
             settings.Write();
             if (CurrentOverOverrideCosts != settings.OverrideCosts)
             {

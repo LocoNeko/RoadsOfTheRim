@@ -51,7 +51,7 @@
         <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
             <built>true</built>
             <costs>
-                <Work>600</Work>
+                <Work>200</Work>
             </costs>
         </li>
     </modExtensions>    
@@ -107,8 +107,8 @@
                 <hillinessModifier>0.2</hillinessModifier>
                 <winterModifier>0</winterModifier>
                 <costs>
-                  <Work>1200</Work>
-                  <Wood>120</Wood>
+                  <Work>400</Work>
+                  <WoodLog>120</WoodLog>
                 </costs>
             </li>
     </modExtensions>
@@ -166,8 +166,8 @@
 				<techlevelToBuild>Medieval</techlevelToBuild>
 				<techNeededToBuild>ResearchProject_RotRStoneRoad</techNeededToBuild>
 				<costs>
-                  <Work>3600</Work>
-                  <Wood>240</Wood>
+                  <Work>1200</Work>
+                  <WoodLog>240</WoodLog>
                   <Stone>1800</Stone>
                   <Steel>300</Steel>
                 </costs>
@@ -233,7 +233,7 @@
                     <techlevelToBuild>Industrial</techlevelToBuild>
 					<techNeededToBuild>ResearchProject_RotRAsphaltRoad</techNeededToBuild>
 					<costs>
-                      <Work>5400</Work>
+                      <Work>1800</Work>
                       <Stone>3600</Stone>
                       <Steel>600</Steel>
                       <Chemfuel>300</Chemfuel>
@@ -289,7 +289,7 @@
                     <techlevelToBuild>Spacer</techlevelToBuild>
 					<techNeededToBuild>ResearchProject_RotRGlitterRoad</techNeededToBuild>
 					<costs>
-                      <Work>10800</Work>
+                      <Work>3600</Work>
                       <Stone>3600</Stone>
                       <Steel>900</Steel>
                       <Chemfuel>300</Chemfuel>

@@ -108,7 +108,7 @@ namespace RoadsOfTheRim
 
     }
 
-    [HarmonyPatch(typeof(Alert_CaravanIdle), "idleCaravansResult")]
+    [HarmonyPatch(typeof(Alert_CaravanIdle), "Alert_CaravanIdle")]
     public static class Patch_Alert_CaravanIdle
     {
         [HarmonyPostfix]

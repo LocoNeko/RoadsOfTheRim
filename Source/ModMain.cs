@@ -175,7 +175,14 @@ namespace RoadsOfTheRim
 
             if (settings.useISR2G)
             {
-                RoadsOfTheRim.DebugLog("[RotR] DEBUG ISR2G - Label = " + DefDatabase<ThingDef>.GetNamed("RotR_ISR2G").label);
+                foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
+                {
+                    if (aThing.def.defName == DefDatabase<ThingDef>.GetNamed("RotR_ISR2G").defName)
+                    {
+                        RoadsOfTheRim.DebugLog("[RotR] DEBUG ISR2G - ***** FOUND *****");
+                    }
+                }
+                //RoadsOfTheRim.DebugLog("[RotR] DEBUG ISR2G - Label = " + DefDatabase<ThingDef>.GetNamed("RotR_ISR2G").label);
                 /*
                 bool theTest = CaravanInventoryUtility.HasThings(caravan, DefDatabase<ThingDef>.GetNamed("RotR_ISR2G"), 1);
                 //DefDatabase<ThingDef>.GetNamed("RotR_ISR2G").defName;
@@ -191,7 +198,7 @@ namespace RoadsOfTheRim
             }
 
             // calculate material present in the caravan
-                foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
+            foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
             {
                 available[resourceName] = 0;
             }

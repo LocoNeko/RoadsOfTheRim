@@ -23,7 +23,7 @@
 		<castEdgeShadows>true</castEdgeShadows>
 		<fillPercent>0.40</fillPercent>
 		<tickerType>Normal</tickerType>
-		<minifiedDef>MinifiedThing</minifiedDef>
+		<minifiedDef>RotR_ISR2G</minifiedDef>
 		<thingCategories>
 			<li>BuildingsPower</li>
 		</thingCategories>
@@ -71,7 +71,7 @@
 		<castEdgeShadows>true</castEdgeShadows>
 		<fillPercent>0.40</fillPercent>
 		<tickerType>Normal</tickerType>
-		<minifiedDef>MinifiedThing</minifiedDef>
+		<minifiedDef>RotR_AISR2G</minifiedDef>
 		<thingCategories>
 			<li>BuildingsPower</li>
 		</thingCategories>

@@ -245,10 +245,16 @@ namespace RoadsOfTheRim
             {
                 foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
                 {
-                    if (needed[resourceName] > 0 && isThis(aThing.def, resourceName) && !roadDefExtension.GetInSituModifier(resourceName , useISR2G))
+                    if (needed[resourceName] > 0 && isThis(aThing.def, resourceName))
                     {
-                        int amountUsed = (aThing.stackCount > needed[resourceName]) ? needed[resourceName] : aThing.stackCount;
-                        aThing.stackCount -= amountUsed;
+                        int amountUsed = needed[resourceName] ;
+                        // ISR2G not present : adjust amountUsed to the stackcount for the thing and consume it
+                        if (!roadDefExtension.GetInSituModifier(resourceName, useISR2G))
+                        {
+                            amountUsed = (aThing.stackCount > needed[resourceName]) ? needed[resourceName] : aThing.stackCount;
+                            aThing.stackCount -= amountUsed;
+                        }
+                        // Reduce how much of this resource is needed
                         needed[resourceName] -= amountUsed;
                         siteComp.ReduceLeft(resourceName, amountUsed);
                     }

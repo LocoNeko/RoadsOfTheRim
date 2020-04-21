@@ -177,9 +177,10 @@ namespace RoadsOfTheRim
             {
                 foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
                 {
-                    if (aThing.def.defName == DefDatabase<ThingDef>.GetNamed("RotR_ISR2G").defName)
+                    RoadsOfTheRim.DebugLog("[RotR] DEBUG trying to find ISR2G. current inventory item = "+aThing.Label);
+                    if (aThing.def.Equals (DefDatabase<ThingDef>.GetNamed("RotR_ISR2G")))
                     {
-                        RoadsOfTheRim.DebugLog("[RotR] DEBUG ISR2G - ***** FOUND *****");
+                        RoadsOfTheRim.DebugLog("***** FOUND *****");
                     }
                 }
                 //RoadsOfTheRim.DebugLog("[RotR] DEBUG ISR2G - Label = " + DefDatabase<ThingDef>.GetNamed("RotR_ISR2G").label);

@@ -173,8 +173,22 @@ namespace RoadsOfTheRim
                 amountOfWork = siteComp.GetLeft("Work");
             }
 
+            if (settings.useISR2G)
+            {
+                bool theTest = CaravanInventoryUtility.HasThings(caravan, DefDatabase<ThingDef>.GetNamed("RotR_ISR2G"), 1);
+                //DefDatabase<ThingDef>.GetNamed("RotR_ISR2G").defName;
+                if (theTest)
+                {
+                    RoadsOfTheRim.DebugLog("[RotR] DEBUG ISR2G - ******** SUCCESS" + theTest);
+                }
+                else
+                {
+                    RoadsOfTheRim.DebugLog("[RotR] DEBUG ISR2G - ******** FAILURE" + theTest);
+                }
+            }
+
             // calculate material present in the caravan
-            foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
+                foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
             {
                 available[resourceName] = 0;
             }

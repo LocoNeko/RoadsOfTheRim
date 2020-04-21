@@ -145,6 +145,7 @@ namespace RoadsOfTheRim
             Dictionary<string, int> needed = new Dictionary<string, int>();
             Dictionary<string, float> ratio = new Dictionary<string, float>();
             float ratio_final = 1;
+            RoadsOfTheRim.DebugLog("[RotR] DEBUG ========== doSomeWork() ==========");
 
             if (DebugSettings.godMode)
             {
@@ -239,26 +240,33 @@ namespace RoadsOfTheRim
                 }
                 caravanComp.stopWorking();
             }
+            RoadsOfTheRim.DebugLog("[RotR] ISR2G DEBUG ratio final = " + ratio_final);
 
             // Consume resources from the caravan 
             foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
             {
                 foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
                 {
-                    if (needed[resourceName] > 0 && isThis(aThing.def, resourceName))
+                    if (!roadDefExtension.GetInSituModifier(resourceName, useISR2G))
                     {
-                        int amountUsed = needed[resourceName] ;
-                        // ISR2G not present : adjust amountUsed to the stackcount for the thing and consume it
-                        if (!roadDefExtension.GetInSituModifier(resourceName, useISR2G))
+                        if (needed[resourceName] > 0 && isThis(aThing.def, resourceName))
                         {
-                            amountUsed = (aThing.stackCount > needed[resourceName]) ? needed[resourceName] : aThing.stackCount;
+                            int amountUsed = (aThing.stackCount > needed[resourceName]) ? needed[resourceName] : aThing.stackCount;
                             aThing.stackCount -= amountUsed;
+                            // Reduce how much of this resource is needed
+                            needed[resourceName] -= amountUsed;
+                            siteComp.ReduceLeft(resourceName, amountUsed);
+                            RoadsOfTheRim.DebugLog("[RotR] ISR2G consumption DEBUG =" + resourceName + " Qty consumed = " + amountUsed);
                         }
-                        // Reduce how much of this resource is needed
-                        needed[resourceName] -= amountUsed;
-                        siteComp.ReduceLeft(resourceName, amountUsed);
-                        RoadsOfTheRim.DebugLog("[RotR] ISR2G consumption DEBUG =" + resourceName + " Qty consumed = " + amountUsed);
-
+                    }
+                    else
+                    {
+                        if (needed[resourceName] > 0)
+                        {
+                            RoadsOfTheRim.DebugLog("[RotR] ISR2G consumption DEBUG =" + resourceName + " Qty freely awarded = " + needed[resourceName]);
+                            siteComp.ReduceLeft(resourceName, needed[resourceName]);
+                            needed[resourceName] = 0 ;
+                        }
                     }
                 }
                 if (aThing.stackCount == 0)

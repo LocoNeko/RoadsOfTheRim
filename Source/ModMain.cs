@@ -214,7 +214,7 @@ namespace RoadsOfTheRim
             {
                 needed[resourceName] = (int)Math.Round(siteComp.GetLeft(resourceName) - (percentOfWorkLeftToDoAfter * siteComp.GetCost(resourceName)));
                 // Check if there's enough material to go through this batch. Materials with a cost of 0 are always OK
-                // Don't check if ISR2G is in use for this resource
+                // Don't check when ISR2G is in use for this resource
                 if (!roadDefExtension.GetInSituModifier(resourceName , useISR2G))
                 {
                     ratio[resourceName] = (needed[resourceName] == 0 ? 1f : Math.Min((float)available[resourceName] / (float)needed[resourceName], 1f));
@@ -245,7 +245,7 @@ namespace RoadsOfTheRim
             {
                 foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
                 {
-                    if (needed[resourceName] > 0 && isThis(aThing.def, resourceName))
+                    if (needed[resourceName] > 0 && isThis(aThing.def, resourceName) && !roadDefExtension.GetInSituModifier(resourceName , useISR2G))
                     {
                         int amountUsed = (aThing.stackCount > needed[resourceName]) ? needed[resourceName] : aThing.stackCount;
                         aThing.stackCount -= amountUsed;
@@ -259,9 +259,14 @@ namespace RoadsOfTheRim
                 }
             }
 
-            // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
-            amountOfWork = Math.Max(ratio_final * amountOfWork , 1); // Always do at least 1 work
             caravanComp.teachPawns(ratio_final); // Pawns learn some construction
+            // HARDCODED : ISR2G divides work done by 4 , AISR2G by 2
+            if (useISR2G>0)
+            {
+                amountOfWork = amountOfWork * 0.25f * useISR2G;
+            }
+            // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
+            amountOfWork = Math.Max(ratio_final * amountOfWork, 1); // Always do at least 1 work
             return siteComp.UpdateProgress(amountOfWork, caravan);
         }
 

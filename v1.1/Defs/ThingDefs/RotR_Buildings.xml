@@ -52,7 +52,7 @@
 	<ThingDef ParentName="BuildingBase">
 		<defName>RotR_AISR2G</defName>
 		<label>AISR2G</label>
-		<description>Advanced In Situ Road Ressources Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood, stone , steel, Chemfuel , Plasteel and Uranium  at the cost of twice the work..</description>
+		<description>Advanced In Situ Road Ressources Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood, stone , steel, Chemfuel , Plasteel and Uranium at the cost of twice the work.</description>
 		<graphicData>
 			<texPath>Buildings/AISR2G</texPath>
 			<graphicClass>Graphic_Multi</graphicClass>

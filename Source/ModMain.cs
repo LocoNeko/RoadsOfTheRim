@@ -278,8 +278,8 @@ namespace RoadsOfTheRim
             }
 
             caravanComp.teachPawns(ratio_final); // Pawns learn some construction
-            // HARDCODED : ISR2G divides work done by 4 , AISR2G by 2 for all but 2 lowest tier roads
-            if (useISR2G> 0 && site.roadDef.defName != "DirtPathBuilt" && site.roadDef.defName != "DirtRoadBuilt")
+            // HARDCODED : ISR2G divides work done by 4 , AISR2G by 2 for all roads except dirt path
+            if (useISR2G> 0 && site.roadDef.defName != "DirtPathBuilt")
             {
                 amountOfWork = amountOfWork * 0.25f * useISR2G;
             }

@@ -73,10 +73,10 @@ namespace RoadsOfTheRim
             return (aCost==null) ? 0 : aCost.count ;
         }
 
-        public bool GetInSituModifier(string name , int ISR2G)
+        public static bool GetInSituModifier(string resourceName , int ISR2G)
         {
             bool result = false;
-            switch (name)
+            switch (resourceName)
             {
                 case "WoodLog":
                     result = ISR2G > 0;

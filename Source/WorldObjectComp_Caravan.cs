@@ -350,6 +350,29 @@ namespace RoadsOfTheRim
 
         }
 
+        public int useISR2G()
+        {
+            int result = 0 ;
+            RoadsOfTheRimSettings settings = LoadedModManager.GetMod<RoadsOfTheRim>().GetSettings<RoadsOfTheRimSettings>();
+            // Setting the caravan to use ISR2G or AISR2G if present and settings allow it
+            if (settings.useISR2G)
+            {
+                foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(this.GetCaravan()))
+                {
+                    if (result  < 1 && aThing.GetInnerIfMinified().def.defName == "RotR_ISR2G")
+                    {
+                        result = 1;
+                    }
+                    if (result < 2 && aThing.GetInnerIfMinified().def.defName == "RotR_AISR2G")
+                    {
+                        result = 2;
+                        return result;
+                    }
+                }
+            }
+            return result;
+        }
+
         public override void PostExposeData()
         {
             base.PostExposeData();

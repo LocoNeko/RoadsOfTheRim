@@ -142,12 +142,13 @@ namespace RoadsOfTheRim
             WorldObjectComp_ConstructionSite siteComp = site.GetComponent<WorldObjectComp_ConstructionSite>();
             DefModExtension_RotR_RoadDef roadDefExtension = site.roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
             noMoreResources = false;
-            int useISR2G = 0;
+            int useISR2G = caravanComp.useISR2G() ;
             Dictionary<string, int> available = new Dictionary<string, int>();
             Dictionary<string, int> needed = new Dictionary<string, int>();
             Dictionary<string, float> ratio = new Dictionary<string, float>();
             float ratio_final = 1;
             RoadsOfTheRim.DebugLog("[RotR] DEBUG ========== doSomeWork() ==========");
+            RoadsOfTheRim.DebugLog("[RotR] DEBUG ISR2G set to "+useISR2G);
 
             if (DebugSettings.godMode)
             {
@@ -191,21 +192,6 @@ namespace RoadsOfTheRim
                         available[resourceName] += aThing.stackCount;
                     }
                 }
-                // Setting the caravan to use ISR2G or AISR2G is present and settings allow it
-                if (settings.useISR2G)
-                {
-                    if (useISR2G <1 && aThing.GetInnerIfMinified().def.defName == "RotR_ISR2G")
-                    {
-                        useISR2G = 1;
-                        //RoadsOfTheRim.DebugLog("[RotR] DEBUG : using ISR2G");
-                    }
-                    if (useISR2G <2 && aThing.GetInnerIfMinified().def.defName == "RotR_AISR2G")
-                    {
-                        useISR2G = 2;
-                        //RoadsOfTheRim.DebugLog("[RotR] DEBUG : using AISR2G");
-                    }
-                }
-
             }
 
             // What percentage of work will remain after amountOfWork is done ?
@@ -218,7 +204,7 @@ namespace RoadsOfTheRim
                 needed[resourceName] = (int)Math.Round(siteComp.GetLeft(resourceName) - (percentOfWorkLeftToDoAfter * siteComp.GetCost(resourceName)));
                 // Check if there's enough material to go through this batch. Materials with a cost of 0 are always OK
                 // Don't check when ISR2G is in use for this resource
-                if (!roadDefExtension.GetInSituModifier(resourceName , useISR2G))
+                if (!DefModExtension_RotR_RoadDef.GetInSituModifier(resourceName , useISR2G))
                 {
                     ratio[resourceName] = (needed[resourceName] == 0 ? 1f : Math.Min((float)available[resourceName] / (float)needed[resourceName], 1f));
                     if (ratio[resourceName] < ratio_final)
@@ -249,7 +235,7 @@ namespace RoadsOfTheRim
             {
                 foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
                 {
-                    if (!roadDefExtension.GetInSituModifier(resourceName, useISR2G))
+                    if (!DefModExtension_RotR_RoadDef.GetInSituModifier(resourceName, useISR2G))
                     {
                         if (needed[resourceName] > 0 && isThis(aThing.def, resourceName))
                         {

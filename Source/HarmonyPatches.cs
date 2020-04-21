@@ -108,15 +108,14 @@ namespace RoadsOfTheRim
 
     }
 
-    [HarmonyPatch(typeof(Alert_CaravanIdle), "idleCaravansResult")]
+    [HarmonyPatch(typeof(Alert_CaravanIdle), "GetLabel")]
     public static class Patch_Alert_CaravanIdle
     {
         [HarmonyPostfix]
-        public static void Postfix(ref List<Caravan> ___result)
+        public static void Postfix(ref String __result)
         {
+            __result = "Boo";
             // Go through the list of Caravans, remove those that are working on a road
-            foreach (Caravan caravan in ___result)
-            {
                 /*
                 WorldObjectComp_Caravan caravanComp = caravan.GetComponent<WorldObjectComp_Caravan>();
                 if (caravanComp.currentlyWorkingOnSite)
@@ -125,7 +124,6 @@ namespace RoadsOfTheRim
                     __result.Remove(caravan);
                 }
                 */
-            }
         }
     }
 

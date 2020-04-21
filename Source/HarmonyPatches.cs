@@ -112,12 +112,16 @@ namespace RoadsOfTheRim
     public static class Patch_Alert_CaravanIdle_GetExplanation
     {
         [HarmonyPostfix]
-        public static void Postfix(TaggedString __result)
+        public static void Postfix(ref TaggedString __result)
         {
             StringBuilder stringBuilder = new StringBuilder();
             foreach (Caravan caravan in Find.WorldObjects.Caravans)
             {
                 WorldObjectComp_Caravan caravanComp = caravan.GetComponent<WorldObjectComp_Caravan>();
+                if (caravanComp.currentlyWorkingOnSite)
+                {
+                    RoadsOfTheRim.DebugLog("[RotR] - Found a caravan for which to patch the idle message : "+caravan.Label);
+                }
                 if (caravan.Spawned && caravan.IsPlayerControlled && !caravan.pather.MovingNow && !caravan.CantMove && !caravanComp.currentlyWorkingOnSite)
                 {
                     stringBuilder.AppendLine("  - " + caravan.Label);

@@ -108,11 +108,11 @@ namespace RoadsOfTheRim
 
     }
 
-    [HarmonyPatch(typeof(Alert_CaravanIdle))]
-    public static class Patch_Alert_CaravanIdle
+    [HarmonyPatch(typeof(Alert_CaravanIdle) , "GetExplanation")]
+    public static class Patch_Alert_CaravanIdle_GetExplanation
     {
         [HarmonyPostfix]
-        public static void Postfix(ref List<Caravan> __result)
+        public static void Prefix(Alert_CaravanIdle __instance)
         {
             // Go through the list of Caravans, remove those that are working on a road
                 /*

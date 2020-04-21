@@ -257,6 +257,8 @@ namespace RoadsOfTheRim
                         // Reduce how much of this resource is needed
                         needed[resourceName] -= amountUsed;
                         siteComp.ReduceLeft(resourceName, amountUsed);
+                        RoadsOfTheRim.DebugLog("[RotR] ISR2G consumption DEBUG =" + resourceName + " Qty consumed = " + amountUsed);
+
                     }
                 }
                 if (aThing.stackCount == 0)

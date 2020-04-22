@@ -338,16 +338,15 @@ namespace RoadsOfTheRim
         {
             ratio = Math.Max(Math.Min(1,ratio), 0);
             List<Pawn> pawns = GetCaravan().PawnsListForReading;
-            RoadsOfTheRim.DebugLog("Teaching Construction to pawns");
+            //RoadsOfTheRim.DebugLog("Teaching Construction to pawns");
             foreach (Pawn pawn in pawns)
             {
                 if (pawn.IsFreeColonist && pawn.health.State == PawnHealthState.Mobile && !pawn.RaceProps.packAnimal)
                 {
                     pawn.skills.Learn(SkillDefOf.Construction, ratio, false);
-                    RoadsOfTheRim.DebugLog(pawn.Name+" learned " + ratio + " Xp = "+pawn.skills.GetSkill(SkillDefOf.Construction).XpTotalEarned);
+                    //RoadsOfTheRim.DebugLog(pawn.Name+" learned " + ratio + " Xp = "+pawn.skills.GetSkill(SkillDefOf.Construction).XpTotalEarned);
                 }
             }
-
         }
 
         public int useISR2G()

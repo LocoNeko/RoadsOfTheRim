@@ -147,8 +147,8 @@ namespace RoadsOfTheRim
             Dictionary<string, int> needed = new Dictionary<string, int>();
             Dictionary<string, float> ratio = new Dictionary<string, float>();
             float ratio_final = 1;
-            RoadsOfTheRim.DebugLog("[RotR] DEBUG ========== doSomeWork() ==========");
-            RoadsOfTheRim.DebugLog("[RotR] DEBUG ISR2G set to "+useISR2G);
+            //RoadsOfTheRim.DebugLog("[RotR] DEBUG ========== doSomeWork() ==========");
+            //RoadsOfTheRim.DebugLog("[RotR] DEBUG ISR2G set to "+useISR2G);
 
             if (DebugSettings.godMode)
             {
@@ -212,10 +212,6 @@ namespace RoadsOfTheRim
                         ratio_final = ratio[resourceName];
                     }
                 }
-                else
-                {
-                    RoadsOfTheRim.DebugLog("[RotR] ISR2G DEBUG, free " + resourceName + " thanks to ISR2G = " + useISR2G);
-                }
             }
 
             // The caravan didn't have enough resources for a full batch of work. Use as much as we can then stop working
@@ -228,7 +224,7 @@ namespace RoadsOfTheRim
                 }
                 caravanComp.stopWorking();
             }
-            RoadsOfTheRim.DebugLog("[RotR] ISR2G DEBUG ratio final = " + ratio_final);
+            //RoadsOfTheRim.DebugLog("[RotR] ISR2G DEBUG ratio final = " + ratio_final);
 
             // Consume resources from the caravan 
             foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
@@ -244,14 +240,14 @@ namespace RoadsOfTheRim
                             // Reduce how much of this resource is needed
                             needed[resourceName] -= amountUsed;
                             siteComp.ReduceLeft(resourceName, amountUsed);
-                            RoadsOfTheRim.DebugLog("[RotR] ISR2G consumption DEBUG =" + resourceName + " Qty consumed = " + amountUsed);
+                            //RoadsOfTheRim.DebugLog("[RotR] ISR2G consumption DEBUG =" + resourceName + " Qty consumed = " + amountUsed);
                         }
                     }
                     else
                     {
                         if (needed[resourceName] > 0)
                         {
-                            RoadsOfTheRim.DebugLog("[RotR] ISR2G consumption DEBUG =" + resourceName + " Qty freely awarded = " + needed[resourceName]);
+                            //RoadsOfTheRim.DebugLog("[RotR] ISR2G consumption DEBUG =" + resourceName + " Qty freely awarded = " + needed[resourceName]);
                             siteComp.ReduceLeft(resourceName, needed[resourceName]);
                             needed[resourceName] = 0 ;
                         }

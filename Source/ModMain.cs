@@ -227,6 +227,7 @@ namespace RoadsOfTheRim
             //RoadsOfTheRim.DebugLog("[RotR] ISR2G DEBUG ratio final = " + ratio_final);
 
             // Consume resources from the caravan 
+            bool ResourcesHaveBeenConsumed = (site.roadDef.defName == "DirtPathBuilt") ; // Always consider resources have been consumed when the road is a dirt path
             foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
             {
                 foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
@@ -235,6 +236,7 @@ namespace RoadsOfTheRim
                     {
                         if (needed[resourceName] > 0 && isThis(aThing.def, resourceName))
                         {
+                            ResourcesHaveBeenConsumed = true;
                             int amountUsed = (aThing.stackCount > needed[resourceName]) ? needed[resourceName] : aThing.stackCount;
                             aThing.stackCount -= amountUsed;
                             // Reduce how much of this resource is needed
@@ -266,7 +268,11 @@ namespace RoadsOfTheRim
                 amountOfWork = amountOfWork * 0.25f * useISR2G;
             }
             // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
-            amountOfWork = Math.Max(ratio_final * amountOfWork, 1); // Always do at least 1 work
+            amountOfWork = ratio_final * amountOfWork ;
+            if (ResourcesHaveBeenConsumed && amountOfWork <1) // If resources have been consumed (or the road is a dirt path), always do at least 1 work
+            {
+                amountOfWork = 1 ;
+            }
             return siteComp.UpdateProgress(amountOfWork, caravan);
         }
 
@@ -292,7 +298,7 @@ namespace RoadsOfTheRim
             listing_Standard.Gap();
             settings.CostIncreaseElevationThreshold = listing_Standard.Slider(settings.CostIncreaseElevationThreshold, 0f , 5000f);
             listing_Standard.Gap();
-            listing_Standard.Label("RoadsOfTheRimSettingsUpgradeRebate".Translate() + ": " + string.Format("{0:0%}", (float)settings.CostUpgradeRebate));
+            listing_Standard.Label("RoadsOfTheRimSettingsUpgradeRebate".Translate() + ": " + settings.CostUpgradeRebate + "%");
             listing_Standard.Gap();
             settings.CostUpgradeRebate = (int)listing_Standard.Slider(settings.CostUpgradeRebate, 0, 100);
             listing_Standard.Gap();

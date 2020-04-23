@@ -145,7 +145,7 @@ namespace RoadsOfTheRim
                             }
                             else
                             {
-                                rebate[resourceName] = (int)(existingCost * RoadsOfTheRim.settings.CostUpgradeRebate / 100) ; 
+                                rebate[resourceName] = (int)(existingCost * RoadsOfTheRim.settings.CostUpgradeRebate / 10) ; 
                             }
                             RoadsOfTheRim.DebugLog("GetUpgradeModifier DEBUG. Ressource " + resourceName + " get a rebate of "+rebate[resourceName]);
                         }

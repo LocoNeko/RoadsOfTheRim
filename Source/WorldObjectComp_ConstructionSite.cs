@@ -149,6 +149,7 @@ namespace RoadsOfTheRim
                     }
                 }
             }
+            RoadsOfTheRim.DebugLog("GetUpgradeModifier DEBUG. Rebate = " + rebate.ToString());
         }
 
         /*

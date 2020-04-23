@@ -231,7 +231,7 @@ namespace RoadsOfTheRim
                         RoadsOfTheRim.DebugLog("RotR Debug - SetCosts : resource " + resourceName);
                         costs[resourceName] = (int)((roadDefExtension.GetCost(resourceName) - thisRebate) * totalCostModifier);
                         left[resourceName] = costs[resourceName];
-                        RoadsOfTheRim.DebugLog("Qty needed = " + left[resourceName] + " , rebate = "+thisRebate);
+                        RoadsOfTheRim.DebugLog("Qty needed = " + left[resourceName] + " , original cost = " + roadDefExtension.GetCost(resourceName) + " , rebate = " + thisRebate);
                         if (thisRebate>0)
                         {
                             s.Add("RoadsOfTheRim_UpgradeRebateDetail".Translate((int)(thisRebate * totalCostModifier) , resourceName));

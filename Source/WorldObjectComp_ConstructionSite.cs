@@ -136,7 +136,7 @@ namespace RoadsOfTheRim
                     {
                         int existingCost = bestExistingRoadDefModExtension.GetCost(resourceName) ;
                         int toBuildCost = roadToBuildRoadDefModExtension.GetCost(resourceName) ;
-                        RoadsOfTheRim.DebugLog("GetUpgradeModifier DEBUG. Ressource " + resourceName + " exising cost = " + existingCost + ", toBuildCost = " + toBuildCost);
+                        RoadsOfTheRim.DebugLog("GetUpgradeModifier DEBUG. Ressource " + resourceName + " exising cost = " + existingCost + ", toBuildCost = " + toBuildCost + ", CostUpgradeRebate =" + RoadsOfTheRim.settings.CostUpgradeRebate);
                         if (existingCost!=0 && toBuildCost!=0)
                         {
                             if ( (int)(existingCost * RoadsOfTheRim.settings.CostUpgradeRebate) > toBuildCost)

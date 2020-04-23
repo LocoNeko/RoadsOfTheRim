@@ -33,7 +33,7 @@ namespace RoadsOfTheRim
         public int BaseEffort = DefaultBaseEffort;
         public bool OverrideCosts = true;
         public float CostIncreaseElevationThreshold = 1000f ;
-        public float CostUpgradeRebate = 0.3f ;
+        public int CostUpgradeRebate = 30 ;
         public bool useISR2G = true ;
 
         public override void ExposeData()
@@ -44,7 +44,7 @@ namespace RoadsOfTheRim
             Scribe_Values.Look<int>(ref BaseEffort, "BaseEffort", DefaultBaseEffort, true);
             Scribe_Values.Look<bool>(ref OverrideCosts, "OverrideCosts", true, true);
             Scribe_Values.Look<float>(ref CostIncreaseElevationThreshold, "CostIncreaseElevationThreshold", 1000f , true);
-            Scribe_Values.Look<float>(ref CostUpgradeRebate, "CostUpgradeRebate", 0.3f , true) ;
+            Scribe_Values.Look<int>(ref CostUpgradeRebate, "CostUpgradeRebate", 30 , true) ;
             Scribe_Values.Look<bool>(ref useISR2G, "useISR2G", true, true);
         }
     }
@@ -292,9 +292,9 @@ namespace RoadsOfTheRim
             listing_Standard.Gap();
             settings.CostIncreaseElevationThreshold = listing_Standard.Slider(settings.CostIncreaseElevationThreshold, 0f , 5000f);
             listing_Standard.Gap();
-            listing_Standard.Label("RoadsOfTheRimSettingsUpgradeRebate".Translate() + ": " + string.Format("{0:0%}", (float)settings.CostUpgradeRebate / 10));
+            listing_Standard.Label("RoadsOfTheRimSettingsUpgradeRebate".Translate() + ": " + string.Format("{0:0%}", (float)settings.CostUpgradeRebate));
             listing_Standard.Gap();
-            settings.CostUpgradeRebate = (int)listing_Standard.Slider(settings.CostUpgradeRebate, 0, 10);
+            settings.CostUpgradeRebate = (int)listing_Standard.Slider(settings.CostUpgradeRebate, 0, 100);
             listing_Standard.Gap();
             listing_Standard.CheckboxLabeled("RoadsOfTheRimSettingsUseISR2G".Translate() + ": ", ref settings.useISR2G);
             listing_Standard.End();

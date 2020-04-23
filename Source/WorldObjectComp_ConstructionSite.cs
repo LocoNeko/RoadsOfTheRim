@@ -139,13 +139,13 @@ namespace RoadsOfTheRim
                         RoadsOfTheRim.DebugLog("GetUpgradeModifier DEBUG. Ressource " + resourceName + " exising cost = " + existingCost + ", toBuildCost = " + toBuildCost + ", CostUpgradeRebate =" + RoadsOfTheRim.settings.CostUpgradeRebate);
                         if (existingCost!=0 && toBuildCost!=0)
                         {
-                            if ( (int)(existingCost * RoadsOfTheRim.settings.CostUpgradeRebate / 100) > toBuildCost)
+                            if ( (int)(existingCost * (float)RoadsOfTheRim.settings.CostUpgradeRebate / 100) > toBuildCost)
                             {
                                 rebate[resourceName] = toBuildCost ;
                             }
                             else
                             {
-                                rebate[resourceName] = (int)(existingCost * RoadsOfTheRim.settings.CostUpgradeRebate / 100) ; 
+                                rebate[resourceName] = (int)(existingCost * (float)RoadsOfTheRim.settings.CostUpgradeRebate / 100) ; 
                             }
                             RoadsOfTheRim.DebugLog("GetUpgradeModifier DEBUG. Ressource " + resourceName + " get a rebate of "+rebate[resourceName]);
                         }

@@ -127,7 +127,6 @@ namespace RoadsOfTheRim
             RoadDef bestExistingRoad = RoadsOfTheRim.BestExistingRoad(fromTile_int, toTile_int) ;
             if (bestExistingRoad!=null)
             {
-                RoadsOfTheRim.DebugLog("GetUpgradeModifier DEBUG. Found road " + bestExistingRoad.label);
                 DefModExtension_RotR_RoadDef bestExistingRoadDefModExtension = bestExistingRoad.GetModExtension<DefModExtension_RotR_RoadDef>() ;
                 DefModExtension_RotR_RoadDef roadToBuildRoadDefModExtension = roadToBuild.GetModExtension<DefModExtension_RotR_RoadDef>() ;
                 if (bestExistingRoadDefModExtension!=null && roadToBuildRoadDefModExtension!=null && RoadsOfTheRim.isRoadBetter(roadToBuild , bestExistingRoad))
@@ -136,7 +135,6 @@ namespace RoadsOfTheRim
                     {
                         int existingCost = bestExistingRoadDefModExtension.GetCost(resourceName) ;
                         int toBuildCost = roadToBuildRoadDefModExtension.GetCost(resourceName) ;
-                        RoadsOfTheRim.DebugLog("GetUpgradeModifier DEBUG. Ressource " + resourceName + " exising cost = " + existingCost + ", toBuildCost = " + toBuildCost + ", CostUpgradeRebate =" + RoadsOfTheRim.settings.CostUpgradeRebate);
                         if (existingCost!=0 && toBuildCost!=0)
                         {
                             if ( (int)(existingCost * (float)RoadsOfTheRim.settings.CostUpgradeRebate / 100) > toBuildCost)
@@ -147,7 +145,6 @@ namespace RoadsOfTheRim
                             {
                                 rebate[resourceName] = (int)(existingCost * (float)RoadsOfTheRim.settings.CostUpgradeRebate / 100) ; 
                             }
-                            RoadsOfTheRim.DebugLog("GetUpgradeModifier DEBUG. Ressource " + resourceName + " get a rebate of "+rebate[resourceName]);
                         }
                     }
                 }

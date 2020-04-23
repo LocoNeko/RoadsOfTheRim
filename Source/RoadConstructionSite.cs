@@ -246,6 +246,7 @@ namespace RoadsOfTheRim
                 // We've found an existing road that is better than the one we intend to build : skip this leg and move to the next
                 if (!RoadsOfTheRim.isRoadBetter(roadDef , bestExistingRoad))
                 {
+                    Messages.Message("RoadsOfTheRim_BetterRoadFound".Translate(caravan.Name, bestExistingRoad.label , roadDef.label), MessageTypeDefOf.NeutralEvent);
                     int currentTile = Tile;
                     Tile = nextLeg.Tile; // The construction site moves to the next leg
                     RoadConstructionLeg nextNextLeg = nextLeg.Next;

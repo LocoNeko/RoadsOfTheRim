@@ -402,7 +402,7 @@ namespace RoadsOfTheRim
             // disable if the caravan can't work OR if the site is not ready
             if (caravan.GetComponent<WorldObjectComp_Caravan>().CaravanCurrentState() != CaravanState.ReadyToWork)
             {
-                command_Action.Disable("RoadsOfTheRimBuildWorkOnSiteCantWork".Translate());
+                command_Action.Disable("RoadsOfTheRimBuildWorkOnSiteCantWork".Translate(caravan.GetDescription()));
             }
             return command_Action;
         }

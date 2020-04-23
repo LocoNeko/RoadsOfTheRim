@@ -127,6 +127,7 @@ namespace RoadsOfTheRim
             RoadDef bestExistingRoad = RoadsOfTheRim.BestExistingRoad(fromTile_int, toTile_int) ;
             if (bestExistingRoad!=null)
             {
+                RoadsOfTheRim.DebugLog("GetUpgradeModifier DEBUG. Found road " + bestExistingRoad.label);
                 DefModExtension_RotR_RoadDef bestExistingRoadDefModExtension = bestExistingRoad.GetModExtension<DefModExtension_RotR_RoadDef>() ;
                 DefModExtension_RotR_RoadDef roadToBuildRoadDefModExtension = roadToBuild.GetModExtension<DefModExtension_RotR_RoadDef>() ;
                 if (bestExistingRoadDefModExtension!=null && roadToBuildRoadDefModExtension!=null && RoadsOfTheRim.isRoadBetter(roadToBuild , bestExistingRoad))
@@ -145,11 +146,11 @@ namespace RoadsOfTheRim
                             {
                                 rebate[resourceName] = (int)(existingCost * RoadsOfTheRim.settings.CostUpgradeRebate) ; 
                             }
+                            RoadsOfTheRim.DebugLog("GetUpgradeModifier DEBUG. Ressource " + resourceName + " get a rebate of "+rebate[resourceName]);
                         }
                     }
                 }
             }
-            RoadsOfTheRim.DebugLog("GetUpgradeModifier DEBUG. Rebate = " + rebate.ToString());
         }
 
         /*
@@ -229,10 +230,8 @@ namespace RoadsOfTheRim
                     {
                         int thisRebate = 0;
                         rebate.TryGetValue(resourceName, out thisRebate);
-                        RoadsOfTheRim.DebugLog("RotR Debug - SetCosts : resource " + resourceName);
                         costs[resourceName] = (int)((roadDefExtension.GetCost(resourceName) - thisRebate) * totalCostModifier);
                         left[resourceName] = costs[resourceName];
-                        RoadsOfTheRim.DebugLog("Qty needed = " + left[resourceName] + " , original cost = " + roadDefExtension.GetCost(resourceName) + " , rebate = " + thisRebate);
                         if (thisRebate>0)
                         {
                             s.Add("RoadsOfTheRim_UpgradeRebateDetail".Translate((int)(thisRebate * totalCostModifier) , resourceName));

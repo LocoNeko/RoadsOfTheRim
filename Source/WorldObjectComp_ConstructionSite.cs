@@ -136,6 +136,7 @@ namespace RoadsOfTheRim
                     {
                         int existingCost = bestExistingRoadDefModExtension.GetCost(resourceName) ;
                         int toBuildCost = roadToBuildRoadDefModExtension.GetCost(resourceName) ;
+                        RoadsOfTheRim.DebugLog("GetUpgradeModifier DEBUG. Ressource " + resourceName + " exising cost = " + existingCost + ", toBuildCost = " + toBuildCost);
                         if (existingCost!=0 && toBuildCost!=0)
                         {
                             if ( (int)(existingCost * RoadsOfTheRim.settings.CostUpgradeRebate) > toBuildCost)
@@ -225,7 +226,6 @@ namespace RoadsOfTheRim
                 List<string> s = new List<string>();
                 foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
                 {
-                    RoadsOfTheRim.DebugLog("RotR Debug - SetCosts : resource "+resourceName);
                     if (roadDefExtension.GetCost(resourceName)>0)
                     {
                         int thisRebate = 0;

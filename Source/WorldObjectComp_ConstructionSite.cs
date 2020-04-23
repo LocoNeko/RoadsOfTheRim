@@ -137,13 +137,13 @@ namespace RoadsOfTheRim
                         int toBuildCost = roadToBuildRoadDefModExtension.GetCost(resourceName) ;
                         if (existingCost!=0 && toBuildCost!=0)
                         {
-                            if ( (int)(existingCost * RoadsOfTheRim.settings.CostUpgradeRebate) > toBuildCost)
+                            if ( (int)(existingCost * (float)RoadsOfTheRim.settings.CostUpgradeRebate / 100) > toBuildCost)
                             {
                                 rebate[resourceName] = toBuildCost ;
                             }
                             else
                             {
-                                rebate[resourceName] = (int)(existingCost * RoadsOfTheRim.settings.CostUpgradeRebate) ; 
+                                rebate[resourceName] = (int)(existingCost * (float)RoadsOfTheRim.settings.CostUpgradeRebate / 100) ; 
                             }
                         }
                     }
@@ -215,18 +215,7 @@ namespace RoadsOfTheRim
                 // Total cost modifier
                 float totalCostModifier = (1 + elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier) * ((float)settings.BaseEffort / 10);
 
-                /* TO DO : This debug info should be shown properly on the site and/or caravan working on it
-                Log.Message( string.Format(
-                "From Tile: {0}m , {1} hilliness , {2} swampiness. To Tile: {3}m , {4} hilliness , {5} swampiness. Average {6} hilliness, {7} swampiness" , 
-                    fromTile.elevation , (float)fromTile.hilliness , fromTile.swampiness, toTile.elevation , (float)toTile.hilliness , toTile.swampiness , hilliness , swampiness
-                ));
-                Log.Message( string.Format(
-                "Work cost increase from elevation: {0:0.00%}, from hilliness {1:0.00%}, from swampiness {2:0.00%}, from bridge crossing {3:0.00%}. Total cost : {4:0.00%}" , 
-                    elevationCostIncrease , hillinessCostIncrease , swampinessCostIncrease, bridgeCostIncrease, totalCostModifier
-                ));
-                */
                 DefModExtension_RotR_RoadDef roadDefExtension = parentSite.roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
-
 
                 // Check existing roads for potential rebates when upgrading
                 GetUpgradeModifiers(parentSite.Tile , parentSite.GetNextLeg().Tile , parentSite.roadDef , out Dictionary<string , int> rebate) ;
@@ -400,15 +389,41 @@ namespace RoadsOfTheRim
                 String.Format("{0:P0}",elevationModifier) , String.Format("{0:P0}",hillinessModifier) , String.Format("{0:P0}",swampinessModifier) , String.Format("{0:P0}",bridgeModifier)
             )) ;
 
+
+            List<Caravan> AllCaravansHere = new List<Caravan>() ;
+            Find.WorldObjects.GetPlayerControlledCaravansAt(parentSite.Tile , AllCaravansHere) ;
+            int ISR2G = 0;
+            foreach (Caravan c in AllCaravansHere)
+            {
+                int caravanISR2G = c.GetComponent<WorldObjectComp_Caravan>().useISR2G();
+                if (caravanISR2G > ISR2G)
+                {
+                    ISR2G = caravanISR2G;
+                }
+            }
+
             // Per resource : show costs & how much is left to do
             foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
             {
                 if (GetCost(resourceName) > 0)
                 {
                     stringBuilder.AppendLine();
-                    stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate(resourceName, (int)GetLeft(resourceName), (int)GetCost(resourceName)));
+                    string ISR2Gmsg = "";
+                    if (ISR2G>0)
+                    {
+                        if (resourceName=="Work")
+                        {
+                            ISR2Gmsg = (ISR2G == 1 ? "RoadsOfTheRim_ConstructionSiteDescription_ISR2Gwork".Translate() : "RoadsOfTheRim_ConstructionSiteDescription_AISR2Gwork".Translate()) ;
+                        }
+                        else if (DefModExtension_RotR_RoadDef.GetInSituModifier(resourceName, ISR2G))
+                        {
+                            ISR2Gmsg = (ISR2G == 1 ? "RoadsOfTheRim_ConstructionSiteDescription_ISR2GFree".Translate() : "RoadsOfTheRim_ConstructionSiteDescription_AISR2GFree".Translate()) ;
+                        }
+                    }
+                    stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate(resourceName, (int)GetLeft(resourceName), (int)GetCost(resourceName) , ISR2Gmsg));
                 }
             }
+
             return stringBuilder.ToString();
         }
 

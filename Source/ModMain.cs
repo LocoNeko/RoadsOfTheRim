@@ -32,17 +32,20 @@ namespace RoadsOfTheRim
         public const float SwampinessCostDouble = 0.5f;
         public int BaseEffort = DefaultBaseEffort;
         public bool OverrideCosts = true;
-        public float CostIncreaseElevationThreshold = 1000 ;
-
-        public float CostUpgradeRebate = 0.3f ;
+        public float CostIncreaseElevationThreshold = 1000f ;
+        public int CostUpgradeRebate = 30 ;
+        public bool useISR2G = true ;
 
         public override void ExposeData()
         {
             base.ExposeData();
+            // Costs are always 100% when using ISR2G
+            if (useISR2G) { BaseEffort = MaxBaseEffort;  }
             Scribe_Values.Look<int>(ref BaseEffort, "BaseEffort", DefaultBaseEffort, true);
             Scribe_Values.Look<bool>(ref OverrideCosts, "OverrideCosts", true, true);
-            Scribe_Values.Look<float>(ref CostIncreaseElevationThreshold, "CostIncreaseElevationThreshold", 1000 , true);
-            Scribe_Values.Look<float>(ref CostUpgradeRebate, "CostUpgradeRebate", 0.3f , true) ;
+            Scribe_Values.Look<float>(ref CostIncreaseElevationThreshold, "CostIncreaseElevationThreshold", 1000f , true);
+            Scribe_Values.Look<int>(ref CostUpgradeRebate, "CostUpgradeRebate", 30 , true) ;
+            Scribe_Values.Look<bool>(ref useISR2G, "useISR2G", true, true);
         }
     }
 
@@ -139,10 +142,13 @@ namespace RoadsOfTheRim
             WorldObjectComp_ConstructionSite siteComp = site.GetComponent<WorldObjectComp_ConstructionSite>();
             DefModExtension_RotR_RoadDef roadDefExtension = site.roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
             noMoreResources = false;
+            int useISR2G = caravanComp.useISR2G() ;
             Dictionary<string, int> available = new Dictionary<string, int>();
             Dictionary<string, int> needed = new Dictionary<string, int>();
             Dictionary<string, float> ratio = new Dictionary<string, float>();
             float ratio_final = 1;
+            //RoadsOfTheRim.DebugLog("[RotR] DEBUG ========== doSomeWork() ==========");
+            //RoadsOfTheRim.DebugLog("[RotR] DEBUG ISR2G set to "+useISR2G);
 
             if (DebugSettings.godMode)
             {
@@ -197,10 +203,14 @@ namespace RoadsOfTheRim
             {
                 needed[resourceName] = (int)Math.Round(siteComp.GetLeft(resourceName) - (percentOfWorkLeftToDoAfter * siteComp.GetCost(resourceName)));
                 // Check if there's enough material to go through this batch. Materials with a cost of 0 are always OK
-                ratio[resourceName] = (needed[resourceName] == 0 ? 1f : Math.Min((float)available[resourceName] / (float)needed[resourceName], 1f));
-                if (ratio[resourceName] < ratio_final)
+                // Don't check when ISR2G is in use for this resource
+                if (!DefModExtension_RotR_RoadDef.GetInSituModifier(resourceName , useISR2G))
                 {
-                    ratio_final = ratio[resourceName];
+                    ratio[resourceName] = (needed[resourceName] == 0 ? 1f : Math.Min((float)available[resourceName] / (float)needed[resourceName], 1f));
+                    if (ratio[resourceName] < ratio_final)
+                    {
+                        ratio_final = ratio[resourceName];
+                    }
                 }
             }
 
@@ -214,18 +224,35 @@ namespace RoadsOfTheRim
                 }
                 caravanComp.stopWorking();
             }
+            //RoadsOfTheRim.DebugLog("[RotR] ISR2G DEBUG ratio final = " + ratio_final);
 
             // Consume resources from the caravan 
+            bool ResourcesHaveBeenConsumed = (site.roadDef.defName == "DirtPathBuilt") ; // Always consider resources have been consumed when the road is a dirt path
             foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
             {
                 foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
                 {
-                    if (needed[resourceName] > 0 && isThis(aThing.def, resourceName))
+                    if (!DefModExtension_RotR_RoadDef.GetInSituModifier(resourceName, useISR2G))
                     {
-                        int amountUsed = (aThing.stackCount > needed[resourceName]) ? needed[resourceName] : aThing.stackCount;
-                        aThing.stackCount -= amountUsed;
-                        needed[resourceName] -= amountUsed;
-                        siteComp.ReduceLeft(resourceName, amountUsed);
+                        if (needed[resourceName] > 0 && isThis(aThing.def, resourceName))
+                        {
+                            ResourcesHaveBeenConsumed = true;
+                            int amountUsed = (aThing.stackCount > needed[resourceName]) ? needed[resourceName] : aThing.stackCount;
+                            aThing.stackCount -= amountUsed;
+                            // Reduce how much of this resource is needed
+                            needed[resourceName] -= amountUsed;
+                            siteComp.ReduceLeft(resourceName, amountUsed);
+                            //RoadsOfTheRim.DebugLog("[RotR] ISR2G consumption DEBUG =" + resourceName + " Qty consumed = " + amountUsed);
+                        }
+                    }
+                    else
+                    {
+                        if (needed[resourceName] > 0)
+                        {
+                            //RoadsOfTheRim.DebugLog("[RotR] ISR2G consumption DEBUG =" + resourceName + " Qty freely awarded = " + needed[resourceName]);
+                            siteComp.ReduceLeft(resourceName, needed[resourceName]);
+                            needed[resourceName] = 0 ;
+                        }
                     }
                 }
                 if (aThing.stackCount == 0)
@@ -234,9 +261,18 @@ namespace RoadsOfTheRim
                 }
             }
 
-            // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
-            amountOfWork = Math.Max(ratio_final * amountOfWork , 1); // Always do at least 1 work
             caravanComp.teachPawns(ratio_final); // Pawns learn some construction
+            // HARDCODED : ISR2G divides work done by 4 , AISR2G by 2 for all roads except dirt path
+            if (useISR2G> 0 && site.roadDef.defName != "DirtPathBuilt")
+            {
+                amountOfWork = amountOfWork * 0.25f * useISR2G;
+            }
+            // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
+            amountOfWork = ratio_final * amountOfWork ;
+            if (ResourcesHaveBeenConsumed && amountOfWork <1) // If resources have been consumed (or the road is a dirt path), always do at least 1 work
+            {
+                amountOfWork = 1 ;
+            }
             return siteComp.UpdateProgress(amountOfWork, caravan);
         }
 
@@ -257,7 +293,19 @@ namespace RoadsOfTheRim
             settings.BaseEffort = (int)listing_Standard.Slider(settings.BaseEffort, RoadsOfTheRimSettings.MinBaseEffort, RoadsOfTheRimSettings.MaxBaseEffort);
             listing_Standard.Gap();
             listing_Standard.CheckboxLabeled("RoadsOfTheRimSettingsOverrideCosts".Translate() + ": ", ref settings.OverrideCosts);
+            listing_Standard.Gap();
+            listing_Standard.Label("RoadsOfTheRimSettingsElevationThreshold".Translate() + ": " + settings.CostIncreaseElevationThreshold);
+            listing_Standard.Gap();
+            settings.CostIncreaseElevationThreshold = listing_Standard.Slider(settings.CostIncreaseElevationThreshold, 0f , 5000f);
+            listing_Standard.Gap();
+            listing_Standard.Label("RoadsOfTheRimSettingsUpgradeRebate".Translate() + ": " + settings.CostUpgradeRebate + "%");
+            listing_Standard.Gap();
+            settings.CostUpgradeRebate = (int)listing_Standard.Slider(settings.CostUpgradeRebate, 0, 100);
+            listing_Standard.Gap();
+            listing_Standard.CheckboxLabeled("RoadsOfTheRimSettingsUseISR2G".Translate() + ": ", ref settings.useISR2G);
             listing_Standard.End();
+            // Always make sure to set costs to 100% when using ISR2G
+            if (settings.useISR2G) { settings.BaseEffort = RoadsOfTheRimSettings.MaxBaseEffort;  }
             settings.Write();
             if (CurrentOverOverrideCosts != settings.OverrideCosts)
             {
@@ -354,7 +402,7 @@ namespace RoadsOfTheRim
             // disable if the caravan can't work OR if the site is not ready
             if (caravan.GetComponent<WorldObjectComp_Caravan>().CaravanCurrentState() != CaravanState.ReadyToWork)
             {
-                command_Action.Disable("RoadsOfTheRimBuildWorkOnSiteCantWork".Translate());
+                command_Action.Disable("RoadsOfTheRimBuildWorkOnSiteCantWork".Translate(caravan.GetDescription()));
             }
             return command_Action;
         }

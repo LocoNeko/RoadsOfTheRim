@@ -172,10 +172,12 @@ namespace RoadsOfTheRim
                 return false ;
             }
 
+            /*
             if (amountOfWork > siteComp.GetLeft("Work"))
             {
                 amountOfWork = siteComp.GetLeft("Work");
             }
+            */
 
             // calculate material present in the caravan
             foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
@@ -210,7 +212,7 @@ namespace RoadsOfTheRim
                     if (ratio[resourceName] < ratio_final)
                     {
                         ratio_final = ratio[resourceName];
-                        RoadsOfTheRim.DebugLog("[RotR] ISR2G DEBUG updating ratio final to " + ratio_final + " because of " + resourceName);
+                        //RoadsOfTheRim.DebugLog("[RotR] ISR2G DEBUG updating ratio final to " + ratio_final + " because of " + resourceName);
                     }
                 }
             }

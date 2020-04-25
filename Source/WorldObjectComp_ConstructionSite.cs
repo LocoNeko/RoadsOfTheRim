@@ -30,13 +30,13 @@ namespace RoadsOfTheRim
         // TO DO : Make those 2 private
         public Dictionary<string , int> costs = new Dictionary<string, int>() ; 
 
-        public Dictionary<string , int> left = new Dictionary<string, int>() ;
+        public Dictionary<string , float> left = new Dictionary<string, float>() ;
 
         // Used for ExposeData()
         private List<string> costs_Keys = new List<string>();
         private List<int> costs_Values = new List<int>();
         private List<string> left_Keys = new List<string>();
-        private List<int> left_Values = new List<int>();
+        private List<float> left_Values = new List<float>();
 
         public int GetCost(string name)
         {
@@ -48,9 +48,9 @@ namespace RoadsOfTheRim
             return value ;
         }
 
-        public int GetLeft(string name)
+        public float GetLeft(string name)
         {
-            int value = 0 ;
+            float value = 0 ;
             if (!left.TryGetValue(name , out value))
             {
                 return 0 ; // TO DO : Throwing an excepion would be bettah
@@ -58,9 +58,9 @@ namespace RoadsOfTheRim
             return value ;
         }
 
-        public void ReduceLeft (string name, int amount)
+        public void ReduceLeft (string name, float amount)
         {
-            int value =0 ;
+            float value =0 ;
             if (left.TryGetValue(name, out value))
             {
                 left[name] -= (amount > value) ? value : amount ;
@@ -69,7 +69,7 @@ namespace RoadsOfTheRim
 
         public float GetPercentageDone(string name)
         {
-            if (!costs.TryGetValue(name, out int costTotal) & !left.TryGetValue(name, out int leftTotal))
+            if (!costs.TryGetValue(name, out int costTotal) & !left.TryGetValue(name, out float leftTotal))
             {
                 return 0;
             }
@@ -253,7 +253,7 @@ namespace RoadsOfTheRim
         {
             RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
 
-            ReduceLeft("Work", (int)amountOfWork);
+            ReduceLeft("Work", amountOfWork);
 
             parentSite.UpdateProgressBarMaterial();
 
@@ -420,7 +420,12 @@ namespace RoadsOfTheRim
                             ISR2Gmsg = (ISR2G == 1 ? "RoadsOfTheRim_ConstructionSiteDescription_ISR2GFree".Translate() : "RoadsOfTheRim_ConstructionSiteDescription_AISR2GFree".Translate()) ;
                         }
                     }
-                    stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate(resourceName, (int)GetLeft(resourceName), (int)GetCost(resourceName) , ISR2Gmsg));
+                    stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate(
+                        resourceName,
+                        String.Format((resourceName=="Work" ? "{0:##.00}" : "{0:##}"), GetLeft(resourceName)), // Only Work should be shown with 2 decimals
+                        (int)GetCost(resourceName) ,
+                        ISR2Gmsg
+                    ));
                 }
             }
 
@@ -435,7 +440,7 @@ namespace RoadsOfTheRim
         public override void PostExposeData()
         {
             Scribe_Collections.Look<string, int>(ref costs, "RotR_site_costs", LookMode.Value, LookMode.Value, ref costs_Keys , ref costs_Values);
-            Scribe_Collections.Look<string, int>(ref left, "RotR_site_left", LookMode.Value, LookMode.Value, ref left_Keys, ref left_Values);
+            Scribe_Collections.Look<string, float>(ref left, "RotR_site_left", LookMode.Value, LookMode.Value, ref left_Keys, ref left_Values);
         }
     }
 }

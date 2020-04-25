@@ -172,11 +172,6 @@ namespace RoadsOfTheRim
                 return false ;
             }
 
-            if (amountOfWork > siteComp.GetLeft("Work"))
-            {
-                amountOfWork = siteComp.GetLeft("Work");
-            }
-
             // calculate material present in the caravan
             foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
             {
@@ -203,8 +198,8 @@ namespace RoadsOfTheRim
             {
                 needed[resourceName] = (int)Math.Round(siteComp.GetLeft(resourceName) - (percentOfWorkLeftToDoAfter * siteComp.GetCost(resourceName)));
                 // Check if there's enough material to go through this batch. Materials with a cost of 0 are always OK
-                // Don't check when ISR2G is in use for this resource
-                if (!DefModExtension_RotR_RoadDef.GetInSituModifier(resourceName , useISR2G))
+                // Don't check when ISR2G is in use for this resource, don't check for work
+                if (!DefModExtension_RotR_RoadDef.GetInSituModifier(resourceName , useISR2G) && resourceName != "Work")
                 {
                     ratio[resourceName] = (needed[resourceName] == 0 ? 1f : Math.Min((float)available[resourceName] / (float)needed[resourceName], 1f));
                     if (ratio[resourceName] < ratio_final)
@@ -236,7 +231,6 @@ namespace RoadsOfTheRim
                     {
                         if (needed[resourceName] > 0 && isThis(aThing.def, resourceName))
                         {
-                            ResourcesHaveBeenConsumed = true;
                             int amountUsed = (aThing.stackCount > needed[resourceName]) ? needed[resourceName] : aThing.stackCount;
                             aThing.stackCount -= amountUsed;
                             // Reduce how much of this resource is needed
@@ -269,10 +263,6 @@ namespace RoadsOfTheRim
             }
             // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
             amountOfWork = ratio_final * amountOfWork ;
-            if (ResourcesHaveBeenConsumed && amountOfWork <1) // If resources have been consumed (or the road is a dirt path), always do at least 1 work
-            {
-                amountOfWork = 1 ;
-            }
             return siteComp.UpdateProgress(amountOfWork, caravan);
         }
 

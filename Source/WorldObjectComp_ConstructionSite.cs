@@ -253,7 +253,7 @@ namespace RoadsOfTheRim
         {
             RoadConstructionSite parentSite = this.parent as RoadConstructionSite;
 
-            ReduceLeft("Work", (int)amountOfWork);
+            ReduceLeft("Work", amountOfWork);
 
             parentSite.UpdateProgressBarMaterial();
 

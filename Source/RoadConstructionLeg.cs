@@ -1,4 +1,5 @@
 using System ;
+using System.Text;
 using System.Collections.Generic ;
 using RimWorld ;
 using RimWorld.Planet;
@@ -65,6 +66,19 @@ namespace RoadsOfTheRim
         {
             return site;
         }
+
+        public override string GetInspectString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append(base.GetInspectString());
+            if (stringBuilder.Length != 0)
+            {
+                stringBuilder.AppendLine();
+            }
+            stringBuilder.Append("RoadsOfTheRim_siteInspectString".Translate(this.GetSite().roadDef.label, string.Format("{0:0.0}", this.GetSite().roadDef.movementCostMultiplier)));
+            return stringBuilder.ToString();
+        }
+
 
         // Here, test if we picked a tile that's already part of the chain for this construction site (different construction sites can cross each other's paths)
         // Yes -> 

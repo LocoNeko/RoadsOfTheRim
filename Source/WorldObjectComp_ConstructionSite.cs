@@ -420,7 +420,13 @@ namespace RoadsOfTheRim
                             ISR2Gmsg = (ISR2G == 1 ? "RoadsOfTheRim_ConstructionSiteDescription_ISR2GFree".Translate() : "RoadsOfTheRim_ConstructionSiteDescription_AISR2GFree".Translate()) ;
                         }
                     }
-                    stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate(resourceName, (int)GetLeft(resourceName), (int)GetCost(resourceName) , ISR2Gmsg));
+                    String.Format("N2" , GetLeft(resourceName));
+                    stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate(
+                        resourceName,
+                        String.Format((resourceName=="Work" ? "N2" : "N"), GetLeft(resourceName)), // Only Work should be shown with 2 decimals
+                        (int)GetCost(resourceName) ,
+                        ISR2Gmsg
+                    ));
                 }
             }
 

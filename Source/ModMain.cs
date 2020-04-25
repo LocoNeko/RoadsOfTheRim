@@ -172,13 +172,6 @@ namespace RoadsOfTheRim
                 return false ;
             }
 
-            /*
-            if (amountOfWork > siteComp.GetLeft("Work"))
-            {
-                amountOfWork = siteComp.GetLeft("Work");
-            }
-            */
-
             // calculate material present in the caravan
             foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
             {
@@ -212,7 +205,6 @@ namespace RoadsOfTheRim
                     if (ratio[resourceName] < ratio_final)
                     {
                         ratio_final = ratio[resourceName];
-                        //RoadsOfTheRim.DebugLog("[RotR] ISR2G DEBUG updating ratio final to " + ratio_final + " because of " + resourceName);
                     }
                 }
             }
@@ -229,7 +221,6 @@ namespace RoadsOfTheRim
             }
 
             // Consume resources from the caravan 
-            bool ResourcesHaveBeenConsumed = (site.roadDef.defName == "DirtPathBuilt") ; // Always consider resources have been consumed when the road is a dirt path
             foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
             {
                 foreach (string resourceName in DefModExtension_RotR_RoadDef.allResources)
@@ -238,7 +229,6 @@ namespace RoadsOfTheRim
                     {
                         if (needed[resourceName] > 0 && isThis(aThing.def, resourceName))
                         {
-                            ResourcesHaveBeenConsumed = true;
                             int amountUsed = (aThing.stackCount > needed[resourceName]) ? needed[resourceName] : aThing.stackCount;
                             aThing.stackCount -= amountUsed;
                             // Reduce how much of this resource is needed
@@ -270,15 +260,7 @@ namespace RoadsOfTheRim
                 amountOfWork = amountOfWork * 0.25f * useISR2G;
             }
             // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
-            RoadsOfTheRim.DebugLog("[RotR] ISR2G DEBUG ratio final = " + ratio_final + " amount of work before that = " + amountOfWork);
-
             amountOfWork = ratio_final * amountOfWork ;
-            /*
-            if (ResourcesHaveBeenConsumed && amountOfWork <1) // If resources have been consumed (or the road is a dirt path), always do at least 1 work
-            {
-                amountOfWork = 1 ;
-            }
-            */
             return siteComp.UpdateProgress(amountOfWork, caravan);
         }
 

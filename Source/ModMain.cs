@@ -203,8 +203,8 @@ namespace RoadsOfTheRim
             {
                 needed[resourceName] = (int)Math.Round(siteComp.GetLeft(resourceName) - (percentOfWorkLeftToDoAfter * siteComp.GetCost(resourceName)));
                 // Check if there's enough material to go through this batch. Materials with a cost of 0 are always OK
-                // Don't check when ISR2G is in use for this resource
-                if (!DefModExtension_RotR_RoadDef.GetInSituModifier(resourceName , useISR2G))
+                // Don't check when ISR2G is in use for this resource, don't check for work
+                if (!DefModExtension_RotR_RoadDef.GetInSituModifier(resourceName , useISR2G) || resourceName == "Work")
                 {
                     ratio[resourceName] = (needed[resourceName] == 0 ? 1f : Math.Min((float)available[resourceName] / (float)needed[resourceName], 1f));
                     if (ratio[resourceName] < ratio_final)

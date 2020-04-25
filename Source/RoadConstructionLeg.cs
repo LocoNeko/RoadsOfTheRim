@@ -87,6 +87,7 @@ namespace RoadsOfTheRim
                 String.Format("{0:P0}", elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier),
                 String.Format("{0:P0}", elevationModifier), String.Format("{0:P0}", hillinessModifier), String.Format("{0:P0}", swampinessModifier), String.Format("{0:P0}", bridgeModifier)
             ));
+            RoadsOfTheRim.DebugLog("Road construction Leg DEBUG - Found modifiers for elevation "+elevationModifier + ", hilliness "+hillinessModifier+", swampiness"+swampinessModifier+", bridges "+bridgeModifier);
 
             // Show costs
             WorldObjectComp_ConstructionSite SiteComp = this.GetSite().GetComponent<WorldObjectComp_ConstructionSite>();

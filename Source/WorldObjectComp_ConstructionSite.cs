@@ -422,7 +422,7 @@ namespace RoadsOfTheRim
                     }
                     stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_Resource".Translate(
                         resourceName,
-                        String.Format((resourceName=="Work" ? "{0:N2}" : "{0:N}"), GetLeft(resourceName)), // Only Work should be shown with 2 decimals
+                        String.Format((resourceName=="Work" ? "{0:N2}" : "{0:N0}"), GetLeft(resourceName)), // Only Work should be shown with 2 decimals
                         (int)GetCost(resourceName) ,
                         ISR2Gmsg
                     ));

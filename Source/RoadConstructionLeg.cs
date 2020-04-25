@@ -76,6 +76,29 @@ namespace RoadsOfTheRim
                 stringBuilder.AppendLine();
             }
             stringBuilder.Append("RoadsOfTheRim_siteInspectString".Translate(this.GetSite().roadDef.label, string.Format("{0:0.0}", this.GetSite().roadDef.movementCostMultiplier)));
+
+            // Show total cost modifiers : TODO - MOve that to a static function in WorldObjectComp_ConstructionSite which uses it for the site alreday
+            float elevationModifier = 0f;
+            float hillinessModifier = 0f;
+            float swampinessModifier = 0f;
+            float bridgeModifier = 0f;
+            WorldObjectComp_ConstructionSite.GetCostsModifiers(this.Tile, this.Next.Tile, ref elevationModifier, ref hillinessModifier, ref swampinessModifier, ref bridgeModifier);
+            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_CostModifiers".Translate(
+                String.Format("{0:P0}", elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier),
+                String.Format("{0:P0}", elevationModifier), String.Format("{0:P0}", hillinessModifier), String.Format("{0:P0}", swampinessModifier), String.Format("{0:P0}", bridgeModifier)
+            ));
+
+            // Show costs
+            WorldObjectComp_ConstructionSite SiteComp = this.GetSite().GetComponent<WorldObjectComp_ConstructionSite>();
+            foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
+            {
+                if (SiteComp.GetCost(resourceName) > 0)
+                {
+                    stringBuilder.AppendLine();
+                    stringBuilder.Append((int)SiteComp.GetCost(resourceName) + "" + resourceName);
+                }
+            }
+
             return stringBuilder.ToString();
         }
 

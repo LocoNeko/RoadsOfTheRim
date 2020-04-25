@@ -269,10 +269,12 @@ namespace RoadsOfTheRim
             }
             // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
             amountOfWork = ratio_final * amountOfWork ;
+            /*
             if (ResourcesHaveBeenConsumed && amountOfWork <1) // If resources have been consumed (or the road is a dirt path), always do at least 1 work
             {
                 amountOfWork = 1 ;
             }
+            */
             return siteComp.UpdateProgress(amountOfWork, caravan);
         }
 

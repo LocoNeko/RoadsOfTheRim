@@ -224,7 +224,6 @@ namespace RoadsOfTheRim
                 }
                 caravanComp.stopWorking();
             }
-            //RoadsOfTheRim.DebugLog("[RotR] ISR2G DEBUG ratio final = " + ratio_final);
 
             // Consume resources from the caravan 
             bool ResourcesHaveBeenConsumed = (site.roadDef.defName == "DirtPathBuilt") ; // Always consider resources have been consumed when the road is a dirt path
@@ -268,6 +267,8 @@ namespace RoadsOfTheRim
                 amountOfWork = amountOfWork * 0.25f * useISR2G;
             }
             // Update amountOfWork based on the actual ratio worked & finally reducing the work & resources left
+            RoadsOfTheRim.DebugLog("[RotR] ISR2G DEBUG ratio final = " + ratio_final + " amount of work before that = " + amountOfWork);
+
             amountOfWork = ratio_final * amountOfWork ;
             /*
             if (ResourcesHaveBeenConsumed && amountOfWork <1) // If resources have been consumed (or the road is a dirt path), always do at least 1 work

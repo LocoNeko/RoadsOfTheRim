@@ -51,7 +51,7 @@
         <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
             <built>true</built>
             <costs>
-                <Work>600</Work>
+                <Work>200</Work>
             </costs>
         </li>
     </modExtensions>    
@@ -107,8 +107,8 @@
                 <hillinessModifier>0.2</hillinessModifier>
                 <winterModifier>0</winterModifier>
                 <costs>
-                  <Work>1200</Work>
-                  <Wood>120</Wood>
+                  <Work>400</Work>
+                  <WoodLog>120</WoodLog>
                 </costs>
             </li>
     </modExtensions>
@@ -163,9 +163,11 @@
                 <biomeModifier>0.75</biomeModifier>
                 <hillinessModifier>0.4</hillinessModifier>
                 <winterModifier>0</winterModifier>
-                <costs>
-                  <Work>3600</Work>
-                  <Wood>240</Wood>
+				<techlevelToBuild>Medieval</techlevelToBuild>
+				<techNeededToBuild>ResearchProject_RotRStoneRoad</techNeededToBuild>
+				<costs>
+                  <Work>1200</Work>
+                  <WoodLog>240</WoodLog>
                   <Stone>1800</Stone>
                   <Steel>300</Steel>
                 </costs>
@@ -229,8 +231,9 @@
                     <minConstruction>6</minConstruction>
                     <percentageOfminConstruction>0.25</percentageOfminConstruction>
                     <techlevelToBuild>Industrial</techlevelToBuild>
-                    <costs>
-                      <Work>5400</Work>
+					<techNeededToBuild>ResearchProject_RotRAsphaltRoad</techNeededToBuild>
+					<costs>
+                      <Work>1800</Work>
                       <Stone>3600</Stone>
                       <Steel>600</Steel>
                       <Chemfuel>300</Chemfuel>
@@ -284,22 +287,21 @@
                     <minConstruction>8</minConstruction>
                     <percentageOfminConstruction>0.25</percentageOfminConstruction>
                     <techlevelToBuild>Spacer</techlevelToBuild>
-                    <costs>
-                      <Work>10800</Work>
+					<techNeededToBuild>ResearchProject_RotRGlitterRoad</techNeededToBuild>
+					<costs>
+                      <Work>3600</Work>
                       <Stone>3600</Stone>
                       <Steel>900</Steel>
                       <Chemfuel>300</Chemfuel>
-                      <Plasteel>580</Plasteel>
-                      <Uranium>70</Uranium>
-                      <componentIndustrial>50</componentIndustrial>
-                      <componentSpacer>50</componentSpacer>
+                      <Plasteel>290</Plasteel>
+                      <Uranium>35</Uranium>
+                      <ComponentIndustrial>20</ComponentIndustrial>
+                      <ComponentSpacer>10</ComponentSpacer>
                     </costs>
                 </li>
         </modExtensions>    
     </RoadDef>
-        <!--
-    TO DO : Glitter roads
-    -->
+
 </Defs>
 
 

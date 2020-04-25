@@ -30,7 +30,7 @@ namespace RoadsOfTheRim
             // Initialise the list of terrains that are specific to built roads. Doing it here is hacky, but this is a quick way to use defs after they were loaded
             foreach (RoadDef thisDef in DefDatabase<RoadDef>.AllDefs)
             {
-                RoadsOfTheRim.DebugLog("initialising roadDef " + thisDef);
+                //RoadsOfTheRim.DebugLog("initialising roadDef " + thisDef);
                 if (thisDef.HasModExtension<DefModExtension_RotR_RoadDef>() && thisDef.GetModExtension<DefModExtension_RotR_RoadDef>().built) // Only add RoadDefs that are buildable, based on DefModExtension_RotR_RoadDef.built
                 {
                     foreach (RoadDefGenStep_Place aStep in thisDef.roadGenSteps.OfType<RoadDefGenStep_Place>()) // Only get RoadDefGenStep_Place
@@ -43,11 +43,13 @@ namespace RoadsOfTheRim
                     }
                 }
             }
+            /*
             foreach (TerrainDef t in RoadsOfTheRim.builtRoadTerrains)
             {
                 RoadsOfTheRim.DebugLog("builtRoadTerrains - Adding : " + t);
             }
             RoadsOfTheRim.DebugLog("[RofR] - Roads of the Rim loaded v20191010");
+            */
         }
     }
 
@@ -104,6 +106,44 @@ namespace RoadsOfTheRim
             }
         }
 
+    }
+
+    [HarmonyPatch(typeof(Alert_CaravanIdle) , "GetExplanation")]
+    public static class Patch_Alert_CaravanIdle_GetExplanation
+    {
+        [HarmonyPostfix]
+        public static void Postfix(ref TaggedString __result)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (Caravan caravan in Find.WorldObjects.Caravans)
+            {
+                WorldObjectComp_Caravan caravanComp = caravan.GetComponent<WorldObjectComp_Caravan>();
+                if (caravan.Spawned && caravan.IsPlayerControlled && !caravan.pather.MovingNow && !caravan.CantMove && !caravanComp.currentlyWorkingOnSite)
+                {
+                    stringBuilder.AppendLine("  - " + caravan.Label);
+                }
+            }
+            __result = "CaravanIdleDesc".Translate(stringBuilder.ToString());
+        }
+    }
+
+    [HarmonyPatch(typeof(Alert_CaravanIdle), "GetReport")]
+    public static class Patch_Alert_CaravanIdle_GetReport
+    {
+        [HarmonyPostfix]
+        public static void Postfix(ref AlertReport __result)
+        {
+            List<Caravan> newList = new List<Caravan>();
+            foreach (Caravan caravan in Find.WorldObjects.Caravans)
+            {
+                WorldObjectComp_Caravan caravanComp = caravan.GetComponent<WorldObjectComp_Caravan>();
+                if (caravan.Spawned && caravan.IsPlayerControlled && !caravan.pather.MovingNow && !caravan.CantMove && !caravanComp.currentlyWorkingOnSite)
+                {
+                    newList.Add(caravan);
+                }
+            }
+            __result = AlertReport.CulpritsAre(newList);
+        }
     }
 
     [HarmonyPatch(typeof(FactionDialogMaker), "FactionDialogFor")]

@@ -48,6 +48,8 @@ namespace RoadsOfTheRim
 
         public TechLevel techlevelToBuild = TechLevel.Neolithic;
 
+        public ResearchProjectDef techNeededToBuild = null ;
+
         public static string[] allResources = new string[] { "WoodLog", "Stone", "Steel", "Chemfuel" , "Plasteel" , "Uranium" , "ComponentIndustrial" , "ComponentSpacer" };
 
         public static string[] allResourcesAndWork = new string[] { "Work", "WoodLog", "Stone", "Steel", "Chemfuel" , "Plasteel" , "Uranium" , "ComponentIndustrial" , "ComponentSpacer"};
@@ -69,6 +71,35 @@ namespace RoadsOfTheRim
         {
             RotR_cost aCost = costs.Find(c => c.name == name) ;
             return (aCost==null) ? 0 : aCost.count ;
+        }
+
+        public static bool GetInSituModifier(string resourceName , int ISR2G)
+        {
+            bool result = false;
+            switch (resourceName)
+            {
+                case "WoodLog":
+                    result = ISR2G > 0;
+                    break;
+                case "Stone":
+                    result = ISR2G > 0;
+                    break;
+                case "Steel":
+                    result = ISR2G > 1;
+                    break;
+                case "Chemfuel":
+                    result = ISR2G > 1;
+                    break;
+                case "Plasteel":
+                    result = ISR2G > 1;
+                    break;
+                case "Uranium":
+                    result = ISR2G > 1;
+                    break;
+                default:
+                    break;
+            }
+            return result;
         }
     }
 }

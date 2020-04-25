@@ -21,7 +21,7 @@ namespace RoadsOfTheRim
 
 		public override void Generate(Map map, GenStepParams parms)
 		{
-            RoadsOfTheRim.DebugLog("Cleaning up roads if I can");
+            //RoadsOfTheRim.DebugLog("Cleaning up roads if I can");
             TerrainGrid terrainGrid = map.terrainGrid;
             foreach (IntVec3 current in map.AllCells)
 			{

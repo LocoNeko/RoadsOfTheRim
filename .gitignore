@@ -351,16 +351,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-/v1.1/Assemblies/UnityEngine.AccessibilityModule.dll
-/v1.1/Assemblies/Unity.TextMeshPro.dll
-/v1.1/Assemblies/System.Xml.Linq.dll
-/v1.1/Assemblies/System.Xml.dll
-/v1.1/Assemblies/System.ServiceModel.Internals.dll
-/v1.1/Assemblies/System.Security.dll
-/v1.1/Assemblies/System.Runtime.Serialization.dll
-/v1.1/Assemblies/System.dll
-/v1.1/Assemblies/System.Core.dll
-/v1.1/Assemblies/System.Configuration.dll
 /v1.1/Assemblies/mscorlib.dll
 /v1.1/Assemblies/Mono.Security.dll
 /v1.1/Assemblies/Mono.Posix.dll
@@ -487,3 +477,13 @@ MigrationBackup/
 /v1.1/Assemblies/UnityEngine.AIModule.dll.mdb
 /v1.1/Assemblies/UnityEngine.AIModule.dll
 /v1.1/Assemblies/UnityEngine.AccessibilityModule.dll.mdb
+/v1.1/Assemblies/UnityEngine.AccessibilityModule.dll
+/v1.1/Assemblies/Unity.TextMeshPro.dll
+/v1.1/Assemblies/System.Xml.Linq.dll
+/v1.1/Assemblies/System.Xml.dll
+/v1.1/Assemblies/System.ServiceModel.Internals.dll
+/v1.1/Assemblies/System.Security.dll
+/v1.1/Assemblies/System.Runtime.Serialization.dll
+/v1.1/Assemblies/System.dll
+/v1.1/Assemblies/System.Core.dll
+/v1.1/Assemblies/System.Configuration.dll

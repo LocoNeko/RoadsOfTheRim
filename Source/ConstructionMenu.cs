@@ -122,43 +122,59 @@ namespace RoadsOfTheRim
             Vector2 groupSize = new Vector2(144 , 512+128);
             foreach (RoadDef aDef in buildableRoads)
             {
-                DefModExtension_RotR_RoadDef roadDefExtension = aDef.GetModExtension<DefModExtension_RotR_RoadDef>();
-                GUI.BeginGroup(new Rect(new Vector2(64 + 144 * nbOfSections, 32f), groupSize));
+                DefModExtension_RotR_RoadDef roadDefExtension = aDef.GetModExtension<DefModExtension_RotR_RoadDef>() ;
 
-                // Buildable Road icon
-                Texture2D theButton = ContentFinder<Texture2D>.Get("UI/Commands/Build_"+aDef.defName, true);
-                Rect ButtonRect = new Rect(8, 8, 128, 128);
-                if (Widgets.ButtonImage(ButtonRect, theButton))
+                // Check if a tech is necessary to build this road, don't display the road if it isn't researched yet
+                ResearchProjectDef NeededTech = roadDefExtension.techNeededToBuild ;
+                bool TechResearched = false ;
+                if (NeededTech != null)
                 {
-                    if (Event.current.button == 0)
+                    TechResearched = NeededTech.IsFinished;
+                }
+                else 
+                {
+                    TechResearched = true;
+                }
+
+                if (TechResearched)
+                {
+                    GUI.BeginGroup(new Rect(new Vector2(64 + 144 * nbOfSections, 32f), groupSize));
+
+                    // Buildable Road icon
+                    Texture2D theButton = ContentFinder<Texture2D>.Get("UI/Commands/Build_" + aDef.defName, true);
+                    Rect ButtonRect = new Rect(8, 8, 128, 128);
+                    if (Widgets.ButtonImage(ButtonRect, theButton))
                     {
-                        SoundStarter.PlayOneShotOnCamera(SoundDefOf.Tick_High, null);
-                        site.roadDef = aDef;
-                        Close();
-                        RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting = site ;
-                        RoadsOfTheRim.RoadBuildingState.Caravan = caravan ;
-                        RoadConstructionLeg.Target(site);
+                        if (Event.current.button == 0)
+                        {
+                            SoundStarter.PlayOneShotOnCamera(SoundDefOf.Tick_High, null);
+                            site.roadDef = aDef;
+                            Close();
+                            RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting = site;
+                            RoadsOfTheRim.RoadBuildingState.Caravan = caravan;
+                            RoadConstructionLeg.Target(site);
+                        }
                     }
-                }
 
-                // Buildable Road label
-                Text.Anchor = TextAnchor.MiddleCenter;
-                Text.Font = GameFont.Medium;
-                Rect NameRect = new Rect(0, 144, 144f , 32f);
-                Widgets.Label(NameRect, aDef.label);
+                    // Buildable Road label
+                    Text.Anchor = TextAnchor.MiddleCenter;
+                    Text.Font = GameFont.Medium;
+                    Rect NameRect = new Rect(0, 144, 144f, 32f);
+                    Widgets.Label(NameRect, aDef.label);
 
-                // Resources amounts
-                Text.Font = GameFont.Small;
-                int i = 0;
-                foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
-                {
-                    Rect ResourceAmountRect = new Rect(0, 176f + i++ * 40f, 144f, 32f);
-                    Widgets.Label(ResourceAmountRect,
-                        (roadDefExtension.GetCost(resourceName) > 0) ? (roadDefExtension.GetCost(resourceName) * ((float)RoadsOfTheRim.settings.BaseEffort / 10)).ToString() : "-" 
-                    );
+                    // Resources amounts
+                    Text.Font = GameFont.Small;
+                    int i = 0;
+                    foreach (string resourceName in DefModExtension_RotR_RoadDef.allResourcesAndWork)
+                    {
+                        Rect ResourceAmountRect = new Rect(0, 176f + i++ * 40f, 144f, 32f);
+                        Widgets.Label(ResourceAmountRect,
+                            (roadDefExtension.GetCost(resourceName) > 0) ? (roadDefExtension.GetCost(resourceName) * ((float)RoadsOfTheRim.settings.BaseEffort / 10)).ToString() : "-"
+                        );
+                    }
+                    GUI.EndGroup();
+                    nbOfSections++;
                 }
-                GUI.EndGroup();
-                nbOfSections++;
             }
             Text.Anchor = TextAnchor.UpperLeft;
         }

@@ -10,8 +10,12 @@
   <RoadsOfTheRim_ConstructionSiteDescription_Main>Construction {0} done</RoadsOfTheRim_ConstructionSiteDescription_Main>
   <RoadsOfTheRim_ConstructionSiteDescription_Help>, helped by {0} [{1} work@{2}/sec]</RoadsOfTheRim_ConstructionSiteDescription_Help>
   <RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen> starting in {0} days</RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen>
-  <RoadsOfTheRim_ConstructionSiteDescription_CostModifiers>. Work cost increased by {0} because of Elevation({1}), Hills({2}), Swamps({3}) and bridges({4})</RoadsOfTheRim_ConstructionSiteDescription_CostModifiers>
-  <RoadsOfTheRim_ConstructionSiteDescription_Resource>{1} {0} left of {2}</RoadsOfTheRim_ConstructionSiteDescription_Resource>
+  <RoadsOfTheRim_ConstructionSiteDescription_CostModifiers>. + {0} : Elevation {1}, Hills {2}, Swamps {3}, bridges {4}</RoadsOfTheRim_ConstructionSiteDescription_CostModifiers>
+  <RoadsOfTheRim_ConstructionSiteDescription_Resource>{1} {0} left of {2}{3}</RoadsOfTheRim_ConstructionSiteDescription_Resource>
+  <RoadsOfTheRim_ConstructionSiteDescription_ISR2Gwork>, ISR2G makes work 4 times slower</RoadsOfTheRim_ConstructionSiteDescription_ISR2Gwork>
+  <RoadsOfTheRim_ConstructionSiteDescription_AISR2Gwork>, AISR2G makes work 2 times slower</RoadsOfTheRim_ConstructionSiteDescription_AISR2Gwork>
+  <RoadsOfTheRim_ConstructionSiteDescription_ISR2GFree>, Gathered for free by ISR2G</RoadsOfTheRim_ConstructionSiteDescription_ISR2GFree>
+  <RoadsOfTheRim_ConstructionSiteDescription_AISR2GFree>, Gathered for free by AISR2G</RoadsOfTheRim_ConstructionSiteDescription_AISR2GFree>
   <RoadsOfTheRim_WITab_Caravan_Build>Build</RoadsOfTheRim_WITab_Caravan_Build>
   <RoadsOfTheRim_commsAskHelp>Ask ally for help on road construction (cost: 10 goodwill)</RoadsOfTheRim_commsAskHelp>
   <RoadsOfTheRim_commsNoSites>No construction sites found</RoadsOfTheRim_commsNoSites>
@@ -32,6 +36,9 @@
   <RoadsOfTheRimSettingsCategoryLabel>Roads of the Rim</RoadsOfTheRimSettingsCategoryLabel>
   <RoadsOfTheRimSettingsBaseEffort>Base multiplier to road building costs</RoadsOfTheRimSettingsBaseEffort>
   <RoadsOfTheRimSettingsOverrideCosts>Override standard movement multipliers (requires game restart)</RoadsOfTheRimSettingsOverrideCosts>
+  <RoadsOfTheRimSettingsElevationThreshold>Elevation at which costs increase starts</RoadsOfTheRimSettingsElevationThreshold>
+  <RoadsOfTheRimSettingsUpgradeRebate>Percentage of resources salvaged from existing roads</RoadsOfTheRimSettingsUpgradeRebate>
+  <RoadsOfTheRimSettingsUseISR2G>Use In Situ Road Ressource Gatherer</RoadsOfTheRimSettingsUseISR2G>
   <RoadsOfTheRim_CaravanInspectStringWorkingOn>Working on : {0} [{1} work/sec]</RoadsOfTheRim_CaravanInspectStringWorkingOn>
   <RoadsOfTheRimBuildConstructionSiteAlreadyHere>There is already a construction site here</RoadsOfTheRimBuildConstructionSiteAlreadyHere>
   <RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>There is no construction site here</RoadsOfTheRimBuildConstructionSiteNotAlreadyHere>
@@ -42,7 +49,8 @@
   <RoadsOfTheRim_BuildToHere>Build road to here</RoadsOfTheRim_BuildToHere>
   <RoadsOfTheRimStopWorkingOnSite>Stop</RoadsOfTheRimStopWorkingOnSite>
   <RoadsOfTheRimStopWorkingOnSiteDescription>Stop working on construction site</RoadsOfTheRimStopWorkingOnSiteDescription>
-  <RoadsOfTheRimBuildWorkOnSiteCantWork>Caravan unable to work right now</RoadsOfTheRimBuildWorkOnSiteCantWork>
+  <RoadsOfTheRimBuildWorkOnSiteCantWork>{0} unable to build road right now</RoadsOfTheRimBuildWorkOnSiteCantWork>
+  <RoadsOfTheRim_BetterRoadFound>{0} found {1} while building {2} and is moving to the next leg</RoadsOfTheRim_BetterRoadFound>
   <RoadsOfTheRim_siteInspectString>Building {0} (movement difficulty {1});</RoadsOfTheRim_siteInspectString>
   <RoadsOfTheRim_siteDescription>{0} ({1} days)</RoadsOfTheRim_siteDescription>
   <RoadsOfTheRim_siteDescriptionExtra> and {0} more</RoadsOfTheRim_siteDescriptionExtra>

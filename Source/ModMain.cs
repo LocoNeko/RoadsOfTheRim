@@ -210,6 +210,7 @@ namespace RoadsOfTheRim
                     if (ratio[resourceName] < ratio_final)
                     {
                         ratio_final = ratio[resourceName];
+                        RoadsOfTheRim.DebugLog("[RotR] ISR2G DEBUG updating ratio final to " + ratio_final + " because of " + resourceName);
                     }
                 }
             }

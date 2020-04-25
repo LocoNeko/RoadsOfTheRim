@@ -75,7 +75,11 @@ namespace RoadsOfTheRim
             {
                 stringBuilder.AppendLine();
             }
-            if (this.Next==null)
+            if (this.Next is null)
+            {
+                stringBuilder.Append("Goal");
+            }
+            else
             {
                 stringBuilder.Append("RoadsOfTheRim_siteInspectString".Translate(this.GetSite().roadDef.label, string.Format("{0:0.0}", this.GetSite().roadDef.movementCostMultiplier)));
 
@@ -103,10 +107,6 @@ namespace RoadsOfTheRim
                         stringBuilder.Append((int)SiteComp.GetCost(resourceName) * totalCostModifier + " " + resourceName);
                     }
                 }
-            }
-            else
-            {
-                stringBuilder.Append("Goal");
             }
 
             return stringBuilder.ToString();

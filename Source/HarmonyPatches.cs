@@ -293,9 +293,9 @@ namespace RoadsOfTheRim
     public static class Patch_Dialog_FormCaravan_Tab
     {
         [HarmonyPostfix]
-        public static void Postfix(ref Enum __result)
+        public static void Postfix(ref Enum ___result)
         {
-            RoadsOfTheRim.DebugLog("Patch_Dialog_FormCaravan_Tab: "+__result.ToString());
+            RoadsOfTheRim.DebugLog("Patch_Dialog_FormCaravan_Tab: "+___result.ToString());
         }
     }
 }

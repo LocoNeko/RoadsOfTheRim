@@ -71,7 +71,7 @@ namespace RoadsOfTheRim
             }
             __result = __result.Concat(new Gizmo[] { RoadsOfTheRim.AddConstructionSite(__instance) })
                                .Concat(new Gizmo[] { RoadsOfTheRim.RemoveConstructionSite(__instance.Tile) });
-            if (isThereAConstructionSiteHere & !isTheCaravanWorkingOnASite && RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting==null)
+            if (isThereAConstructionSiteHere & !isTheCaravanWorkingOnASite && RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting == null)
             {
                 __result = __result.Concat(new Gizmo[] { RoadsOfTheRim.WorkOnSite(__instance) });
             }
@@ -108,7 +108,7 @@ namespace RoadsOfTheRim
 
     }
 
-    [HarmonyPatch(typeof(Alert_CaravanIdle) , "GetExplanation")]
+    [HarmonyPatch(typeof(Alert_CaravanIdle), "GetExplanation")]
     public static class Patch_Alert_CaravanIdle_GetExplanation
     {
         [HarmonyPostfix]
@@ -170,45 +170,45 @@ namespace RoadsOfTheRim
         private static readonly MethodInfo HillinessMovementDifficultyOffset = AccessTools.Method(typeof(WorldPathGrid), "HillinessMovementDifficultyOffset", new Type[] { typeof(Hilliness) });
 
         [HarmonyPostfix]
-        public static void Postifx(ref float __result , WorldGrid __instance, ref int fromTile, ref int toTile, ref StringBuilder explanation)
+        public static void Postifx(ref float __result, WorldGrid __instance, ref int fromTile, ref int toTile, ref StringBuilder explanation)
         {
             List<Tile.RoadLink> roads = __instance.tiles[fromTile].Roads;
-			if (roads == null)
-			{
-                return ;
-			}
-			if (toTile == -1)
-			{
-				toTile = __instance.FindMostReasonableAdjacentTileForDisplayedPathCost(fromTile);
-			}
-            float BiomeModifier = 0 ;
-            float HillModifier = 0 ;
+            if (roads == null)
+            {
+                return;
+            }
+            if (toTile == -1)
+            {
+                toTile = __instance.FindMostReasonableAdjacentTileForDisplayedPathCost(fromTile);
+            }
+            float BiomeModifier = 0;
+            float HillModifier = 0;
             float WinterModifier = 0;
             for (int i = 0; i < roads.Count; i++)
-			{
+            {
                 if (roads[i].neighbor == toTile)
-				{
+                {
                     float HillinessOffset = (float)HillinessMovementDifficultyOffset.Invoke(null, new object[] { Find.WorldGrid[toTile].hilliness });
-                    if (HillinessOffset>12f) { HillinessOffset = 12f; }
+                    if (HillinessOffset > 12f) { HillinessOffset = 12f; }
 
                     // Calculate biome, Hillines & winter modifiers, update explanation &  multiply result by biome modifier
                     float RoadModifier = RoadsOfTheRim.calculateRoadModifier(
-                        roads[i].road , 
-                        Find.WorldGrid[toTile].biome.movementDifficulty ,
+                        roads[i].road,
+                        Find.WorldGrid[toTile].biome.movementDifficulty,
                         HillinessOffset,
-                        WorldPathGrid.GetCurrentWinterMovementDifficultyOffset(toTile) ,
+                        WorldPathGrid.GetCurrentWinterMovementDifficultyOffset(toTile),
                         out BiomeModifier,
-                        out HillModifier ,
+                        out HillModifier,
                         out WinterModifier
                     );
 
-                    __result *= RoadModifier ;
+                    __result *= RoadModifier;
                     if (explanation != null) {
-                        explanation.AppendLine ();
+                        explanation.AppendLine();
                         explanation.Append(String.Format(
                             "The road cancels {0:P0} of the biome ({3:##.###}), {1:P0} of the hills ({4:##.###}) & {2:P0} of winter movement costs",
-                            BiomeModifier, HillModifier , WinterModifier ,
-                            Find.WorldGrid[toTile].biome.movementDifficulty , HillinessOffset
+                            BiomeModifier, HillModifier, WinterModifier,
+                            Find.WorldGrid[toTile].biome.movementDifficulty, HillinessOffset
                         ));
                     }
                 }
@@ -220,7 +220,7 @@ namespace RoadsOfTheRim
     static class Patch_WorldPathGrid_CalculatedMovementDifficultyAt
     {
         [HarmonyPostfix]
-        public static void PostFix(ref float __result, int tile , bool perceivedStatic , int? ticksAbs , StringBuilder explanation)
+        public static void PostFix(ref float __result, int tile, bool perceivedStatic, int? ticksAbs, StringBuilder explanation)
         {
             if (__result > 999f)
             {
@@ -230,7 +230,7 @@ namespace RoadsOfTheRim
                     {
                         Tile tile2 = Find.WorldGrid.tiles[tile];
                         List<Tile.RoadLink> roads = tile2.Roads;
-                        if (roads?.Count>0)
+                        if (roads?.Count > 0)
                         {
                             RoadDef BestRoad = null;
                             for (int i = 0; i < roads.Count; i++)
@@ -253,7 +253,7 @@ namespace RoadsOfTheRim
                                 if (roadDefExtension != null && ((tile2.biome.impassable && roadDefExtension.biomeModifier > 0) || (tile2.hilliness == Hilliness.Impassable)))
                                 {
                                     __result = 12f;
-                                    RoadsOfTheRim.DebugLog(String.Format("[RotR] - Impassable Tile {0} movement difficulty patched" , tile));
+                                    RoadsOfTheRim.DebugLog(String.Format("[RotR] - Impassable Tile {0} movement difficulty patched", tile));
                                 }
                             }
 
@@ -279,12 +279,23 @@ namespace RoadsOfTheRim
         [HarmonyPrefix]
         public static void Prefix()
         {
-            if (RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting!=null)
+            if (RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting != null)
             {
                 //RoadsOfTheRim.DebugLog("StopTargeting");
                 RoadsOfTheRim.FinaliseConstructionSite(RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting);
                 RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting = null;
             }
+        }
+    }
+
+
+    [HarmonyPatch(typeof(Dialog_FormCaravan), "Tab", MethodType.Getter)]
+    public static class Patch_Dialog_FormCaravan_Tab
+    {
+        [HarmonyPostfix]
+        public static void Postfix(ref Enum __result)
+        {
+            RoadsOfTheRim.DebugLog("Patch_Dialog_FormCaravan_Tab: "+__result.ToString());
         }
     }
 }

@@ -291,6 +291,7 @@ namespace RoadsOfTheRim
     }
 
     // Pure debug
+    /*
     [HarmonyPatch(typeof(Dialog_FormCaravan), "AddToTransferables")]
     public static class Patch_Dialog_FormCaravan_AddToTransferables
     {
@@ -300,8 +301,10 @@ namespace RoadsOfTheRim
             RoadsOfTheRim.DebugLog("Forming caravan, adding to transferable: " + t.Label);
         }
     }
+    */
 
     // Pure debug
+    /*
     [HarmonyPatch(typeof(Dialog_FormCaravan), "CalculateAndRecacheTransferables")]
     public static class Patch_Dialog_FormCaravan_CalculateAndRecacheTransferables
     {
@@ -318,6 +321,7 @@ namespace RoadsOfTheRim
             }
         }
     }
+    */
 
     // Pure debug
     /*
@@ -335,4 +339,15 @@ namespace RoadsOfTheRim
         }
     }
     */
+
+    [HarmonyPatch(typeof(CaravanUIUtility), "AddPawnsSections")]
+    public static class Patch_CaravanUIUtility_AddPawnsSections
+    {
+        [HarmonyPostfix]
+        public static void Postfix(TransferableOneWayWidget widget, List<TransferableOneWay> transferables)
+        {
+            widget.AddSection("Road related", transferables.Where((TransferableOneWay x) => x.ThingDef.defName=="ISR2G"));
+        }
+    }
+
 }

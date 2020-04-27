@@ -310,7 +310,7 @@ namespace RoadsOfTheRim
             List<TabRecord> list = tabs.ListFullCopy();
             foreach (TabRecord item in list)
             {
-                RoadsOfTheRim.DebugLog("Forming caravan, adding to transferable: " + item.label);
+                RoadsOfTheRim.DebugLog("Forming caravan, adding to transferable: " + item.label + "Action = " +item.clickedAction.ToString());
             }
         }
     }

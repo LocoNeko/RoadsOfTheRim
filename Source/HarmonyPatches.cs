@@ -300,7 +300,27 @@ namespace RoadsOfTheRim
             RoadsOfTheRim.DebugLog("Forming caravan, adding to transferable: " + t.Label);
         }
     }
+
     // Pure debug
+    [HarmonyPatch(typeof(Dialog_FormCaravan), "CalculateAndRecacheTransferables")]
+    public static class Patch_Dialog_FormCaravan_CalculateAndRecacheTransferables
+    {
+        [HarmonyPostfix]
+        public static void Postfix(Dialog_FormCaravan __instance)
+        {
+            RoadsOfTheRim.DebugLog("debugging calcualting transferables");
+            foreach (TransferableOneWay tow in __instance.transferables)
+            {
+                foreach (Thing t in tow.things)
+                {
+                    RoadsOfTheRim.DebugLog("Transferable "+tow.Label+", AnyThing "+tow.AnyThing.Label+", Thing "+t.Label);
+                }
+            }
+        }
+    }
+
+    // Pure debug
+    /*
     [HarmonyPatch(typeof(TabDrawer), "DrawTabs" , new Type[] { typeof(Rect) , typeof(List<TabRecord>) , typeof(float) })]
     public static class Patch_TabDrawer_DrawTabs
     {
@@ -314,4 +334,5 @@ namespace RoadsOfTheRim
             }
         }
     }
+    */
 }

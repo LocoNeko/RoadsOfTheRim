@@ -344,7 +344,7 @@ namespace RoadsOfTheRim
     public static class Patch_CaravanUIUtility_AddPawnsSections
     {
         [HarmonyPostfix]
-        public static void Postfix(TransferableOneWayWidget widget, List<TransferableOneWay> transferables)
+        public static void Postfix(ref TransferableOneWayWidget widget, List<TransferableOneWay> transferables)
         {
             RoadsOfTheRim.DebugLog("Found ISR2G");
 

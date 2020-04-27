@@ -289,14 +289,28 @@ namespace RoadsOfTheRim
         }
     }
 
-
+    // Pure debug
     [HarmonyPatch(typeof(Dialog_FormCaravan), "AddToTransferables")]
     public static class Patch_Dialog_FormCaravan_AddToTransferables
     {
         [HarmonyPostfix]
         public static void Postfix(Thing t)
         {
-            RoadsOfTheRim.DebugLog("Forming caravan, adding to transferable: "+t.Label);
+            RoadsOfTheRim.DebugLog("Forming caravan, adding to transferable: " + t.Label);
+        }
+    }
+    // Pure debug
+    [HarmonyPatch(typeof(TabDrawer), "DrawTabs")]
+    public static class Patch_TabDrawer_DrawTabs
+    {
+        [HarmonyPostfix]
+        public static void Postfix(List<TabRecord> tabs)
+        {
+            List<TabRecord> list = tabs.ListFullCopy();
+            foreach (TabRecord item in list)
+            {
+                RoadsOfTheRim.DebugLog("Forming caravan, adding to transferable: " + item.label);
+            }
         }
     }
 }

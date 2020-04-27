@@ -5,6 +5,7 @@ using RimWorld.Planet;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System;
 
@@ -289,13 +290,13 @@ namespace RoadsOfTheRim
     }
 
 
-    [HarmonyPatch(typeof(Dialog_FormCaravan), "Tab", MethodType.Getter)]
-    public static class Patch_Dialog_FormCaravan_Tab
+    [HarmonyPatch(typeof(Dialog_FormCaravan), "AddToTransferables")]
+    public static class Patch_Dialog_FormCaravan_AddToTransferables
     {
         [HarmonyPostfix]
-        public static void Postfix(ref Enum ___result)
+        public static void Postfix(Thing t)
         {
-            RoadsOfTheRim.DebugLog("Patch_Dialog_FormCaravan_Tab: "+___result.ToString());
+            RoadsOfTheRim.DebugLog("Forming caravan, adding to transferable: "+t.Label);
         }
     }
 }

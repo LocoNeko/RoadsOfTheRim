@@ -346,7 +346,9 @@ namespace RoadsOfTheRim
         [HarmonyPostfix]
         public static void Postfix(TransferableOneWayWidget widget, List<TransferableOneWay> transferables)
         {
-            widget.AddSection("Road related", transferables.Where((TransferableOneWay x) => x.ThingDef.defName=="ISR2G"));
+            RoadsOfTheRim.DebugLog("Found ISR2G");
+
+            widget.AddSection("Road related", transferables.Where((TransferableOneWay x) => x.AnyThing.def.defName == "ISR2G"));
         }
     }
 

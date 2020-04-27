@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System;
+using UnityEngine;
 
 namespace RoadsOfTheRim
 {
@@ -304,7 +305,7 @@ namespace RoadsOfTheRim
     public static class Patch_TabDrawer_DrawTabs
     {
         [HarmonyPostfix]
-        public static void Postfix(List<TabRecord> tabs)
+        public static void Postfix(Rect baseRect , List<TabRecord> tabs)
         {
             List<TabRecord> list = tabs.ListFullCopy();
             foreach (TabRecord item in list)

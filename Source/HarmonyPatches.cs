@@ -301,11 +301,11 @@ namespace RoadsOfTheRim
         }
     }
     // Pure debug
-    [HarmonyPatch(typeof(TabDrawer), "DrawTabs")]
+    [HarmonyPatch(typeof(TabDrawer), "DrawTabs" , new Type[] { typeof(Rect) , typeof(List<TabRecord>) , typeof(float) })]
     public static class Patch_TabDrawer_DrawTabs
     {
         [HarmonyPostfix]
-        public static void Postfix(Rect baseRect , List<TabRecord> tabs , float maxTabWidth)
+        public static void Postfix(Rect baseRect , List<TabRecord> tabs)
         {
             List<TabRecord> list = tabs.ListFullCopy();
             foreach (TabRecord item in list)

@@ -305,7 +305,7 @@ namespace RoadsOfTheRim
     public static class Patch_TabDrawer_DrawTabs
     {
         [HarmonyPostfix]
-        public static void Postfix(Rect baseRect , List<TabRecord> tabs , float maxTabWidth)
+        public static void Postfix(TabRecord __result , Rect baseRect , List<TabRecord> tabs , float maxTabWidth)
         {
             List<TabRecord> list = tabs.ListFullCopy();
             foreach (TabRecord item in list)

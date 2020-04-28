@@ -45,6 +45,10 @@ namespace RoadsOfTheRim
                     }
                 }
             }
+            foreach (BiomeDef aDef in DefDatabase<BiomeDef>.AllDefs)
+            {
+                RoadsOfTheRim.DebugLog("Biome " + aDef.label + " allow roads: "+aDef.allowRoads);
+            }
             /*
             foreach (TerrainDef t in RoadsOfTheRim.builtRoadTerrains)
             {

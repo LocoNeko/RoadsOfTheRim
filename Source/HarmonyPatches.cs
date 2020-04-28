@@ -346,4 +346,53 @@ namespace RoadsOfTheRim
         }
     }
 
+    [HarmonyPatch(typeof(WorldLayer_Roads))]
+    [HarmonyPatch("Regenerate")]
+    public static class Patch_WorldLayer_Roads_Regenerate
+    {
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            // I need to remove :
+            // IL_014f: callvirt instance bool RimWorld.Planet.Tile::get_WaterCovered()
+            // IL_0154: brtrue IL_02cbIL_014f and IL_0154
+
+            bool foundWaterCovered = false;
+            int startIndex = -1, endIndex = -1;
+
+            var codes = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < codes.Count; i++)
+            {
+                if (codes[i].opcode == OpCodes.Ret)
+                {
+                    if (foundWaterCovered)
+                    {
+                        //Log.Error("END " + i);
+                        endIndex = i; // include current 'ret'
+                        break;
+                    }
+                    else
+                    {
+                        //Log.Error("START " + (i + 1));
+
+                        startIndex = i + 1; // exclude current 'ret'
+                        for (int j = startIndex; j < codes.Count; j++)
+                        {
+                            if (codes[j].opcode == OpCodes.Ret)
+                                break;
+                            var strOperand = codes[j].operand as String;
+                            RoadsOfTheRim.DebugLog("Transpiler code="+ codes[j].ToString());
+                            
+                            if (strOperand == "get_WaterCovered")
+                            {
+                                foundWaterCovered = true;
+                                RoadsOfTheRim.DebugLog("Transpiler found Water Covered");
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return codes.AsEnumerable();
+        }
+    }
 }

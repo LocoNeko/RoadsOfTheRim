@@ -160,8 +160,7 @@ namespace RoadsOfTheRim
                     Target(site);
                     return false ;
                 }
-
-                if (!DefModExtension_RotR_RoadDef.ImpassableAllowed(tile , site.roadDef))
+                else if (!DefModExtension_RotR_RoadDef.ImpassableAllowed(tile , site.roadDef))
                 {
                     Messages.Message("RoadsOfTheRim_BiomePreventsConstruction".Translate(site.roadDef.label, " impassable mountains"), MessageTypeDefOf.RejectInput);
                     Target(site);

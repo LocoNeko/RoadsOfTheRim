@@ -106,8 +106,7 @@ namespace RoadsOfTheRim
         {
             DefModExtension_RotR_RoadDef RoadDefMod = roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
             biomeHere = Find.WorldGrid.tiles[tile].biome ;
-            RoadsOfTheRim.DebugLog("can build on water=" + RoadDefMod.canBuildOnWater + ",biome here=" + biomeHere.defName + ",biome allow roads=" + biomeHere.allowRoads);
-            if (RoadDefMod.canBuildOnWater && (biomeHere.defName == "ocean" || biomeHere.defName == "lake"))
+            if (RoadDefMod.canBuildOnWater && (biomeHere.defName == "Ocean" || biomeHere.defName == "Lake"))
             {
                 return true ;
             }

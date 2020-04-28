@@ -205,7 +205,8 @@ namespace RoadsOfTheRim
                     );
 
                     __result *= RoadModifier;
-                    if (explanation != null) {
+                    if (explanation != null)
+                    {
                         explanation.AppendLine();
                         explanation.Append(String.Format(
                             "The road cancels {0:P0} of the biome ({3:##.###}), {1:P0} of the hills ({4:##.###}) & {2:P0} of winter movement costs",
@@ -347,17 +348,34 @@ namespace RoadsOfTheRim
         public static void Postfix(ref TransferableOneWayWidget widget, List<TransferableOneWay> transferables)
         {
             RoadsOfTheRim.DebugLog("DEBUG AddPawnsSection: ");
-            List<TransferableOneWay> source = new List<TransferableOneWay>() ;
+            List<TransferableOneWay> source = new List<TransferableOneWay>();
             foreach (TransferableOneWay tow in transferables)
             {
-                if (tow.Label=="ISR2G")
+                if (tow.Label == "ISR2G")
                 {
                     source.Add(tow);
                 }
             }
-            widget.AddSection("Road equipment".Translate(), source);
-
+            widget.AddSection("RoadsOfTheRim_RoadEquipment".Translate(), source);
         }
     }
 
+    // PostFix additemstotransferable, remove ISR2G from transferables
+    [HarmonyPatch(typeof(Dialog_FormCaravan), "AddItemsToTransferables")]
+    public static class Patch_CaravanUIUtility_AddItemsToTransferables
+    {
+        [HarmonyPostfix]
+        public static void Postfix(ref Dialog_FormCaravan __instance)
+        {
+            List<TransferableOneWay> fullList = __instance.transferables;
+            foreach (TransferableOneWay tow in fullList)
+            {
+                if (tow.Label == "ISR2G")
+                {
+                    fullList.Remove(tow);
+                }
+            }
+            __instance.transferables = fullList;
+        }
+    }
 }

@@ -354,11 +354,13 @@ namespace RoadsOfTheRim
             }
 
             // Disable on biomes that don't allow roads
+            /*
             BiomeDef biomeHere = Find.WorldGrid.tiles[caravan.Tile].biome ;
             if (!biomeHere.allowRoads)
             {
                 command_Action.Disable("RoadsOfTheRim_BiomePreventsConstruction".Translate(biomeHere.label));
             }
+            */
             return command_Action;
         }
 

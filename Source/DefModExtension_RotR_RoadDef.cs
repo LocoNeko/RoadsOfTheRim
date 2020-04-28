@@ -101,5 +101,28 @@ namespace RoadsOfTheRim
             }
             return result;
         }
+
+        public static bool BiomeAllowed(int tile , RoadDef roadDef , out BiomeDef biomeHere)
+        {
+            DefModExtension_RotR_RoadDef RoadDefMod = roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
+            biomeHere = Find.WorldGrid.tiles[tile].biome ;
+            if (RoadDefMod.canBuildOnWater && (biomeHere.defName == "ocean" || biomeHere.defName == "lake"))
+            {
+                return true ;
+            }
+            return biomeHere.allowRoads ;
+        }
+
+        public static bool ImpassableAllowed(int tile, RoadDef roadDef , out BiomeDef biomeHere)
+        {
+            DefModExtension_RotR_RoadDef RoadDefMod = roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
+            biomeHere = Find.WorldGrid.tiles[tile].biome;
+            if (RoadDefMod.canBuildOnImpassable && biomeHere.impassable)
+            {
+                return true;
+            }
+            return biomeHere.impassable;
+
+        }
     }
 }

@@ -154,13 +154,18 @@ namespace RoadsOfTheRim
                 }
 
                 // There can be no ConstructionLeg on a biome that doesn't allow roads
-                BiomeDef biomeHere = Find.WorldGrid.tiles[tile].biome ;
-                DefModExtension_RotR_RoadDef roadDefExtension = site.roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
-                if (!biomeHere.allowRoads && !roadDefExtension.canBuildOnWater)
+                if (!DefModExtension_RotR_RoadDef.BiomeAllowed(tile , site.roadDef , out BiomeDef biomeHere))
                 {
                     Messages.Message("RoadsOfTheRim_BiomePreventsConstruction".Translate(site.roadDef.label , biomeHere.label) , MessageTypeDefOf.RejectInput);
                     Target(site);
                     return false ;
+                }
+
+                if (!DefModExtension_RotR_RoadDef.ImpassableAllowed(tile , site.roadDef , out BiomeDef biomeHere2))
+                {
+                    Messages.Message("RoadsOfTheRim_BiomePreventsConstruction".Translate(site.roadDef.label, biomeHere2.label), MessageTypeDefOf.RejectInput);
+                    Target(site);
+                    return false;
                 }
 
                 RoadConstructionLeg newLeg = (RoadConstructionLeg)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionLeg", true));

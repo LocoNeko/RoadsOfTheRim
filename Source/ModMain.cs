@@ -354,6 +354,8 @@ namespace RoadsOfTheRim
             }
 
             // Disable on biomes that don't allow roads
+            // TO DO : did that ever belong here ? testing for each leg should be enough except if somehow a caravan is in an ocean (glitter road ?) building a lower tier road towards the shore ?
+            // In which case, problem is easy to resolve : limit the roads that can be chosen in the menu
             /*
             BiomeDef biomeHere = Find.WorldGrid.tiles[caravan.Tile].biome ;
             if (!biomeHere.allowRoads)

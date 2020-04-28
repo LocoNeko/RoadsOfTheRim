@@ -336,7 +336,7 @@ namespace RoadsOfTheRim
         }
     }
 
-    [HarmonyPatch(typeof(Tile), "WaterCovered")]
+    [HarmonyPatch(typeof(Tile), "WaterCovered" , MethodType.Getter)]
     public static class Patch_Tile_WaterCovered
     {
         [HarmonyPostfix]

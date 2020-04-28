@@ -320,7 +320,6 @@ namespace RoadsOfTheRim
 
 
     [HarmonyPatch(typeof(CaravanUIUtility), "CreateCaravanTransferableWidgets")]
-
     /*
      * Remove Road equipment (TO DO : only ISR2G at the moment) from Item tab when forming caravans
      */
@@ -336,4 +335,15 @@ namespace RoadsOfTheRim
             itemsTransfer = new TransferableOneWayWidget(modifiedTransferables, null, null, thingCountTip, drawMass: true, ignorePawnInventoryMass, includePawnsMassInMassUsage: false, availableMassGetter, 0f, ignoreSpawnedCorpsesGearAndInventoryMass, tile, drawMarketValue: true, drawEquippedWeapon: false, drawNutritionEatenPerDay: false, drawItemNutrition: true, drawForagedFoodPerDay: false, drawDaysUntilRot: true);
         }
     }
+
+    [HarmonyPatch(typeof(Tile), "WaterCovered")]
+    public static class Patch_Tile_WaterCovered
+    {
+        [HarmonyPostfix]
+        public static void Postfix (bool __result)
+        {
+            __result = false;
+        }
+    }
+
 }

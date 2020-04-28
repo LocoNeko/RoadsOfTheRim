@@ -161,9 +161,9 @@ namespace RoadsOfTheRim
                     return false ;
                 }
 
-                if (!DefModExtension_RotR_RoadDef.ImpassableAllowed(tile , site.roadDef , out BiomeDef biomeHere2))
+                if (!DefModExtension_RotR_RoadDef.ImpassableAllowed(tile , site.roadDef))
                 {
-                    Messages.Message("RoadsOfTheRim_BiomePreventsConstruction".Translate(site.roadDef.label, biomeHere2.label), MessageTypeDefOf.RejectInput);
+                    Messages.Message("RoadsOfTheRim_BiomePreventsConstruction".Translate(site.roadDef.label, " impassable mountains"), MessageTypeDefOf.RejectInput);
                     Target(site);
                     return false;
                 }

@@ -112,17 +112,16 @@ namespace RoadsOfTheRim
             }
             return biomeHere.allowRoads ;
         }
-
-        public static bool ImpassableAllowed(int tile, RoadDef roadDef , out BiomeDef biomeHere)
+        
+        public static bool ImpassableAllowed(int tile, RoadDef roadDef)
         {
             DefModExtension_RotR_RoadDef RoadDefMod = roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
-            biomeHere = Find.WorldGrid.tiles[tile].biome;
-            RoadsOfTheRim.DebugLog("Biome : "+biomeHere.label+" , impassable: "+ biomeHere.impassable +"RoadDef: "+roadDef.label + " , roaddefcanbuildonimpassable: " + (RoadDefMod.canBuildOnImpassable ? "yes" : "no"));
-            if (RoadDefMod.canBuildOnImpassable && biomeHere.impassable)
+            Hilliness hillinnessHere = Find.WorldGrid.tiles[tile].hilliness;
+            if (RoadDefMod.canBuildOnImpassable && hillinnessHere==Hilliness.Impassable)
             {
                 return true;
             }
-            return !biomeHere.impassable;
+            return hillinnessHere != Hilliness.Impassable;
         }
     }
 }

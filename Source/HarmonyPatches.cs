@@ -348,12 +348,16 @@ namespace RoadsOfTheRim
         {
             foreach (TransferableOneWay tow in transferables)
             {
+                
                 foreach (Thing t in tow.things)
                 {
-                    RoadsOfTheRim.DebugLog("Adding pawn section : "+t.GetInnerIfMinified().Label);
+                    if (t.GetInnerIfMinified().def.defName == "ISR2G")
+                    {
+                        RoadsOfTheRim.DebugLog("Found ISR2G while adding pawn section : ");
+                        widget.AddSection("Road equipment", transferables.Where((TransferableOneWay x) => x.AnyThing.GetInnerIfMinified().def.defName == "ISR2G"));
+                    }
                 }
             }
-            //widget.AddSection("Road related", transferables.Where((TransferableOneWay x) => x.AnyThing.def.defName == "ISR2G"));
         }
     }
 

@@ -367,15 +367,7 @@ namespace RoadsOfTheRim
         [HarmonyPostfix]
         public static void Postfix(ref Dialog_FormCaravan __instance)
         {
-            List<TransferableOneWay> fullList = __instance.transferables;
-            foreach (TransferableOneWay tow in fullList)
-            {
-                if (tow.Label == "ISR2G")
-                {
-                    fullList.Remove(tow);
-                }
-            }
-            __instance.transferables = fullList;
+            __instance.transferables = __instance.transferables.Where(x => x.Label != "ISR2G").ToList();
         }
     }
 }

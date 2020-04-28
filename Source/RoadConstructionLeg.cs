@@ -158,7 +158,7 @@ namespace RoadsOfTheRim
                 DefModExtension_RotR_RoadDef roadDefExtension = site.roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
                 if (!biomeHere.allowRoads && !roadDefExtension.canBuildOnWater)
                 {
-                    Messages.Message("RoadsOfTheRim_BiomePreventsConstruction".Translate(biomeHere.label) , MessageTypeDefOf.RejectInput);
+                    Messages.Message("RoadsOfTheRim_BiomePreventsConstruction".Translate(site.roadDef.label , biomeHere.label) , MessageTypeDefOf.RejectInput);
                     Target(site);
                     return false ;
                 }

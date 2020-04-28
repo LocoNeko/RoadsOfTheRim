@@ -3,7 +3,7 @@
   <RoadsOfTheRim>Roads of the Rim</RoadsOfTheRim>
   <RoadsOfTheRimAddConstructionSite>Construct</RoadsOfTheRimAddConstructionSite>
   <RoadsOfTheRimAddConstructionSiteDescription>Create road construction site</RoadsOfTheRimAddConstructionSiteDescription>
-  <RoadsOfTheRim_BiomePreventsConstruction>Roads cannot be built in the {0} biome</RoadsOfTheRim_BiomePreventsConstruction>
+  <RoadsOfTheRim_BiomePreventsConstruction>{0} cannot be built in {1}</RoadsOfTheRim_BiomePreventsConstruction>
   <RoadsOfTheRimRemoveConstructionSite>Cancel construction</RoadsOfTheRimRemoveConstructionSite>
   <RoadsOfTheRimRemoveConstructionSiteDescription>Remove road construction site</RoadsOfTheRimRemoveConstructionSiteDescription>
   <RoadsOfTheRim_ConfirmDestroyResourcesAlreadyConsumed>By removing this site, you will lose all resources already consumed: {0}</RoadsOfTheRim_ConfirmDestroyResourcesAlreadyConsumed>

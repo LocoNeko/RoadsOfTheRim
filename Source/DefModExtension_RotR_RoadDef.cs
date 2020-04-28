@@ -121,8 +121,7 @@ namespace RoadsOfTheRim
             {
                 return true;
             }
-            return biomeHere.impassable;
-
+            return biomeHere.allowRoads;
         }
     }
 }

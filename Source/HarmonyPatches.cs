@@ -346,8 +346,8 @@ namespace RoadsOfTheRim
         [HarmonyPostfix]
         public static void Postfix(ref TransferableOneWayWidget widget, List<TransferableOneWay> transferables)
         {
-            IEnumerable<TransferableOneWay> source = transferables.Where((TransferableOneWay x) => x.ThingDef.defName == "ISR2G");
-            RoadsOfTheRim.DebugLog("Adding pawn section DEBUG ISR2G ");
+            IEnumerable<TransferableOneWay> source = transferables.Where((TransferableOneWay x) => x.AnyThing.def.defName == "ISR2G");
+            RoadsOfTheRim.DebugLog("Adding pawn section DEBUG ISR2G. transferables found : "+source.EnumerableCount());
 
             foreach (TransferableOneWay tow in source)
             {

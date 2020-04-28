@@ -340,7 +340,7 @@ namespace RoadsOfTheRim
     public static class Patch_Tile_WaterCovered
     {
         [HarmonyPostfix]
-        public static void Postfix (bool __result)
+        public static void Postfix (ref bool __result)
         {
             __result = false;
         }

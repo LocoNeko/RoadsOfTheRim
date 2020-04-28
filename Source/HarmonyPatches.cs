@@ -350,7 +350,7 @@ namespace RoadsOfTheRim
             {
                 foreach (Thing t in tow.things)
                 {
-                    RoadsOfTheRim.DebugLog("Adding pawn section : "+t.DescriptionDetailed);
+                    RoadsOfTheRim.DebugLog("Adding pawn section : "+t.Label);
                 }
             }
             //widget.AddSection("Road related", transferables.Where((TransferableOneWay x) => x.AnyThing.def.defName == "ISR2G"));

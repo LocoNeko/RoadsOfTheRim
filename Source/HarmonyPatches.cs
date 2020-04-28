@@ -347,27 +347,16 @@ namespace RoadsOfTheRim
         public static void Postfix(ref TransferableOneWayWidget widget, List<TransferableOneWay> transferables)
         {
             RoadsOfTheRim.DebugLog("DEBUG AddPawnsSection: ");
+            List<TransferableOneWay> source = new List<TransferableOneWay>() ;
             foreach (TransferableOneWay tow in transferables)
             {
-                RoadsOfTheRim.DebugLog("DEBUG AddPawnsSection - transferable label = "+tow.Label);
-            }
-            /*
-            IEnumerable<TransferableOneWay> source = transferables.Where((TransferableOneWay x) => x.AnyThing.def.defName == "ISR2G");
-            RoadsOfTheRim.DebugLog("Adding pawn section DEBUG ISR2G. transferables found : "+source.EnumerableCount());
-
-            foreach (TransferableOneWay tow in source)
-            {
-                RoadsOfTheRim.DebugLog("TransferableOneWay : "+tow.Label);
-                foreach (Thing t in tow.things)
+                if (tow.Label=="ISR2G")
                 {
-                    if (t.GetInnerIfMinified().def.defName == "ISR2G")
-                    {
-                        RoadsOfTheRim.DebugLog("ISR2G found");
-                        //widget.AddSection("Road equipment", transferables.Where((TransferableOneWay x) => x.AnyThing.GetInnerIfMinified().def.defName == "ISR2G"));
-                    }
+                    source.Add(tow);
                 }
             }
-            */
+            widget.AddSection("Road equipment".Translate(), source);
+
         }
     }
 

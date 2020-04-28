@@ -357,6 +357,7 @@ namespace RoadsOfTheRim
                 if (tow.Label == "ISR2G")
                 {
                     source.Add(tow);
+                    RoadsOfTheRim.DebugLog("Found an ISR2G");
                 }
             }
             widget.AddSection("RoadsOfTheRim_RoadEquipment".Translate(), source);
@@ -369,7 +370,10 @@ namespace RoadsOfTheRim
         [HarmonyPostfix]
         public static void Postfix(List<TransferableOneWay> transferables, ref TransferableOneWayWidget pawnsTransfer, ref TransferableOneWayWidget itemsTransfer , string thingCountTip, IgnorePawnsInventoryMode ignorePawnInventoryMass, Func<float> availableMassGetter, bool ignoreSpawnedCorpsesGearAndInventoryMass, int tile, bool playerPawnsReadOnly)
         {
+            int countBefore = transferables.Count();
             List<TransferableOneWay> modifiedTransferables = transferables.Where(x => x.Label != "ISR2G").ToList();
+            int countAfter = modifiedTransferables.Count();
+            RoadsOfTheRim.DebugLog("Item transfer widget items before = "+countBefore+", AFter = "+countAfter);
             itemsTransfer = new TransferableOneWayWidget(modifiedTransferables, null, null, thingCountTip, drawMass: true, ignorePawnInventoryMass, includePawnsMassInMassUsage: false, availableMassGetter, 0f, ignoreSpawnedCorpsesGearAndInventoryMass, tile, drawMarketValue: true, drawEquippedWeapon: false, drawNutritionEatenPerDay: false, drawItemNutrition: true, drawForagedFoodPerDay: false, drawDaysUntilRot: true);
         }
     }

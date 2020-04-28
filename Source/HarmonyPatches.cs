@@ -291,60 +291,10 @@ namespace RoadsOfTheRim
         }
     }
 
-    // Pure debug
-    /*
-    [HarmonyPatch(typeof(Dialog_FormCaravan), "AddToTransferables")]
-    public static class Patch_Dialog_FormCaravan_AddToTransferables
-    {
-        [HarmonyPostfix]
-        public static void Postfix(Thing t)
-        {
-            RoadsOfTheRim.DebugLog("Forming caravan, adding to transferable: " + t.Label);
-        }
-    }
-    */
-
-    // Pure debug
-    /*
-    [HarmonyPatch(typeof(Dialog_FormCaravan), "CalculateAndRecacheTransferables")]
-    public static class Patch_Dialog_FormCaravan_CalculateAndRecacheTransferables
-    {
-        [HarmonyPostfix]
-        public static void Postfix(Dialog_FormCaravan __instance)
-        {
-            RoadsOfTheRim.DebugLog("debugging calcualting transferables");
-            foreach (TransferableOneWay tow in __instance.transferables)
-            {
-                foreach (Thing t in tow.things)
-                {
-                    RoadsOfTheRim.DebugLog("Transferable "+tow.Label+", AnyThing "+tow.AnyThing.Label+", Thing "+t.Label);
-                }
-            }
-        }
-    }
-    */
-
-    // Pure debug
-    /*
-    [HarmonyPatch(typeof(TabDrawer), "DrawTabs" , new Type[] { typeof(Rect) , typeof(List<TabRecord>) , typeof(float) })]
-    public static class Patch_TabDrawer_DrawTabs
-    {
-        [HarmonyPostfix]
-        public static void Postfix(Rect baseRect , List<TabRecord> tabs)
-        {
-            List<TabRecord> list = tabs.ListFullCopy();
-            foreach (TabRecord item in list)
-            {
-                RoadsOfTheRim.DebugLog("Forming caravan, adding to transferable: " + item.label + "Action = " +item.clickedAction.ToString());
-            }
-        }
-    }
-    */
-
+    [HarmonyPatch(typeof(CaravanUIUtility), "AddPawnsSections")]
     /*
     * Adds a Road equipment section to pawns & animals
     */
-    [HarmonyPatch(typeof(CaravanUIUtility), "AddPawnsSections")]
     public static class Patch_CaravanUIUtility_AddPawnsSections
     {
         [HarmonyPostfix]
@@ -364,7 +314,12 @@ namespace RoadsOfTheRim
         }
     }
 
+
     [HarmonyPatch(typeof(CaravanUIUtility), "CreateCaravanTransferableWidgets")]
+
+    /*
+     * Remove Road equipment (TO DO : only ISR2G at the moment) from Item tab when forming caravans
+     */
     public static class Patch_CaravanUIUtility_CreateCaravanTransferableWidgets
     {
         [HarmonyPostfix]

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>/Defs/RoadDef</xpath>
+        <value>
+            <li Class="RoadsOfTheRim.DefModExtension_RotR_RoadDef">
+                <built>false</built>
+            </li>
+        </value>
+    </Operation>
+    <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/RoadDef[defName = "DirtPath"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <value>
+            <costs>
+                <Work>600</Work>
+            </costs>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/RoadDef[defName = "DirtRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <value>
+            <biomeModifier>0.25</biomeModifier>
+            <hillinessModifier>0.2</hillinessModifier>
+            <winterModifier>0</winterModifier>
+            <costs>
+                <Work>1200</Work>
+                <Wood>120</Wood>
+            </costs>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/RoadDef[defName = "StoneRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <value>
+            <biomeModifier>0.75</biomeModifier>
+            <hillinessModifier>0.4</hillinessModifier>
+            <winterModifier>0</winterModifier>
+            <costs>
+                <Work>3600</Work>
+                <Wood>240</Wood>
+                <Stone>1800</Stone>
+                <Steel>300</Steel>
+            </costs>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/RoadDef[defName = "AncientAsphaltRoad"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <value>
+            <biomeModifier>1</biomeModifier>
+            <hillinessModifier>0.6</hillinessModifier>
+            <winterModifier>0.2</winterModifier>
+            <costs>
+                <Work>5400</Work>
+                <Stone>3600</Stone>
+                <Steel>600</Steel>
+                <Chemfuel>300</Chemfuel>
+            </costs>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/RoadDef[defName = "AncientAsphaltHighway"]/modExtensions/li[@Class = "RoadsOfTheRim.DefModExtension_RotR_RoadDef"]</xpath>
+        <value>
+            <biomeModifier>1</biomeModifier>
+            <hillinessModifier>0.6</hillinessModifier>
+            <winterModifier>0.2</winterModifier>
+            <costs>
+                <Work>5400</Work>
+                <Stone>3600</Stone>
+                <Steel>600</Steel>
+                <Chemfuel>300</Chemfuel>
+            </costs>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationReplace">
+		<xpath>/Defs/RoadDef[defName = "DirtPath"]/movementCostMultiplier</xpath>
+		<value>
+			<movementCostMultiplier>0.75</movementCostMultiplier>
+		</value>
+	</Operation>
+
+	<Operation Class="PatchOperationReplace">
+		<xpath>/Defs/RoadDef[defName = "DirtRoad"]/movementCostMultiplier</xpath>
+		<value>
+			<movementCostMultiplier>0.6</movementCostMultiplier>
+		</value>
+	</Operation>
+
+    <Operation Class="PatchOperationReplace">
+        <xpath>/Defs/RoadDef[defName = "StoneRoad"]/movementCostMultiplier</xpath>
+        <value>
+            <movementCostMultiplier>0.5</movementCostMultiplier>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationReplace">
+        <xpath>/Defs/RoadDef[defName = "AncientAsphaltRoad"]/movementCostMultiplier</xpath>
+        <value>
+            <movementCostMultiplier>0.4</movementCostMultiplier>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationReplace">
+        <xpath>/Defs/RoadDef[defName = "AncientAsphaltHighway"]/movementCostMultiplier</xpath>
+        <value>
+            <movementCostMultiplier>0.4</movementCostMultiplier>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationConditional">
+        <xpath>/Defs/WorldObjectDef[defName="Caravan"]/comps</xpath>
+        <nomatch Class="PatchOperationAdd">
+            <xpath>/Defs/WorldObjectDef[defName="Caravan"]</xpath>
+            <value>
+                <comps>
+                    <li>
+                        <compClass>RoadsOfTheRim.WorldObjectComp_Caravan</compClass>
+                    </li>
+                </comps>
+            </value>
+        </nomatch>
+        <match Class="PatchOperationAdd">
+            <xpath>/Defs/WorldObjectDef[defName="Caravan"]/comps</xpath>
+            <value>
+                <li>
+                    <compClass>RoadsOfTheRim.WorldObjectComp_Caravan</compClass>
+                </li>
+            </value>
+        </match>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/WorldObjectDef[defName="Caravan"]/inspectorTabs</xpath>
+        <value>
+            <li>RoadsOfTheRim.WITab_Caravan_Build</li>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/MapGeneratorDef[@Name="MapCommonBase"]/genSteps</xpath>
+        <value>
+            <li>RotR_CleanBuiltRoads</li>
+        </value>
+    </Operation>
+    
+    <Operation Class="PatchOperationRemove">
+        <success>Always</success>
+        <xpath>/Defs/TerrainDef[@Name="WaterDeepBase"]/changeable</xpath>
+    </Operation>
+    
+    <Operation Class="PatchOperationConditional">
+        <xpath>/Defs/TerrainDef[@Name="WaterDeepBase"]/affordances</xpath>
+        <nomatch Class="PatchOperationAdd">
+            <xpath>/Defs/TerrainDef[@Name="WaterDeepBase"]</xpath>
+            <value>
+                <affordances>
+                    <li>BridgeableAny</li>
+                </affordances>
+            </value>
+        </nomatch>
+        <match Class="PatchOperationAdd">
+            <xpath>/Defs/TerrainDef[@Name="WaterDeepBase"]/affordances</xpath>
+            <value>
+                <li>BridgeableAny</li>
+            </value>
+        </match>
+    </Operation>
+
+    <Operation Class="PatchOperationReplace">
+		<xpath>/Defs/BiomeDef[defName = "Ocean"]/allowRoads</xpath>
+		<value>
+			<allowRoads>true</allowRoads>
+		</value>
+	</Operation>
+    
+    <Operation Class="PatchOperationReplace">
+		<xpath>/Defs/BiomeDef[defName = "Lake"]/allowRoads</xpath>
+		<value>
+			<allowRoads>true</allowRoads>
+		</value>
+	</Operation>
+    
+</Patch>

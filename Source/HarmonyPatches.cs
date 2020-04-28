@@ -341,6 +341,9 @@ namespace RoadsOfTheRim
     }
     */
 
+    /*
+    * Adds a Road equipment section to pawns & animals
+    */
     [HarmonyPatch(typeof(CaravanUIUtility), "AddPawnsSections")]
     public static class Patch_CaravanUIUtility_AddPawnsSections
     {
@@ -360,14 +363,14 @@ namespace RoadsOfTheRim
         }
     }
 
-    // PostFix additemstotransferable, remove ISR2G from transferables
-    [HarmonyPatch(typeof(Dialog_FormCaravan), "AddItemsToTransferables")]
-    public static class Patch_CaravanUIUtility_AddItemsToTransferables
+    [HarmonyPatch(typeof(CaravanUIUtility), "CreateCaravanTransferableWidgets")]
+    public static class Patch_CaravanUIUtility_CreateCaravanTransferableWidgets
     {
         [HarmonyPostfix]
-        public static void Postfix(ref Dialog_FormCaravan __instance)
+        public static void Postfix(List<TransferableOneWay> transferables, ref TransferableOneWayWidget pawnsTransfer, ref TransferableOneWayWidget itemsTransfer , string thingCountTip, IgnorePawnsInventoryMode ignorePawnInventoryMass, Func<float> availableMassGetter, bool ignoreSpawnedCorpsesGearAndInventoryMass, int tile, bool playerPawnsReadOnly)
         {
-            __instance.transferables = __instance.transferables.Where(x => x.Label != "ISR2G").ToList();
+            List<TransferableOneWay> modifiedTransferables = transferables.Where(x => x.Label != "ISR2G").ToList();
+            itemsTransfer = new TransferableOneWayWidget(modifiedTransferables, null, null, thingCountTip, drawMass: true, ignorePawnInventoryMass, includePawnsMassInMassUsage: false, availableMassGetter, 0f, ignoreSpawnedCorpsesGearAndInventoryMass, tile, drawMarketValue: true, drawEquippedWeapon: false, drawNutritionEatenPerDay: false, drawItemNutrition: true, drawForagedFoodPerDay: false, drawDaysUntilRot: true);
         }
     }
 }

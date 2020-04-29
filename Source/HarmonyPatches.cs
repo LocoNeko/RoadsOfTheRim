@@ -203,9 +203,9 @@ namespace RoadsOfTheRim
                     {
                         explanation.AppendLine();
                         explanation.Append(String.Format(
-                            "The road cancels {0:P0} of the biome ({3:##.###}), {1:P0} of the hills ({4:##.###}) & {2:P0} of winter movement costs",
+                            "The road cancels {0:P0} of the biome ({3:##.###}), {1:P0} of the hills ({4:##.###}) & {2:P0} of winter movement costs. Total modifier={5}",
                             BiomeModifier, HillModifier, WinterModifier,
-                            Find.WorldGrid[toTile].biome.movementDifficulty, HillinessOffset
+                            Find.WorldGrid[toTile].biome.movementDifficulty, HillinessOffset , RoadModifier
                         ));
                     }
                 }
@@ -353,7 +353,7 @@ namespace RoadsOfTheRim
             {
                 MethodBase m = stackFrame.GetMethod();
                 Type c = m.DeclaringType;
-                RoadsOfTheRim.DebugLog("class "+c.FullName+" ,method "+m.Name);
+                //RoadsOfTheRim.DebugLog("class "+c.FullName+" ,method "+m.Name);
                 if ( (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint") ||
                      ( c.FullName.Contains("RimWorld.Planet.WorldLayer_Roads") && c.FullName.Contains("Regenerate")) )
                 {

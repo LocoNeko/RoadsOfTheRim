@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System;
+using System.Diagnostics;
 using UnityEngine;
 
 namespace RoadsOfTheRim
@@ -327,18 +328,19 @@ namespace RoadsOfTheRim
     }
 
     // This was just a test : it confirmed setting WaterCovered to false allows roads on water, unfortunately all roads
-    /*
     [HarmonyPatch(typeof(Tile), "WaterCovered" , MethodType.Getter)]
     public static class Patch_Tile_WaterCovered
     {
         [HarmonyPostfix]
         public static void Postfix (ref bool __result)
         {
-            __result = false;
+            StackTrace stackTrace = new StackTrace();
+            RoadsOfTheRim.DebugLog("WaterCovered called by "+stackTrace.GetFrame(1).GetMethod().Name);
+//            __result = false;
         }
     }
-    */
 
+        /*
     [HarmonyPatch(typeof(WorldLayer_Roads))]
     [HarmonyPatch("Regenerate")]
     public static class Patch_WorldLayer_Roads_Regenerate
@@ -357,7 +359,6 @@ namespace RoadsOfTheRim
             {
                 RoadsOfTheRim.DebugLog("Transpiler code=" + codes[i].ToString());
 
-                /*
                 if (codes[i].opcode == OpCodes.Ret)
                 {
                     if (foundWaterCovered)
@@ -387,9 +388,9 @@ namespace RoadsOfTheRim
                         }
                     }
                 }
-                */
             }
             return codes.AsEnumerable();
         }
     }
+    */
 }

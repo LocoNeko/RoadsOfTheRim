@@ -339,7 +339,6 @@ namespace RoadsOfTheRim
     }
     */
 
-    /*
     [HarmonyPatch(typeof(WorldLayer_Roads))]
     [HarmonyPatch("Regenerate")]
     public static class Patch_WorldLayer_Roads_Regenerate
@@ -349,7 +348,7 @@ namespace RoadsOfTheRim
             // I need to remove :
             // IL_014f: callvirt instance bool RimWorld.Planet.Tile::get_WaterCovered()
             // IL_0154: brtrue IL_02cb
-
+            RoadsOfTheRim.DebugLog("RotR - TRANSPILING");
             bool foundWaterCovered = false;
             int startIndex = -1, endIndex = -1;
 
@@ -389,5 +388,4 @@ namespace RoadsOfTheRim
             return codes.AsEnumerable();
         }
     }
-    */
 }

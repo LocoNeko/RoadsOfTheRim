@@ -329,13 +329,17 @@ namespace RoadsOfTheRim
         public static void Postfix(List<TransferableOneWay> transferables, ref TransferableOneWayWidget pawnsTransfer, ref TransferableOneWayWidget itemsTransfer , string thingCountTip, IgnorePawnsInventoryMode ignorePawnInventoryMass, Func<float> availableMassGetter, bool ignoreSpawnedCorpsesGearAndInventoryMass, int tile, bool playerPawnsReadOnly)
         {
             int countBefore = transferables.Count();
-            List<TransferableOneWay> modifiedTransferables = transferables.Where(x => x.Label != "ISR2G").ToList();
+            List<TransferableOneWay> modifiedTransferables = transferables.Where((TransferableOneWay x) => x.ThingDef.category != ThingCategory.Pawn).ToList();
+            modifiedTransferables = modifiedTransferables.Where(x => x.Label != "ISR2G").ToList();
+            
             int countAfter = modifiedTransferables.Count();
             RoadsOfTheRim.DebugLog("Item transfer widget items before = "+countBefore+", AFter = "+countAfter);
             itemsTransfer = new TransferableOneWayWidget(modifiedTransferables, null, null, thingCountTip, drawMass: true, ignorePawnInventoryMass, includePawnsMassInMassUsage: false, availableMassGetter, 0f, ignoreSpawnedCorpsesGearAndInventoryMass, tile, drawMarketValue: true, drawEquippedWeapon: false, drawNutritionEatenPerDay: false, drawItemNutrition: true, drawForagedFoodPerDay: false, drawDaysUntilRot: true);
         }
     }
 
+    // This was just a test : it confirmed setting WaterCovered to false allows roads on water, unfortunately all roads
+    /*
     [HarmonyPatch(typeof(Tile), "WaterCovered" , MethodType.Getter)]
     public static class Patch_Tile_WaterCovered
     {
@@ -345,7 +349,9 @@ namespace RoadsOfTheRim
             __result = false;
         }
     }
+    */
 
+    /*
     [HarmonyPatch(typeof(WorldLayer_Roads))]
     [HarmonyPatch("Regenerate")]
     public static class Patch_WorldLayer_Roads_Regenerate
@@ -354,7 +360,7 @@ namespace RoadsOfTheRim
         {
             // I need to remove :
             // IL_014f: callvirt instance bool RimWorld.Planet.Tile::get_WaterCovered()
-            // IL_0154: brtrue IL_02cbIL_014f and IL_0154
+            // IL_0154: brtrue IL_02cb
 
             bool foundWaterCovered = false;
             int startIndex = -1, endIndex = -1;
@@ -395,4 +401,5 @@ namespace RoadsOfTheRim
             return codes.AsEnumerable();
         }
     }
+    */
 }

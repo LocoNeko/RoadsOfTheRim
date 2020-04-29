@@ -350,7 +350,8 @@ namespace RoadsOfTheRim
             int i = 0;
             foreach (StackFrame stackFrame in stackFrames)
             {
-                RoadsOfTheRim.DebugLog("WaterCovered call# " + i++ + " = " + stackFrame.GetMethod().Name);
+                MethodBase m = stackFrame.GetMethod();
+                RoadsOfTheRim.DebugLog("WaterCovered call# " + i++ + " Class " + m.DeclaringType.FullName + ", Method " + m.Name);
             }
         }
     }

@@ -346,7 +346,12 @@ namespace RoadsOfTheRim
         {
             __result = false;
             StackTrace stackTrace = new StackTrace();
-            RoadsOfTheRim.DebugLog("WaterCovered called by " + stackTrace.GetFrame(1).GetMethod().Name);
+            StackFrame[] stackFrames = stackTrace.GetFrames();
+            int i = 0;
+            foreach (StackFrame stackFrame in stackFrames)
+            {
+                RoadsOfTheRim.DebugLog("WaterCovered call# " + i++ + " = " + stackFrame.GetMethod().Name);
+            }
         }
     }
 

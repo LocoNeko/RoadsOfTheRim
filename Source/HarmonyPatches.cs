@@ -357,6 +357,7 @@ namespace RoadsOfTheRim
             {
                 RoadsOfTheRim.DebugLog("Transpiler code=" + codes[i].ToString());
 
+                /*
                 if (codes[i].opcode == OpCodes.Ret)
                 {
                     if (foundWaterCovered)
@@ -386,6 +387,7 @@ namespace RoadsOfTheRim
                         }
                     }
                 }
+                */
             }
             return codes.AsEnumerable();
         }

@@ -197,15 +197,15 @@ namespace RoadsOfTheRim
                         out HillModifier,
                         out WinterModifier
                     );
-
+                    float resultBefore = __result;
                     __result *= RoadModifier;
                     if (explanation != null)
                     {
                         explanation.AppendLine();
                         explanation.Append(String.Format(
-                            "The road cancels {0:P0} of the biome ({3:##.###}), {1:P0} of the hills ({4:##.###}) & {2:P0} of winter movement costs. Total modifier={5}",
+                            "The road cancels {0:P0} of the biome ({3:##.###}), {1:P0} of the hills ({4:##.###}) & {2:P0} of winter movement costs. Total modifier={5} was {6}",
                             BiomeModifier, HillModifier, WinterModifier,
-                            Find.WorldGrid[toTile].biome.movementDifficulty, HillinessOffset , RoadModifier
+                            Find.WorldGrid[toTile].biome.movementDifficulty, HillinessOffset , RoadModifier , resultBefore
                         ));
                     }
                 }

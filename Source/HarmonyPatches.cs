@@ -45,17 +45,6 @@ namespace RoadsOfTheRim
                     }
                 }
             }
-            foreach (BiomeDef aDef in DefDatabase<BiomeDef>.AllDefs)
-            {
-                RoadsOfTheRim.DebugLog("Biome " + aDef.label + " allow roads: "+aDef.allowRoads);
-            }
-            /*
-            foreach (TerrainDef t in RoadsOfTheRim.builtRoadTerrains)
-            {
-                RoadsOfTheRim.DebugLog("builtRoadTerrains - Adding : " + t);
-            }
-            RoadsOfTheRim.DebugLog("[RofR] - Roads of the Rim loaded v20191010");
-            */
         }
     }
 
@@ -350,6 +339,7 @@ namespace RoadsOfTheRim
     }
     */
 
+    /*
     [HarmonyPatch(typeof(WorldLayer_Roads))]
     [HarmonyPatch("Regenerate")]
     public static class Patch_WorldLayer_Roads_Regenerate
@@ -399,4 +389,5 @@ namespace RoadsOfTheRim
             return codes.AsEnumerable();
         }
     }
+    */
 }

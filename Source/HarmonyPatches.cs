@@ -355,6 +355,8 @@ namespace RoadsOfTheRim
             var codes = new List<CodeInstruction>(instructions);
             for (int i = 0; i < codes.Count; i++)
             {
+                RoadsOfTheRim.DebugLog("Transpiler code=" + codes[i].ToString());
+
                 if (codes[i].opcode == OpCodes.Ret)
                 {
                     if (foundWaterCovered)
@@ -370,7 +372,6 @@ namespace RoadsOfTheRim
                         startIndex = i + 1; // exclude current 'ret'
                         for (int j = startIndex; j < codes.Count; j++)
                         {
-                            RoadsOfTheRim.DebugLog("Transpiler code=" + codes[j].ToString());
 
                             if (codes[j].opcode == OpCodes.Ret)
                                 break;
@@ -389,15 +390,4 @@ namespace RoadsOfTheRim
             return codes.AsEnumerable();
         }
     }
-
-    [HarmonyPatch(typeof(WorldRenderer), "DrawWorldLayers")]
-    public static class Patch_WorldRenderer_DrawWorldLayers
-    {
-        [HarmonyPostfix]
-        public static void Postfix(WorldRenderer __instance)
-        {
-            RoadsOfTheRim.DebugLog("ROTR DEBUG - WorldRenderer.");
-        }
-    }
-
 }

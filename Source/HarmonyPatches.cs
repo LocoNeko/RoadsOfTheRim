@@ -354,7 +354,8 @@ namespace RoadsOfTheRim
                 MethodBase m = stackFrame.GetMethod();
                 Type c = m.DeclaringType;
                 RoadsOfTheRim.DebugLog("class "+c.FullName+" ,method "+m.Name);
-                if (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint")
+                if ( (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint") ||
+                     ( c.FullName.Contains("RimWorld.Planet.WorldLayer_Roads") && c.FullName.Contains("Regenerate")) )
                 {
                     RoadsOfTheRim.DebugLog("Water covered PATCHED TO FALSE");
                     __result = false;

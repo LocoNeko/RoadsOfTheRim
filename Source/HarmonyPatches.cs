@@ -250,7 +250,7 @@ namespace RoadsOfTheRim
                                 if (roadDefExtension != null && ((tile2.biome.impassable && roadDefExtension.biomeModifier > 0) || (tile2.hilliness == Hilliness.Impassable)))
                                 {
                                     __result = 12f;
-                                    RoadsOfTheRim.DebugLog(String.Format("[RotR] - Impassable Tile {0} movement difficulty patched", tile));
+                                    RoadsOfTheRim.DebugLog(String.Format("[RotR] - Impassable Tile {0} of biome {1} movement difficulty patched to 12", tile , tile2.biome.label));
                                 }
                             }
 
@@ -357,7 +357,7 @@ namespace RoadsOfTheRim
                 if ( (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint") ||
                      ( c.FullName.Contains("RimWorld.Planet.WorldLayer_Roads") && c.FullName.Contains("Regenerate")) )
                 {
-                    RoadsOfTheRim.DebugLog("Water covered PATCHED TO FALSE");
+                    //RoadsOfTheRim.DebugLog("Water covered PATCHED TO FALSE");
                     __result = false;
                     break;
                 }

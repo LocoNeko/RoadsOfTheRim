@@ -327,70 +327,15 @@ namespace RoadsOfTheRim
         }
     }
 
-    // This was just a test : it confirmed setting WaterCovered to false allows roads on water, unfortunately all roads
-    [HarmonyPatch(typeof(Tile), "WaterCovered" , MethodType.Getter)]
-    public static class Patch_Tile_WaterCovered
+    // ALl Tiles can now have roads
+    [HarmonyPatch(typeof(Tile), "Roads" , MethodType.Getter)]
+    public static class Patch_Tile_Roads
     {
         [HarmonyPostfix]
-        public static void Postfix (ref bool __result)
+        public static void Postfix(Tile __instance , ref List<Tile.RoadLink> __result)
         {
-            StackTrace stackTrace = new StackTrace();
-            RoadsOfTheRim.DebugLog("WaterCovered called by "+stackTrace.GetFrame(1).GetMethod().Name);
-//            __result = false;
+            __result = __instance.potentialRoads;
         }
     }
 
-        /*
-    [HarmonyPatch(typeof(WorldLayer_Roads))]
-    [HarmonyPatch("Regenerate")]
-    public static class Patch_WorldLayer_Roads_Regenerate
-    {
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            // I need to remove :
-            // IL_014f: callvirt instance bool RimWorld.Planet.Tile::get_WaterCovered()
-            // IL_0154: brtrue IL_02cb
-            RoadsOfTheRim.DebugLog("RotR - TRANSPILING");
-            bool foundWaterCovered = false;
-            int startIndex = -1, endIndex = -1;
-
-            var codes = new List<CodeInstruction>(instructions);
-            for (int i = 0; i < codes.Count; i++)
-            {
-                RoadsOfTheRim.DebugLog("Transpiler code=" + codes[i].ToString());
-
-                if (codes[i].opcode == OpCodes.Ret)
-                {
-                    if (foundWaterCovered)
-                    {
-                        //Log.Error("END " + i);
-                        endIndex = i; // include current 'ret'
-                        break;
-                    }
-                    else
-                    {
-                        //Log.Error("START " + (i + 1));
-
-                        startIndex = i + 1; // exclude current 'ret'
-                        for (int j = startIndex; j < codes.Count; j++)
-                        {
-
-                            if (codes[j].opcode == OpCodes.Ret)
-                                break;
-                            var strOperand = codes[j].operand as String;
-                            
-                            if (strOperand == "get_WaterCovered")
-                            {
-                                foundWaterCovered = true;
-                                RoadsOfTheRim.DebugLog("Transpiler found Water Covered");
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            return codes.AsEnumerable();
-        }
-    }
-    */
 }

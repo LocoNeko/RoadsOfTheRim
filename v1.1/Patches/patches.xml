@@ -168,19 +168,5 @@
             </value>
         </match>
     </Operation>
-
-    <Operation Class="PatchOperationReplace">
-		<xpath>/Defs/BiomeDef[defName = "Ocean"]/allowRoads</xpath>
-		<value>
-			<allowRoads>true</allowRoads>
-		</value>
-	</Operation>
-    
-    <Operation Class="PatchOperationReplace">
-		<xpath>/Defs/BiomeDef[defName = "Lake"]/allowRoads</xpath>
-		<value>
-			<allowRoads>true</allowRoads>
-		</value>
-	</Operation>
     
 </Patch>

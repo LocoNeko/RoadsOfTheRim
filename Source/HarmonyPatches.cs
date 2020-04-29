@@ -327,7 +327,7 @@ namespace RoadsOfTheRim
         }
     }
 
-    // ALl Tiles can now have roads
+    // All Tiles can now have roads
     [HarmonyPatch(typeof(Tile), "Roads" , MethodType.Getter)]
     public static class Patch_Tile_Roads
     {
@@ -335,6 +335,18 @@ namespace RoadsOfTheRim
         public static void Postfix(Tile __instance , ref List<Tile.RoadLink> __result)
         {
             __result = __instance.potentialRoads;
+        }
+    }
+
+    [HarmonyPatch(typeof(Tile), "WaterCovered", MethodType.Getter)]
+    public static class Patch_Tile_WaterCovered
+    {
+        [HarmonyPostfix]
+        public static void Postfix(ref bool __result)
+        {
+            __result = false;
+            StackTrace stackTrace = new StackTrace();
+            RoadsOfTheRim.DebugLog("WaterCovered called by " + stackTrace.GetFrame(1).GetMethod().Name);
         }
     }
 

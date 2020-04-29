@@ -370,10 +370,11 @@ namespace RoadsOfTheRim
                         startIndex = i + 1; // exclude current 'ret'
                         for (int j = startIndex; j < codes.Count; j++)
                         {
+                            RoadsOfTheRim.DebugLog("Transpiler code=" + codes[j].ToString());
+
                             if (codes[j].opcode == OpCodes.Ret)
                                 break;
                             var strOperand = codes[j].operand as String;
-                            RoadsOfTheRim.DebugLog("Transpiler code="+ codes[j].ToString());
                             
                             if (strOperand == "get_WaterCovered")
                             {

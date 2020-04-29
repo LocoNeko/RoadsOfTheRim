@@ -338,20 +338,26 @@ namespace RoadsOfTheRim
         }
     }
 
+    /*
+     * WaterCovered returns false whenever called from RimWorld.Planet.WorldLayer_Paths.AddPathEndpoint(), to allow roads to be shown in water
+     */
     [HarmonyPatch(typeof(Tile), "WaterCovered", MethodType.Getter)]
     public static class Patch_Tile_WaterCovered
     {
         [HarmonyPostfix]
         public static void Postfix(ref bool __result)
         {
-            __result = false;
             StackTrace stackTrace = new StackTrace();
             StackFrame[] stackFrames = stackTrace.GetFrames();
-            int i = 0;
             foreach (StackFrame stackFrame in stackFrames)
             {
                 MethodBase m = stackFrame.GetMethod();
-                RoadsOfTheRim.DebugLog("WaterCovered call# " + i++ + " Class " + m.DeclaringType.FullName + ", Method " + m.Name);
+                Type c = m.DeclaringType;
+                if (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint")
+                {
+                    __result = false;
+                    break;
+                }
             }
         }
     }

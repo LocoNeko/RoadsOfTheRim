@@ -388,4 +388,15 @@ namespace RoadsOfTheRim
             return codes.AsEnumerable();
         }
     }
+
+    [HarmonyPatch(typeof(WorldRenderer), "DrawWorldLayers")]
+    public static class Patch_WorldRenderer_DrawWorldLayers
+    {
+        [HarmonyPostfix]
+        public static void Postfix(WorldRenderer __instance)
+        {
+            RoadsOfTheRim.DebugLog("ROTR DEBUG - WorldRenderer.");
+        }
+    }
+
 }

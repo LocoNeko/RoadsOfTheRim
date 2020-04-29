@@ -353,8 +353,10 @@ namespace RoadsOfTheRim
             {
                 MethodBase m = stackFrame.GetMethod();
                 Type c = m.DeclaringType;
+                RoadsOfTheRim.DebugLog("class "+c.FullName+" ,method "+m.Name);
                 if (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint")
                 {
+                    RoadsOfTheRim.DebugLog("Water covered PATCHED TO FALSE");
                     __result = false;
                     break;
                 }

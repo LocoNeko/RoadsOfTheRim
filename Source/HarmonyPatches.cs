@@ -373,11 +373,8 @@ namespace RoadsOfTheRim
            }
        }
        */
-        [HarmonyPrefix]
-        public static void Prefix()
-        {
-        }
-        public static void TraceMessage([CallerMemberName] string memberName = "")
+        [HarmonyPostfix]
+        public static void Postfix([CallerMemberName] string memberName = "")
         {
             RoadsOfTheRim.DebugLog("Water covered Prefix - Call member name = " + memberName);
         }

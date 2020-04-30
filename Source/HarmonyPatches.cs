@@ -166,37 +166,37 @@ namespace RoadsOfTheRim
         private static readonly MethodInfo HillinessMovementDifficultyOffset = AccessTools.Method(typeof(WorldPathGrid), "HillinessMovementDifficultyOffset", new Type[] { typeof(Hilliness) });
 
         [HarmonyPostfix]
-        public static void Postifx(ref float __result, WorldGrid __instance, ref int fromTile, ref int toTileint, ref StringBuilder explanation)
+        public static void Postifx(ref float __result, WorldGrid __instance, ref int fromTile, ref int toTile, ref StringBuilder explanation)
         {
             List<Tile.RoadLink> roads = __instance.tiles[fromTile].Roads;
             if (roads == null)
             {
                 return;
             }
-            if (toTileint == -1)
+            if (toTile == -1)
             {
-                toTileint = __instance.FindMostReasonableAdjacentTileForDisplayedPathCost(fromTile);
+                toTile = __instance.FindMostReasonableAdjacentTileForDisplayedPathCost(fromTile);
             }
             float BiomeModifier = 0;
             float HillModifier = 0;
             float WinterModifier = 0;
             for (int i = 0; i < roads.Count; i++)
             {
-                if (roads[i].neighbor == toTileint)
+                if (roads[i].neighbor == toTile)
                 {
-                    Tile ToTile = Find.WorldGrid[toTileint];
-                    float HillinessOffset = (float)HillinessMovementDifficultyOffset.Invoke(null, new object[] { ToTile.hilliness });
+                    Tile ToTileAsTile = Find.WorldGrid[toTile];
+                    float HillinessOffset = (float)HillinessMovementDifficultyOffset.Invoke(null, new object[] { ToTileAsTile.hilliness });
                     if (HillinessOffset > 12f) { HillinessOffset = 12f; }
 
                     // If the tile has an impassable biome, set the biomemovement difficulty to 12, as per the patch for CalculatedMovementDifficultyAt
-                    float biomeMovementDifficulty = (ToTile.biome.impassable ? 12f : ToTile.biome.movementDifficulty) ;
+                    float biomeMovementDifficulty = (ToTileAsTile.biome.impassable ? 12f : ToTileAsTile.biome.movementDifficulty) ;
 
                     // Calculate biome, Hillines & winter modifiers, update explanation &  multiply result by biome modifier
                     float RoadModifier = RoadsOfTheRim.calculateRoadModifier(
                         roads[i].road,
                         biomeMovementDifficulty,
                         HillinessOffset,
-                        WorldPathGrid.GetCurrentWinterMovementDifficultyOffset(toTileint),
+                        WorldPathGrid.GetCurrentWinterMovementDifficultyOffset(toTile),
                         out BiomeModifier,
                         out HillModifier,
                         out WinterModifier

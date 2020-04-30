@@ -416,7 +416,7 @@ namespace RoadsOfTheRim
                 RoadsOfTheRim.DebugLog("Transpiler operand =" + codes[i].operand.ToStringSafe());
                 if (codes[i].operand is float && (float)codes[i].operand == 0.5)
                 {
-                    //codes[i].operand = 1;
+                    codes[i].operand = 1;
                     RoadsOfTheRim.DebugLog("Transpiler found 0.5 in AddPathEndPoint");
                     break;
                 }

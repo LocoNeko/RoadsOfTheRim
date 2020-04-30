@@ -357,7 +357,9 @@ namespace RoadsOfTheRim
 
     /*
      * WaterCovered returns false whenever called from RimWorld.Planet.WorldLayer_Paths.AddPathEndpoint(), to allow roads to be shown in water
+     * Turns out this is too costly
      */
+     /*
     [HarmonyPatch(typeof(Tile), "WaterCovered", MethodType.Getter)]
     public static class Patch_Tile_WaterCovered
     {
@@ -381,5 +383,47 @@ namespace RoadsOfTheRim
             }
         }
     }
+    */
+
+    /*
+     * The idea is to call this on WorldLayer regeneratenow
+     * public IEnumerable<Whatever> MyPatchedGenerator() 
+{
+  foreach (var orig in RimWorld.Whatever.Original())
+  {
+    if (someCondition) 
+    {
+      yield return SomethingElse();
+      continue;
+    }
+    yield return orig; // return original most of the times
+  }
+}
+     */
+
+    [HarmonyPatch(typeof(WorldLayer_Paths))]
+    [HarmonyPatch("AddPathEndpoint")]
+    public static class Patch_WorldLayer_Paths_AddPathEndpoint
+    {
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            RoadsOfTheRim.DebugLog("RotR - TRANSPILING");
+            // Must change IL_0065: brtrue.s IL_006e to Noop
+
+            var codes = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < codes.Count; i++)
+            {
+                RoadsOfTheRim.DebugLog("Transpiler operand =" + codes[i].operand.ToString());
+                if (codes[i].operand as float? == 0.5)
+                {
+                    codes[i].operand = 1;
+                    RoadsOfTheRim.DebugLog("Transpiler found 0.5 in AddPathEndPoint");
+                    break;
+                }
+            }
+            return codes.AsEnumerable();
+        }
+    }
+
 
 }

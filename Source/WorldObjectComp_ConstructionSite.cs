@@ -338,12 +338,10 @@ namespace RoadsOfTheRim
             toTile.potentialRoads.Add(new Tile.RoadLink { neighbor = fromTile_int, road = parentSite.roadDef });
             try
             {
-                /*
                 Find.World.renderer.SetDirty<WorldLayer_Roads>();
                 Find.World.renderer.SetDirty<WorldLayer_Paths>();
                 Find.WorldPathGrid.RecalculatePerceivedMovementDifficultyAt(fromTile_int);
                 Find.WorldPathGrid.RecalculatePerceivedMovementDifficultyAt(toTile_int);
-                */
             }
             catch (Exception e)
             {

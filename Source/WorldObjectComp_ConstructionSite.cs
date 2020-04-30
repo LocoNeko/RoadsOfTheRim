@@ -229,6 +229,10 @@ namespace RoadsOfTheRim
                         int thisRebate = 0;
                         // The cost modifier doesn't affect some advanced resources, as defined in static DefModExtension_RotR_RoadDef.allResourcesWithoutModifiers
                         float costModifierForThisResource = ((DefModExtension_RotR_RoadDef.allResourcesWithoutModifiers.Contains(resourceName)) ? 1 : totalCostModifier );
+                        if (resourceName== "ComponentIndustrial")
+                        {
+                            RoadsOfTheRim.DebugLog("Found a cost in Uranium. costModifierForThisResource="+ costModifierForThisResource+", uranium found in list="+ DefModExtension_RotR_RoadDef.allResourcesWithoutModifiers.Contains(resourceName));
+                        }
                         rebate.TryGetValue(resourceName, out thisRebate);
                         costs[resourceName] = (int)((roadDefExtension.GetCost(resourceName) - thisRebate) * costModifierForThisResource);
                         left[resourceName] = costs[resourceName];

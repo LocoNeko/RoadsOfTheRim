@@ -123,7 +123,7 @@ namespace RoadsOfTheRim
                 WinterModifier = roadDef.GetModExtension<DefModExtension_RotR_RoadDef>().winterModifier ;
             }
             float BiomeCoef = (1 + (BiomeMovementDifficulty-1) * (1-BiomeModifier)) / BiomeMovementDifficulty ;
-            RoadsOfTheRim.DebugLog("calculateRoadModifier: BiomeCoef=" +BiomeCoef+ ", BiomeMovementDifficulty="+ BiomeMovementDifficulty+ ", HillModifier"+ HillModifier+ ", HillinessOffset="+ HillinessOffset+ ", WinterModifier="+ WinterModifier+ ", WinterOffset="+ WinterOffset);
+            //RoadsOfTheRim.DebugLog("calculateRoadModifier: BiomeCoef=" +BiomeCoef+ ", BiomeMovementDifficulty="+ BiomeMovementDifficulty+ ", HillModifier"+ HillModifier+ ", HillinessOffset="+ HillinessOffset+ ", WinterModifier="+ WinterModifier+ ", WinterOffset="+ WinterOffset);
             return ((BiomeCoef*BiomeMovementDifficulty) + ((1-HillModifier)*HillinessOffset) + ((1-WinterModifier)*WinterOffset) ) / (BiomeMovementDifficulty + HillinessOffset + WinterOffset) ;
         }
 

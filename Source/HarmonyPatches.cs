@@ -413,10 +413,10 @@ namespace RoadsOfTheRim
             var codes = new List<CodeInstruction>(instructions);
             for (int i = 0; i < codes.Count; i++)
             {
-                RoadsOfTheRim.DebugLog("Transpiler operand =" + codes[i].operand.ToStringSafe());
+                //RoadsOfTheRim.DebugLog("Transpiler operand =" + codes[i].operand.ToStringSafe());
                 if (codes[i].operand is float && (float)codes[i].operand == 0.5)
                 {
-                    codes[i].operand = 1;
+                    codes[i] = new CodeInstruction(OpCodes.Ldc_R4, 0.5);
                     RoadsOfTheRim.DebugLog("Transpiler found 0.5 in AddPathEndPoint");
                     break;
                 }

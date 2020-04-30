@@ -414,12 +414,14 @@ namespace RoadsOfTheRim
             for (int i = 0; i < codes.Count; i++)
             {
                 RoadsOfTheRim.DebugLog("Transpiler operand =" + codes[i].operand.ToString());
+                /*
                 if (codes[i].operand as float? == 0.5)
                 {
                     codes[i].operand = 1;
                     RoadsOfTheRim.DebugLog("Transpiler found 0.5 in AddPathEndPoint");
                     break;
                 }
+                */
             }
             return codes.AsEnumerable();
         }

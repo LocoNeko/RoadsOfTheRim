@@ -422,7 +422,7 @@ namespace RoadsOfTheRim
             }
             if (index!=-1)
             {
-                codes[index].operand = 0.5f;
+                codes[index].operand = 1f;
                 RoadsOfTheRim.DebugLog("Transpiler found 0.5 in AddPathEndPoint: "+codes[index].ToString());
             }
             return codes.AsEnumerable();

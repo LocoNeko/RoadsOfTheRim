@@ -180,6 +180,12 @@ namespace RoadsOfTheRim
             float BiomeModifier = 0;
             float HillModifier = 0;
             float WinterModifier = 0;
+            // Pure debug
+            WorldComponent_RoadBuildingState f = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState;
+            if (f.debugCost_GetRoadMovementDifficultyMultiplier++ % 1000 == 0)
+            {
+                RoadsOfTheRim.DebugLog("debugCost_GetRoadMovementDifficultyMultiplier called " + f.debugCost_CalculatedMovementDifficultyAt + " times");
+            }
 
             for (int i = 0; i < roads.Count; i++)
             {
@@ -219,7 +225,6 @@ namespace RoadsOfTheRim
         }
     }
 
-    /*
     [HarmonyPatch(typeof(WorldPathGrid), "CalculatedMovementDifficultyAt")]
     static class Patch_WorldPathGrid_CalculatedMovementDifficultyAt
     {
@@ -228,6 +233,11 @@ namespace RoadsOfTheRim
         {
             if (__result > 999f)
             {
+                WorldComponent_RoadBuildingState f = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState ;
+                if (f.debugCost_CalculatedMovementDifficultyAt++ % 1000 == 0)
+                {
+                    RoadsOfTheRim.DebugLog("CalculatedMovementDifficultyAt called "+ f.debugCost_CalculatedMovementDifficultyAt+" times");
+                }
                 try
                 {
                     if (Find.WorldGrid.InBounds(tile))
@@ -276,7 +286,6 @@ namespace RoadsOfTheRim
             }
         }
     }
-    */
 
     [HarmonyPatch(typeof(WorldTargeter), "StopTargeting")]
     public static class Patch_WorldTargeter_StopTargeting

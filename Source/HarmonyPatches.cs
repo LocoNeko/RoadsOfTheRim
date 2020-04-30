@@ -184,7 +184,7 @@ namespace RoadsOfTheRim
             WorldComponent_RoadBuildingState f = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState;
             if (f.debugCost_GetRoadMovementDifficultyMultiplier++ % 1000 == 0)
             {
-                RoadsOfTheRim.DebugLog("debugCost_GetRoadMovementDifficultyMultiplier called " + f.debugCost_CalculatedMovementDifficultyAt + " times");
+                RoadsOfTheRim.DebugLog("debugCost_GetRoadMovementDifficultyMultiplier called " + f.debugCost_GetRoadMovementDifficultyMultiplier + " times");
             }
 
             for (int i = 0; i < roads.Count; i++)

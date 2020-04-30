@@ -84,9 +84,8 @@ namespace RoadsOfTheRim
             {
                 stringBuilder.Append("RoadsOfTheRim_siteInspectString".Translate(this.GetSite().roadDef.label, string.Format("{0:0.0}", this.GetSite().roadDef.movementCostMultiplier)));
 
-                // Show total cost modifiers : TODO - MOve that to a static function in WorldObjectComp_ConstructionSite which uses it for the site alreday
                 float totalCostModifier = 0f;
-                stringBuilder.Append(this.GetSite().CostModifersDescription(ref totalCostModifier));
+                stringBuilder.Append(WorldObjectComp_ConstructionSite.CostModifersDescription(this.Tile , this.Next.Tile , ref totalCostModifier));
 
                 // Show costs
                 WorldObjectComp_ConstructionSite SiteComp = this.GetSite().GetComponent<WorldObjectComp_ConstructionSite>();

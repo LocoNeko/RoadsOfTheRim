@@ -131,28 +131,6 @@ namespace RoadsOfTheRim
             return result.ToString();
         }
 
-        /* return a string describing modifiers to road costs building, and sets totalCostModifer */
-        public string CostModifersDescription(ref float totalCostModifier)
-        {
-            StringBuilder result = new StringBuilder();
-            RoadsOfTheRimSettings settings = LoadedModManager.GetMod<RoadsOfTheRim>().GetSettings<RoadsOfTheRimSettings>();
-            // Show total cost modifiers
-            float elevationModifier = 0f;
-            float hillinessModifier = 0f;
-            float swampinessModifier = 0f;
-            float bridgeModifier = 0f;
-            WorldObjectComp_ConstructionSite.GetCostsModifiers(this.Tile, this.GetNextLeg().Tile, ref elevationModifier, ref hillinessModifier, ref swampinessModifier, ref bridgeModifier);
-            result.Append("RoadsOfTheRim_ConstructionSiteDescription_CostModifiers".Translate(
-                String.Format("{0:P0}", elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier),
-                String.Format("{0:P0}", elevationModifier),
-                String.Format("{0:P0}", hillinessModifier),
-                String.Format("{0:P0}", swampinessModifier),
-                String.Format("{0:P0}", bridgeModifier)
-            ));
-            totalCostModifier = (1 + elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier) * ((float)settings.BaseEffort / 10);
-            return result.ToString();
-        }
-
         public List<SettlementInfo> neighbouringSettlements()
         {
             if (this.Tile!=-1)

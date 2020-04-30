@@ -152,11 +152,34 @@ namespace RoadsOfTheRim
             }
         }
 
+        /* return a string describing modifiers to road costs building between two tiles, and sets totalCostModifer */
+        public static string CostModifersDescription(int fromTile_int , int toTile_int , ref float totalCostModifier)
+        {
+            StringBuilder result = new StringBuilder();
+            RoadsOfTheRimSettings settings = LoadedModManager.GetMod<RoadsOfTheRim>().GetSettings<RoadsOfTheRimSettings>();
+            // Show total cost modifiers
+            float elevationModifier = 0f;
+            float hillinessModifier = 0f;
+            float swampinessModifier = 0f;
+            float bridgeModifier = 0f;
+            WorldObjectComp_ConstructionSite.GetCostsModifiers(fromTile_int, toTile_int, ref elevationModifier, ref hillinessModifier, ref swampinessModifier, ref bridgeModifier);
+            result.Append("RoadsOfTheRim_ConstructionSiteDescription_CostModifiers".Translate(
+                String.Format("{0:P0}", elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier),
+                String.Format("{0:P0}", elevationModifier),
+                String.Format("{0:P0}", hillinessModifier),
+                String.Format("{0:P0}", swampinessModifier),
+                String.Format("{0:P0}", bridgeModifier)
+            ));
+            totalCostModifier = (1 + elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier) * ((float)settings.BaseEffort / 10);
+            return result.ToString();
+        }
+
+
         /*
          * Faction help must be handled here, since it's independent of whether or not a caravan is here.
          * Make it with a delay of 1/50 s compared to the CaravanComp so both functions end up playing nicely along each other
          * Don't work at night !
-         */       
+         */
         public override void CompTick()
         {
             try
@@ -384,7 +407,7 @@ namespace RoadsOfTheRim
 
             // Show total cost modifiers
             float totalCostModifier = 0f;
-            stringBuilder.Append(parentSite.CostModifersDescription(ref totalCostModifier));
+            stringBuilder.Append(WorldObjectComp_ConstructionSite.CostModifersDescription(parentSite.Tile , parentSite.GetNextLeg().Tile , ref totalCostModifier));
 
             List<Caravan> AllCaravansHere = new List<Caravan>() ;
             Find.WorldObjects.GetPlayerControlledCaravansAt(parentSite.Tile , AllCaravansHere) ;

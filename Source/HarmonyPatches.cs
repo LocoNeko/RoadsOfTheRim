@@ -212,6 +212,7 @@ namespace RoadsOfTheRim
                             biomeMovementDifficulty, HillinessOffset , RoadModifier , resultBefore
                         ));
                     }
+                    return;
                 }
             }
         }

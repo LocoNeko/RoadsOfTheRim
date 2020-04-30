@@ -196,7 +196,7 @@ namespace RoadsOfTheRim
                     if (HillinessOffset > 12f) { HillinessOffset = 12f; }
 
                     // If the tile has an impassable biome, set the biomemovement difficulty to 12, as per the patch for CalculatedMovementDifficultyAt
-                    float biomeMovementDifficulty = (ToTileAsTile.biome.impassable ? 12f : ToTileAsTile.biome.movementDifficulty) ;
+                    float biomeMovementDifficulty = (ToTileAsTile.biome.impassable ? 12f : ToTileAsTile.biome.movementDifficulty);
 
                     // Calculate biome, Hillines & winter modifiers, update explanation &  multiply result by biome modifier
                     float RoadModifier = RoadsOfTheRim.calculateRoadModifier(
@@ -216,7 +216,7 @@ namespace RoadsOfTheRim
                         explanation.Append(String.Format(
                             "The road cancels {0:P0} of the biome ({3:##.###}), {1:P0} of the hills ({4:##.###}) & {2:P0} of winter movement costs. Total modifier={5} applied to {6}",
                             BiomeModifier, HillModifier, WinterModifier,
-                            biomeMovementDifficulty, HillinessOffset , RoadModifier , resultBefore
+                            biomeMovementDifficulty, HillinessOffset, RoadModifier, resultBefore
                         ));
                     }
                     return;
@@ -233,10 +233,10 @@ namespace RoadsOfTheRim
         {
             if (__result > 999f)
             {
-                WorldComponent_RoadBuildingState f = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState ;
+                WorldComponent_RoadBuildingState f = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState;
                 if (f.debugCost_CalculatedMovementDifficultyAt++ % 1000 == 0)
                 {
-                    RoadsOfTheRim.DebugLog("CalculatedMovementDifficultyAt called "+ f.debugCost_CalculatedMovementDifficultyAt+" times");
+                    RoadsOfTheRim.DebugLog("CalculatedMovementDifficultyAt called " + f.debugCost_CalculatedMovementDifficultyAt + " times");
                 }
                 try
                 {
@@ -333,23 +333,23 @@ namespace RoadsOfTheRim
     public static class Patch_CaravanUIUtility_CreateCaravanTransferableWidgets
     {
         [HarmonyPostfix]
-        public static void Postfix(List<TransferableOneWay> transferables, ref TransferableOneWayWidget pawnsTransfer, ref TransferableOneWayWidget itemsTransfer , string thingCountTip, IgnorePawnsInventoryMode ignorePawnInventoryMass, Func<float> availableMassGetter, bool ignoreSpawnedCorpsesGearAndInventoryMass, int tile, bool playerPawnsReadOnly)
+        public static void Postfix(List<TransferableOneWay> transferables, ref TransferableOneWayWidget pawnsTransfer, ref TransferableOneWayWidget itemsTransfer, string thingCountTip, IgnorePawnsInventoryMode ignorePawnInventoryMass, Func<float> availableMassGetter, bool ignoreSpawnedCorpsesGearAndInventoryMass, int tile, bool playerPawnsReadOnly)
         {
             List<TransferableOneWay> modifiedTransferables = transferables.Where((TransferableOneWay x) => x.ThingDef.category != ThingCategory.Pawn).ToList();
             int countBefore = transferables.Count();
             modifiedTransferables = modifiedTransferables.Where(x => x.Label != "ISR2G").ToList();
             int countAfter = modifiedTransferables.Count();
-            RoadsOfTheRim.DebugLog("Item transfer widget items before = "+countBefore+", AFter = "+countAfter);
+            RoadsOfTheRim.DebugLog("Item transfer widget items before = " + countBefore + ", AFter = " + countAfter);
             itemsTransfer = new TransferableOneWayWidget(modifiedTransferables, null, null, thingCountTip, drawMass: true, ignorePawnInventoryMass, includePawnsMassInMassUsage: false, availableMassGetter, 0f, ignoreSpawnedCorpsesGearAndInventoryMass, tile, drawMarketValue: true, drawEquippedWeapon: false, drawNutritionEatenPerDay: false, drawItemNutrition: true, drawForagedFoodPerDay: false, drawDaysUntilRot: true);
         }
     }
 
     // All Tiles can now have roads
-    [HarmonyPatch(typeof(Tile), "Roads" , MethodType.Getter)]
+    [HarmonyPatch(typeof(Tile), "Roads", MethodType.Getter)]
     public static class Patch_Tile_Roads
     {
         [HarmonyPostfix]
-        public static void Postfix(Tile __instance , ref List<Tile.RoadLink> __result)
+        public static void Postfix(Tile __instance, ref List<Tile.RoadLink> __result)
         {
             __result = __instance.potentialRoads;
         }
@@ -359,31 +359,31 @@ namespace RoadsOfTheRim
      * WaterCovered returns false whenever called from RimWorld.Planet.WorldLayer_Paths.AddPathEndpoint(), to allow roads to be shown in water
      * Turns out this is too costly
      */
-     /*
-    [HarmonyPatch(typeof(Tile), "WaterCovered", MethodType.Getter)]
-    public static class Patch_Tile_WaterCovered
-    {
-        [HarmonyPostfix]
-        public static void Postfix(ref bool __result)
-        {
-            StackTrace stackTrace = new StackTrace();
-            StackFrame[] stackFrames = stackTrace.GetFrames();
-            foreach (StackFrame stackFrame in stackFrames)
-            {
-                MethodBase m = stackFrame.GetMethod();
-                Type c = m.DeclaringType;
-                //RoadsOfTheRim.DebugLog("class "+c.FullName+" ,method "+m.Name);
-                if ( (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint") ||
-                     ( c.FullName.Contains("RimWorld.Planet.WorldLayer_Roads") && c.FullName.Contains("Regenerate")) )
-                {
-                    //RoadsOfTheRim.DebugLog("Water covered PATCHED TO FALSE");
-                    __result = false;
-                    break;
-                }
-            }
-        }
-    }
-    */
+    /*
+   [HarmonyPatch(typeof(Tile), "WaterCovered", MethodType.Getter)]
+   public static class Patch_Tile_WaterCovered
+   {
+       [HarmonyPostfix]
+       public static void Postfix(ref bool __result)
+       {
+           StackTrace stackTrace = new StackTrace();
+           StackFrame[] stackFrames = stackTrace.GetFrames();
+           foreach (StackFrame stackFrame in stackFrames)
+           {
+               MethodBase m = stackFrame.GetMethod();
+               Type c = m.DeclaringType;
+               //RoadsOfTheRim.DebugLog("class "+c.FullName+" ,method "+m.Name);
+               if ( (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint") ||
+                    ( c.FullName.Contains("RimWorld.Planet.WorldLayer_Roads") && c.FullName.Contains("Regenerate")) )
+               {
+                   //RoadsOfTheRim.DebugLog("Water covered PATCHED TO FALSE");
+                   __result = false;
+                   break;
+               }
+           }
+       }
+   }
+   */
 
     /*
      * The idea is to call this on WorldLayer regeneratenow
@@ -401,6 +401,7 @@ namespace RoadsOfTheRim
 }
      */
 
+    // When WorldLayer_Paths.AddPathEndPoint calls WaterCovered, it should return 1, not 0.5
     [HarmonyPatch(typeof(WorldLayer_Paths))]
     [HarmonyPatch("AddPathEndpoint")]
     public static class Patch_WorldLayer_Paths_AddPathEndpoint
@@ -420,14 +421,27 @@ namespace RoadsOfTheRim
                     break;
                 }
             }
-            if (index!=-1)
+            if (index != -1)
             {
                 codes[index].operand = 1f;
-                RoadsOfTheRim.DebugLog("Transpiler found 0.5 in AddPathEndPoint: "+codes[index].ToString());
+                RoadsOfTheRim.DebugLog("Transpiler found 0.5 in AddPathEndPoint: " + codes[index].ToString());
             }
             return codes.AsEnumerable();
         }
     }
 
-
+    [HarmonyPatch(typeof(WorldLayer_Roads))]
+    [HarmonyPatch("Regenerate")]
+    public static class Patch_WorldLayer_Roads_Regenerate
+    {
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var codes = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < codes.Count; i++)
+            {
+                RoadsOfTheRim.DebugLog("WorldLayer_Roads.Regenerate Transpiler code " + codes[i].ToString());
+            }
+            return instructions;
+        }
+    }
 }

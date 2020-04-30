@@ -229,10 +229,6 @@ namespace RoadsOfTheRim
                         int thisRebate = 0;
                         // The cost modifier doesn't affect some advanced resources, as defined in static DefModExtension_RotR_RoadDef.allResourcesWithoutModifiers
                         float costModifierForThisResource = ((DefModExtension_RotR_RoadDef.allResourcesWithoutModifiers.Contains(resourceName)) ? 1 : totalCostModifier );
-                        if (resourceName== "ComponentIndustrial")
-                        {
-                            RoadsOfTheRim.DebugLog("Found a cost in Uranium. costModifierForThisResource="+ costModifierForThisResource+", uranium found in list="+ DefModExtension_RotR_RoadDef.allResourcesWithoutModifiers.Contains(resourceName));
-                        }
                         rebate.TryGetValue(resourceName, out thisRebate);
                         costs[resourceName] = (int)((roadDefExtension.GetCost(resourceName) - thisRebate) * costModifierForThisResource);
                         left[resourceName] = costs[resourceName];
@@ -385,17 +381,10 @@ namespace RoadsOfTheRim
                     stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_HelpStartsWhen".Translate(String.Format("{0:0.00}", (float)(parentSite.helpFromTick - Find.TickManager.TicksGame) / (float)GenDate.TicksPerDay)));
                 }
             }
-            // Show total cost modifiers
-            float elevationModifier = 0f;
-            float hillinessModifier = 0f;
-            float swampinessModifier = 0f;
-            float bridgeModifier = 0f;
-            GetCostsModifiers(parentSite.Tile , parentSite.GetNextLeg().Tile , ref elevationModifier , ref hillinessModifier , ref swampinessModifier , ref bridgeModifier) ;
-            stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_CostModifiers".Translate(
-                String.Format("{0:P0}",elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier) ,
-                String.Format("{0:P0}",elevationModifier) , String.Format("{0:P0}",hillinessModifier) , String.Format("{0:P0}",swampinessModifier) , String.Format("{0:P0}",bridgeModifier)
-            )) ;
 
+            // Show total cost modifiers
+            float totalCostModifier = 0f;
+            stringBuilder.Append(parentSite.CostModifersDescription(ref totalCostModifier));
 
             List<Caravan> AllCaravansHere = new List<Caravan>() ;
             Find.WorldObjects.GetPlayerControlledCaravansAt(parentSite.Tile , AllCaravansHere) ;

@@ -413,7 +413,7 @@ namespace RoadsOfTheRim
             var codes = new List<CodeInstruction>(instructions);
             for (int i = 0; i < codes.Count; i++)
             {
-                RoadsOfTheRim.DebugLog("Transpiler operand =" + codes[i].operand.ToString());
+                RoadsOfTheRim.DebugLog("Transpiler operand =" + codes[i].operand.ToStringSafe());
                 /*
                 if (codes[i].operand as float? == 0.5)
                 {

@@ -352,96 +352,99 @@ namespace RoadsOfTheRim
    [HarmonyPatch(typeof(Tile), "WaterCovered", MethodType.Getter)]
    public static class Patch_Tile_WaterCovered
    {
-        /*
-       [HarmonyPostfix]
-       public static void Postfix(ref bool __result)
-       {
-           StackTrace stackTrace = new StackTrace();
-           StackFrame[] stackFrames = stackTrace.GetFrames();
-           foreach (StackFrame stackFrame in stackFrames)
+        [HarmonyPostfix]
+        public static void Postfix(ref bool __result)
+        {
+            StackFrame frame = new StackFrame(1);
+            string methodName = frame.GetMethod().Name;
+            string className = frame.GetMethod().DeclaringType.Name;
+            RoadsOfTheRim.DebugLog("Water covered called from " + className + " ====> " + methodName);
+        }
+            /*
+           [HarmonyPostfix]
+           public static void Postfix(ref bool __result)
            {
-               MethodBase m = stackFrame.GetMethod();
-               Type c = m.DeclaringType;
-               //RoadsOfTheRim.DebugLog("class "+c.FullName+" ,method "+m.Name);
-               if ( (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint") ||
-                    ( c.FullName.Contains("RimWorld.Planet.WorldLayer_Roads") && c.FullName.Contains("Regenerate")) )
+               StackTrace stackTrace = new StackTrace();
+               StackFrame[] stackFrames = stackTrace.GetFrames();
+               foreach (StackFrame stackFrame in stackFrames)
                {
-                   //RoadsOfTheRim.DebugLog("Water covered PATCHED TO FALSE");
-                   __result = false;
-                   break;
+                   MethodBase m = stackFrame.GetMethod();
+                   Type c = m.DeclaringType;
+                   //RoadsOfTheRim.DebugLog("class "+c.FullName+" ,method "+m.Name);
+                   if ( (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint") ||
+                        ( c.FullName.Contains("RimWorld.Planet.WorldLayer_Roads") && c.FullName.Contains("Regenerate")) )
+                   {
+                       //RoadsOfTheRim.DebugLog("Water covered PATCHED TO FALSE");
+                       __result = false;
+                       break;
+                   }
                }
+           }
+           */
+        }
+
+        // When WorldLayer_Paths.AddPathEndPoint calls WaterCovered, it should return 1, not 0.5
+        /*
+        [HarmonyPatch(typeof(WorldLayer_Paths))]
+        [HarmonyPatch("AddPathEndpoint")]
+        public static class Patch_WorldLayer_Paths_AddPathEndpoint
+        {
+            [HarmonyTranspiler]
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            {
+                RoadsOfTheRim.DebugLog("RotR - TRANSPILING");
+                // Must change IL_0065: brtrue.s IL_006e to Noop
+                int index = -1;
+                var codes = new List<CodeInstruction>(instructions);
+                for (int i = 0; i < codes.Count; i++)
+                {
+                    //RoadsOfTheRim.DebugLog("Transpiler operand =" + codes[i].operand.ToStringSafe());
+                    if (codes[i].operand is float && (float)codes[i].operand == 0.5)
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index != -1)
+                {
+                    codes[index].operand = 1f;
+                    RoadsOfTheRim.DebugLog("Transpiler found 0.5 in AddPathEndPoint: " + codes[index].ToString());
+                }
+                return codes.AsEnumerable();
+            }
+        }
+        */
+
+        /*
+         * One idea is to call this on WorldLayer regeneratenow
+         * public IEnumerable<Whatever> MyPatchedGenerator() 
+        {
+        foreach (var orig in RimWorld.Whatever.Original())
+        {
+        if (someCondition) 
+        {
+          yield return SomethingElse();
+          continue;
+        }
+        yield return orig; // return original most of the times
+        }
+        }
+         */
+        /*
+       [HarmonyPatch(typeof(WorldLayer_Roads))]
+       [HarmonyPatch("Regenerate")]
+       public static class Patch_WorldLayer_Roads_Regenerate
+       {
+           [HarmonyTranspiler]
+           static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+           {
+               var codes = new List<CodeInstruction>(instructions);
+               for (int i = 0; i < codes.Count; i++)
+               {
+                   RoadsOfTheRim.DebugLog("WorldLayer_Roads.Regenerate Transpiler code " + codes[i].ToString());
+               }
+               return instructions;
            }
        }
        */
-        [HarmonyPostfix]
-        public static void Postfix([CallerMemberName] string memberName = "")
-        {
-            RoadsOfTheRim.DebugLog("Water covered Prefix - Call member name = " + memberName);
-        }
     }
-
-    // When WorldLayer_Paths.AddPathEndPoint calls WaterCovered, it should return 1, not 0.5
-    /*
-    [HarmonyPatch(typeof(WorldLayer_Paths))]
-    [HarmonyPatch("AddPathEndpoint")]
-    public static class Patch_WorldLayer_Paths_AddPathEndpoint
-    {
-        [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            RoadsOfTheRim.DebugLog("RotR - TRANSPILING");
-            // Must change IL_0065: brtrue.s IL_006e to Noop
-            int index = -1;
-            var codes = new List<CodeInstruction>(instructions);
-            for (int i = 0; i < codes.Count; i++)
-            {
-                //RoadsOfTheRim.DebugLog("Transpiler operand =" + codes[i].operand.ToStringSafe());
-                if (codes[i].operand is float && (float)codes[i].operand == 0.5)
-                {
-                    index = i;
-                    break;
-                }
-            }
-            if (index != -1)
-            {
-                codes[index].operand = 1f;
-                RoadsOfTheRim.DebugLog("Transpiler found 0.5 in AddPathEndPoint: " + codes[index].ToString());
-            }
-            return codes.AsEnumerable();
-        }
-    }
-    */
-
-    /*
-     * One idea is to call this on WorldLayer regeneratenow
-     * public IEnumerable<Whatever> MyPatchedGenerator() 
-    {
-    foreach (var orig in RimWorld.Whatever.Original())
-    {
-    if (someCondition) 
-    {
-      yield return SomethingElse();
-      continue;
-    }
-    yield return orig; // return original most of the times
-    }
-    }
-     */
-    /*
-   [HarmonyPatch(typeof(WorldLayer_Roads))]
-   [HarmonyPatch("Regenerate")]
-   public static class Patch_WorldLayer_Roads_Regenerate
-   {
-       [HarmonyTranspiler]
-       static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-       {
-           var codes = new List<CodeInstruction>(instructions);
-           for (int i = 0; i < codes.Count; i++)
-           {
-               RoadsOfTheRim.DebugLog("WorldLayer_Roads.Regenerate Transpiler code " + codes[i].ToString());
-           }
-           return instructions;
-       }
-   }
-   */
-}

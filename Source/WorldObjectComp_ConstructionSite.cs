@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
@@ -226,12 +227,14 @@ namespace RoadsOfTheRim
                     if (roadDefExtension.GetCost(resourceName)>0)
                     {
                         int thisRebate = 0;
+                        // The cost modifier doesn't affect some advanced resources, as defined in static DefModExtension_RotR_RoadDef.allResourcesWithoutModifiers
+                        float costModifierForThisResource = ((DefModExtension_RotR_RoadDef.allResourcesWithoutModifiers.Contains(resourceName)) ? 1 : totalCostModifier );
                         rebate.TryGetValue(resourceName, out thisRebate);
-                        costs[resourceName] = (int)((roadDefExtension.GetCost(resourceName) - thisRebate) * totalCostModifier);
+                        costs[resourceName] = (int)((roadDefExtension.GetCost(resourceName) - thisRebate) * costModifierForThisResource);
                         left[resourceName] = costs[resourceName];
                         if (thisRebate>0)
                         {
-                            s.Add("RoadsOfTheRim_UpgradeRebateDetail".Translate((int)(thisRebate * totalCostModifier) , resourceName));
+                            s.Add("RoadsOfTheRim_UpgradeRebateDetail".Translate((int)(thisRebate * costModifierForThisResource) , resourceName));
                         }
                     }
                 }

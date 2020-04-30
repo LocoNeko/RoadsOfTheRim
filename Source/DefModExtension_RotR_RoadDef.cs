@@ -54,6 +54,8 @@ namespace RoadsOfTheRim
 
         public static string[] allResourcesAndWork = new string[] { "Work", "WoodLog", "Stone", "Steel", "Chemfuel" , "Plasteel" , "Uranium" , "ComponentIndustrial" , "ComponentSpacer"};
 
+        public static string[] allResourcesWithoutModifiers = new string[] { "Uranium", "ComponentIndustrial", "ComponentSpacer" };
+
         public List<RotR_cost> costs = new List<RotR_cost>() ;
 
         public string GetCosts()

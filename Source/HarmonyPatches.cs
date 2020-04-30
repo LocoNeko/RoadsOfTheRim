@@ -406,6 +406,7 @@ namespace RoadsOfTheRim
     [HarmonyPatch("AddPathEndpoint")]
     public static class Patch_WorldLayer_Paths_AddPathEndpoint
     {
+        [HarmonyTranspiler]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             RoadsOfTheRim.DebugLog("RotR - TRANSPILING");
@@ -434,6 +435,8 @@ namespace RoadsOfTheRim
     [HarmonyPatch("Regenerate")]
     public static class Patch_WorldLayer_Roads_Regenerate
     {
+        /*
+        [HarmonyTranspiler]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             var codes = new List<CodeInstruction>(instructions);
@@ -442,6 +445,12 @@ namespace RoadsOfTheRim
                 RoadsOfTheRim.DebugLog("WorldLayer_Roads.Regenerate Transpiler code " + codes[i].ToString());
             }
             return instructions;
+        }
+        */
+        [HarmonyPostfix]
+        public static void Postfix()
+        {
+            RoadsOfTheRim.DebugLog("I'm postfixing WorldLayer_Roads.Regenerate()");
         }
     }
 }

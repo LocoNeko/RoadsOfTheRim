@@ -201,24 +201,25 @@ namespace RoadsOfTheRim
                     this.workOnWakeUp = true;
                     if (CaravanCurrentState() == CaravanState.AllOwnersDowned)
                     {
-                        stoppedReason = "Everyone is down";
+                        stoppedReason = "RotR_EveryoneDown".Translate();
                     }
                     if (CaravanCurrentState() == CaravanState.AllOwnersHaveMentalBreak)
                     {
-                        stoppedReason = "Everyone is having a mental break";
+                        stoppedReason = "RotR_EveryoneCrazy".Translate();
                     }
                     if (CaravanCurrentState() == CaravanState.ImmobilizedByMass)
                     {
-                        stoppedReason = "Too heavy to move";
+                        stoppedReason = "RotR_TooHeavy".Translate();
                     }
                     if (CaravanCurrentState() == CaravanState.NightResting)
                     {
-                        stoppedReason = " resting at night. Work will resume in the morning.";
+                        stoppedReason = "RotR_RestingAtNight".Translate();
                     }
                     if (stoppedReason != "")
                     {
-                        Messages.Message("Caravan stopped working on site : " + stoppedReason, MessageTypeDefOf.RejectInput);
+                        Messages.Message("RotR_CaravanStopped".Translate(caravan.Label , site.roadDef.label) + stoppedReason, MessageTypeDefOf.RejectInput);
                     }
+
                     // This should not happen ?
                     else
                     {

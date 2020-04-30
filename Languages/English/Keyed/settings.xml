@@ -49,7 +49,12 @@
   <RoadsOfTheRim_BuildToHere>Build road to here</RoadsOfTheRim_BuildToHere>
   <RoadsOfTheRimStopWorkingOnSite>Stop</RoadsOfTheRimStopWorkingOnSite>
   <RoadsOfTheRimStopWorkingOnSiteDescription>Stop working on construction site</RoadsOfTheRimStopWorkingOnSiteDescription>
-  <RoadsOfTheRimBuildWorkOnSiteCantWork>{0} unable to build road right now</RoadsOfTheRimBuildWorkOnSiteCantWork>
+	<RotR_EveryoneDown>Everyone is down</RotR_EveryoneDown>
+	<RotR_EveryoneCrazy>Everyone is having a mental break</RotR_EveryoneCrazy>
+	<RotR_TooHeavy>Too heavy to move</RotR_TooHeavy>
+	<RotR_RestingAtNight>resting at night. Work will resume in the morning.</RotR_RestingAtNight>
+	<RotR_CaravanStopped>{0} stopped building {1} : </RotR_CaravanStopped>
+	<RoadsOfTheRimBuildWorkOnSiteCantWork>{0} unable to build road right now</RoadsOfTheRimBuildWorkOnSiteCantWork>
   <RoadsOfTheRim_BetterRoadFound>{0} found {1} while building {2} and is moving to the next leg</RoadsOfTheRim_BetterRoadFound>
   <RoadsOfTheRim_siteInspectString>Building {0} (movement difficulty {1});</RoadsOfTheRim_siteInspectString>
   <RoadsOfTheRim_siteDescription>{0} ({1} days)</RoadsOfTheRim_siteDescription>

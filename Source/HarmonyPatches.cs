@@ -409,17 +409,21 @@ namespace RoadsOfTheRim
         {
             RoadsOfTheRim.DebugLog("RotR - TRANSPILING");
             // Must change IL_0065: brtrue.s IL_006e to Noop
-
+            int index = -1;
             var codes = new List<CodeInstruction>(instructions);
             for (int i = 0; i < codes.Count; i++)
             {
                 //RoadsOfTheRim.DebugLog("Transpiler operand =" + codes[i].operand.ToStringSafe());
                 if (codes[i].operand is float && (float)codes[i].operand == 0.5)
                 {
-                    codes[i] = new CodeInstruction(OpCodes.Ldc_R4, 0.5);
-                    RoadsOfTheRim.DebugLog("Transpiler found 0.5 in AddPathEndPoint");
+                    index = i;
                     break;
                 }
+            }
+            if (index!=-1)
+            {
+                codes[index] = new CodeInstruction(OpCodes.Ldc_R4, 0.5f);
+                RoadsOfTheRim.DebugLog("Transpiler found 0.5 in AddPathEndPoint");
             }
             return codes.AsEnumerable();
         }

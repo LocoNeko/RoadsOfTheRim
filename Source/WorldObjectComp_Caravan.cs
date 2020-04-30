@@ -165,8 +165,8 @@ namespace RoadsOfTheRim
             if (Find.TickManager.TicksGame % 100 == 0)
             {
                 Caravan caravan = GetCaravan();
-                // Wake up the caravan if it was nightresting
-                if (this.workOnWakeUp && !caravan.NightResting)
+                // Wake up the caravan if it's ready to work
+                if (this.workOnWakeUp && this.CaravanCurrentState() == CaravanState.ReadyToWork)
                 {
                     this.workOnWakeUp = false;
                     this.currentlyWorkingOnSite = true;

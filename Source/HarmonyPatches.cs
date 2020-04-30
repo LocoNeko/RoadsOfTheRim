@@ -180,12 +180,6 @@ namespace RoadsOfTheRim
             float BiomeModifier = 0;
             float HillModifier = 0;
             float WinterModifier = 0;
-            // Pure debug
-            WorldComponent_RoadBuildingState f = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState;
-            if (f.debugCost_GetRoadMovementDifficultyMultiplier++ % 1000 == 0)
-            {
-                RoadsOfTheRim.DebugLog("debugCost_GetRoadMovementDifficultyMultiplier called " + f.debugCost_GetRoadMovementDifficultyMultiplier + " times");
-            }
 
             for (int i = 0; i < roads.Count; i++)
             {
@@ -233,11 +227,6 @@ namespace RoadsOfTheRim
         {
             if (__result > 999f)
             {
-                WorldComponent_RoadBuildingState f = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState;
-                if (f.debugCost_CalculatedMovementDifficultyAt++ % 1000 == 0)
-                {
-                    RoadsOfTheRim.DebugLog("CalculatedMovementDifficultyAt called " + f.debugCost_CalculatedMovementDifficultyAt + " times");
-                }
                 try
                 {
                     if (Find.WorldGrid.InBounds(tile))
@@ -385,22 +374,6 @@ namespace RoadsOfTheRim
    }
    */
 
-    /*
-     * The idea is to call this on WorldLayer regeneratenow
-     * public IEnumerable<Whatever> MyPatchedGenerator() 
-{
-  foreach (var orig in RimWorld.Whatever.Original())
-  {
-    if (someCondition) 
-    {
-      yield return SomethingElse();
-      continue;
-    }
-    yield return orig; // return original most of the times
-  }
-}
-     */
-
     // When WorldLayer_Paths.AddPathEndPoint calls WaterCovered, it should return 1, not 0.5
     [HarmonyPatch(typeof(WorldLayer_Paths))]
     [HarmonyPatch("AddPathEndpoint")]
@@ -431,11 +404,25 @@ namespace RoadsOfTheRim
         }
     }
 
+    /*
+     * One idea is to call this on WorldLayer regeneratenow
+     * public IEnumerable<Whatever> MyPatchedGenerator() 
+    {
+    foreach (var orig in RimWorld.Whatever.Original())
+    {
+    if (someCondition) 
+    {
+      yield return SomethingElse();
+      continue;
+    }
+    yield return orig; // return original most of the times
+    }
+    }
+     */
     [HarmonyPatch(typeof(WorldLayer_Roads))]
-    [HarmonyPatch("Regenerate")]
+    [HarmonyPatch("<Regenerate>d__3")]
     public static class Patch_WorldLayer_Roads_Regenerate
     {
-        /*
         [HarmonyTranspiler]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -445,12 +432,6 @@ namespace RoadsOfTheRim
                 RoadsOfTheRim.DebugLog("WorldLayer_Roads.Regenerate Transpiler code " + codes[i].ToString());
             }
             return instructions;
-        }
-        */
-        [HarmonyPostfix]
-        public static void Postfix()
-        {
-            RoadsOfTheRim.DebugLog("I'm postfixing WorldLayer_Roads.Regenerate()");
         }
     }
 }

@@ -180,6 +180,13 @@ namespace RoadsOfTheRim
             float BiomeModifier = 0;
             float HillModifier = 0;
             float WinterModifier = 0;
+            // Pure debug
+            WorldComponent_RoadBuildingState f = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState;
+            if (f.debugCost_GetRoadMovementDifficultyMultiplier++ == 1000)
+            {
+                RoadsOfTheRim.DebugLog("GetRoadMovementDifficultyMultiplier called " + f.debugCost_GetRoadMovementDifficultyMultiplier + " times");
+            }
+
             for (int i = 0; i < roads.Count; i++)
             {
                 if (roads[i].neighbor == toTile)
@@ -226,6 +233,11 @@ namespace RoadsOfTheRim
         {
             if (__result > 999f)
             {
+                WorldComponent_RoadBuildingState f = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState ;
+                if (f.debugCost_CalculatedMovementDifficultyAt++ == 1000)
+                {
+                    RoadsOfTheRim.DebugLog("CalculatedMovementDifficultyAt called "+ f.debugCost_CalculatedMovementDifficultyAt+" times");
+                }
                 try
                 {
                     if (Find.WorldGrid.InBounds(tile))

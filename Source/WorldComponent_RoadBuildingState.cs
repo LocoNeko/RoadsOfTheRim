@@ -9,10 +9,14 @@ namespace RoadsOfTheRim
     {
         private RoadConstructionSite currentlyTargeting;
         private Caravan caravan;
+        public int debugCost_GetRoadMovementDifficultyMultiplier;
+        public int debugCost_CalculatedMovementDifficultyAt;
 
         public WorldComponent_RoadBuildingState(World world) : base(world)
         {
             currentlyTargeting = null ;
+            debugCost_GetRoadMovementDifficultyMultiplier = 0;
+            debugCost_CalculatedMovementDifficultyAt = 0;
         }
 
         public RoadConstructionSite CurrentlyTargeting

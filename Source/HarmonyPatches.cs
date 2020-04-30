@@ -10,6 +10,7 @@ using System.Text;
 using System;
 using System.Diagnostics;
 using UnityEngine;
+using System.Runtime.CompilerServices;
 
 namespace RoadsOfTheRim
 {
@@ -348,10 +349,10 @@ namespace RoadsOfTheRim
      * WaterCovered returns false whenever called from RimWorld.Planet.WorldLayer_Paths.AddPathEndpoint(), to allow roads to be shown in water
      * Turns out this is too costly
      */
-    /*
    [HarmonyPatch(typeof(Tile), "WaterCovered", MethodType.Getter)]
    public static class Patch_Tile_WaterCovered
    {
+        /*
        [HarmonyPostfix]
        public static void Postfix(ref bool __result)
        {
@@ -371,10 +372,19 @@ namespace RoadsOfTheRim
                }
            }
        }
-   }
-   */
+       */
+        [HarmonyPrefix]
+        public static void Prefix()
+        {
+        }
+        public static void TraceMessage([CallerMemberName] string memberName = "")
+        {
+            RoadsOfTheRim.DebugLog("Water covered Prefix - Call member name = " + memberName);
+        }
+    }
 
     // When WorldLayer_Paths.AddPathEndPoint calls WaterCovered, it should return 1, not 0.5
+    /*
     [HarmonyPatch(typeof(WorldLayer_Paths))]
     [HarmonyPatch("AddPathEndpoint")]
     public static class Patch_WorldLayer_Paths_AddPathEndpoint
@@ -403,6 +413,7 @@ namespace RoadsOfTheRim
             return codes.AsEnumerable();
         }
     }
+    */
 
     /*
      * One idea is to call this on WorldLayer regeneratenow
@@ -419,19 +430,21 @@ namespace RoadsOfTheRim
     }
     }
      */
-    [HarmonyPatch(typeof(WorldLayer_Roads))]
-    [HarmonyPatch("<Regenerate>d__3")]
-    public static class Patch_WorldLayer_Roads_Regenerate
-    {
-        [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            var codes = new List<CodeInstruction>(instructions);
-            for (int i = 0; i < codes.Count; i++)
-            {
-                RoadsOfTheRim.DebugLog("WorldLayer_Roads.Regenerate Transpiler code " + codes[i].ToString());
-            }
-            return instructions;
-        }
-    }
+    /*
+   [HarmonyPatch(typeof(WorldLayer_Roads))]
+   [HarmonyPatch("Regenerate")]
+   public static class Patch_WorldLayer_Roads_Regenerate
+   {
+       [HarmonyTranspiler]
+       static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+       {
+           var codes = new List<CodeInstruction>(instructions);
+           for (int i = 0; i < codes.Count; i++)
+           {
+               RoadsOfTheRim.DebugLog("WorldLayer_Roads.Regenerate Transpiler code " + codes[i].ToString());
+           }
+           return instructions;
+       }
+   }
+   */
 }

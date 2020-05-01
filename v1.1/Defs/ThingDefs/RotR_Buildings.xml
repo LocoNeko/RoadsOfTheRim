@@ -1,5 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
+
+  <ThingDef>
+	<defName>RotR_NewISR2G</defName>
+	<label>New ISR2G</label>
+	<description>In Situ Road Ressources Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood and stone at the cost of 4 times the work.</description>
+	<graphicData>
+		<texPath>Buildings/ISR2G</texPath>
+		<graphicClass>Graphic_Multi</graphicClass>
+		<drawSize>(2,2)</drawSize>
+		<damageData>
+			<rect>(0.1,0.1,1.8,1.8)</rect>
+		</damageData>
+		<shadowData>
+			<volume>(1.39,0.5,1.25)</volume>
+		</shadowData>
+	</graphicData>
+    <category>RoadEquipment</category>
+    <drawGUIOverlay>true</drawGUIOverlay>
+    <altitudeLayer>Item</altitudeLayer>
+    <alwaysHaulable>true</alwaysHaulable>
+    <tickerType>Never</tickerType>
+    <equipmentType>Primary</equipmentType>
+    <useHitPoints>true</useHitPoints>
+    <pathCost>10</pathCost>
+    <selectable>true</selectable>
+	<statBases>
+		<MaxHitPoints>200</MaxHitPoints>
+		<WorkToBuild>8000</WorkToBuild>
+		<Mass>50</Mass>
+		<Flammability>1.0</Flammability>
+		<Beauty>-20</Beauty>
+	</statBases>
+    <techLevel>Industrial</techLevel>
+	<costList>
+		<Steel>180</Steel>
+		<ComponentIndustrial>10</ComponentIndustrial>
+	</costList>
+    <recipeMaker>
+		<workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+		<workSkill>Crafting</workSkill>
+		<effectWorking>Smith</effectWorking>
+		<soundWorking>Recipe_Smith</soundWorking>
+		<recipeUsers>
+			<li>TableMachining</li>
+		</recipeUsers>
+		<unfinishedThingDef>UnfinishedComponent</unfinishedThingDef>
+		<researchPrerequisite>ResearchProject_RotRISR2G</researchPrerequisite>
+		<skillRequirements>
+			<Crafting>4</Crafting>
+		</skillRequirements>
+    </recipeMaker>
+  </ThingDef>
 	
 	<ThingDef ParentName="BuildingBase">
 		<defName>RotR_ISR2G</defName>

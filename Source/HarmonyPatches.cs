@@ -343,6 +343,24 @@ namespace RoadsOfTheRim
         }
     }
 
+
+    [HarmonyPatch(typeof(Game), "LoadGame")]
+    //Remove Road equipment (TO DO : only ISR2G at the moment) from Item tab when forming caravans
+    public static class Patch_Game_LoadGame
+    {
+        [HarmonyPostfix]
+        public static void Postfix()
+        {
+            ListerThings lister = new ListerThings(ListerThingsUse.Global);
+            lister.AllThings.Find(t => t.def.defName == "RotR_ISR2G");
+            RoadsOfTheRim.DebugLog("Game loaded");
+            foreach (Thing aThing in lister.AllThings)
+            {
+                RoadsOfTheRim.DebugLog("Found ISR2G at "+aThing.Position.ToString());
+            }
+        }
+    }
+
     // When WorldLayer_Paths.AddPathEndPoint calls WaterCovered, it should return 1, not 0.5
     /*
      * NOT EVEN SURE THIS IS NECESSARY

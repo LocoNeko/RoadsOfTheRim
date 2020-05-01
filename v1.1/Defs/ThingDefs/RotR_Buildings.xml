@@ -4,7 +4,7 @@
   <ThingDef>
 	<defName>RotR_NewISR2G</defName>
 	<label>New ISR2G</label>
-	<thingClass>Building</thingClass>
+	<thingClass>ThingWithComps</thingClass>
 	<description>In Situ Road Ressources Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood and stone at the cost of 4 times the work.</description>
 	<graphicData>
 		<texPath>Buildings/ISR2G</texPath>

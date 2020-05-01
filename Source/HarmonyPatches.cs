@@ -369,15 +369,16 @@ namespace RoadsOfTheRim
         {
             StackTrace stackTrace = new StackTrace();
             StackFrame[] stackFrames = stackTrace.GetFrames();
+            int i = 0;
             foreach (StackFrame stackFrame in stackFrames)
             {
                 MethodBase m = stackFrame.GetMethod();
                 Type c = m.DeclaringType;
-                RoadsOfTheRim.DebugLog("class "+c.FullName+" ,method "+m.Name);
+                RoadsOfTheRim.DebugLog(i++ + "class "+c.Name+" ,method "+m.Name);
                 if ( (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint") ||
-                    ( c.FullName.Contains("RimWorld.Planet.WorldLayer_Roads") && c.FullName.Contains("Regenerate")) )
+                    ( c.FullName.Contains("RimWorld.Planet.WorldLayer_Roads") && c.Name.Contains("Regenerate")) )
                 {
-                    //RoadsOfTheRim.DebugLog("Water covered PATCHED TO FALSE");
+                    RoadsOfTheRim.DebugLog("Water covered PATCHED TO FALSE");
                     __result = false;
                     break;
                 }

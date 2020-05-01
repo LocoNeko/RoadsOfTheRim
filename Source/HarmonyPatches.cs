@@ -335,6 +335,7 @@ namespace RoadsOfTheRim
     }
 
     // All Tiles can now have roads
+    /*
     [HarmonyPatch(typeof(Tile), "Roads", MethodType.Getter)]
     public static class Patch_Tile_Roads
     {
@@ -344,6 +345,7 @@ namespace RoadsOfTheRim
             __result = __instance.potentialRoads;
         }
     }
+    */
 
     /*
      * WaterCovered returns false whenever called from RimWorld.Planet.WorldLayer_Paths.AddPathEndpoint(), to allow roads to be shown in water
@@ -352,36 +354,36 @@ namespace RoadsOfTheRim
    [HarmonyPatch(typeof(Tile), "WaterCovered", MethodType.Getter)]
    public static class Patch_Tile_WaterCovered
    {
+        /*
         [HarmonyPostfix]
         public static void Postfix(ref bool __result)
         {
-            StackFrame frame = new StackFrame(1);
+            StackFrame frame = new StackFrame(1); // WRONG because it's always class tile method watercovered, I should try (2), (3), etc... then narrow down again
             string methodName = frame.GetMethod().Name;
             string className = frame.GetMethod().DeclaringType.Name;
             RoadsOfTheRim.DebugLog("Water covered called from " + className + " ====> " + methodName);
         }
-            /*
-           [HarmonyPostfix]
-           public static void Postfix(ref bool __result)
-           {
-               StackTrace stackTrace = new StackTrace();
-               StackFrame[] stackFrames = stackTrace.GetFrames();
-               foreach (StackFrame stackFrame in stackFrames)
-               {
-                   MethodBase m = stackFrame.GetMethod();
-                   Type c = m.DeclaringType;
-                   //RoadsOfTheRim.DebugLog("class "+c.FullName+" ,method "+m.Name);
-                   if ( (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint") ||
-                        ( c.FullName.Contains("RimWorld.Planet.WorldLayer_Roads") && c.FullName.Contains("Regenerate")) )
-                   {
-                       //RoadsOfTheRim.DebugLog("Water covered PATCHED TO FALSE");
-                       __result = false;
-                       break;
-                   }
-               }
-           }
-           */
+        */
+        [HarmonyPostfix]
+        public static void Postfix(ref bool __result)
+        {
+            StackTrace stackTrace = new StackTrace();
+            StackFrame[] stackFrames = stackTrace.GetFrames();
+            foreach (StackFrame stackFrame in stackFrames)
+            {
+                MethodBase m = stackFrame.GetMethod();
+                Type c = m.DeclaringType;
+                RoadsOfTheRim.DebugLog("class "+c.FullName+" ,method "+m.Name);
+                if ( (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint") ||
+                    ( c.FullName.Contains("RimWorld.Planet.WorldLayer_Roads") && c.FullName.Contains("Regenerate")) )
+                {
+                    //RoadsOfTheRim.DebugLog("Water covered PATCHED TO FALSE");
+                    __result = false;
+                    break;
+                }
+            }
         }
+   }
 
         // When WorldLayer_Paths.AddPathEndPoint calls WaterCovered, it should return 1, not 0.5
         /*

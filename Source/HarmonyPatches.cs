@@ -353,6 +353,10 @@ namespace RoadsOfTheRim
         {
             List<Thing> listOfThing = __instance.CurrentMap.listerThings.AllThings.Where(x => x.def.defName == "RotR_ISR2G").ToList();
             RoadsOfTheRim.DebugLog("Game loaded - Found "+listOfThing.Count()+" ISR2G");
+            foreach (Thing t in listOfThing)
+            {
+                RoadsOfTheRim.DebugLog("Position : "+t.Position.ToString()+" defname = "+t.def.defName);
+            }
         }
     }
 

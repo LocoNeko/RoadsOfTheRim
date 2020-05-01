@@ -16,12 +16,14 @@
 			<volume>(1.39,0.5,1.25)</volume>
 		</shadowData>
 	</graphicData>
-    <category>RoadEquipment</category>
+    <category>Item</category>
+	<thingCategories>
+		<li>RoadEquipment</li>
+    </thingCategories>
     <drawGUIOverlay>true</drawGUIOverlay>
     <altitudeLayer>Item</altitudeLayer>
     <alwaysHaulable>true</alwaysHaulable>
     <tickerType>Never</tickerType>
-    <equipmentType>Primary</equipmentType>
     <useHitPoints>true</useHitPoints>
     <pathCost>10</pathCost>
     <selectable>true</selectable>

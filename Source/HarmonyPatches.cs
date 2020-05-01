@@ -354,20 +354,24 @@ namespace RoadsOfTheRim
    [HarmonyPatch(typeof(Tile), "WaterCovered", MethodType.Getter)]
    public static class Patch_Tile_WaterCovered
    {
-        /*
-        [HarmonyPostfix]
-        public static void Postfix(ref bool __result)
-        {
-            StackFrame frame = new StackFrame(1); // WRONG because it's always class tile method watercovered, I should try (2), (3), etc... then narrow down again
-            string methodName = frame.GetMethod().Name;
-            string className = frame.GetMethod().DeclaringType.Name;
-            RoadsOfTheRim.DebugLog("Water covered called from " + className + " ====> " + methodName);
-        }
-        */
         [HarmonyPostfix]
         public static void Postfix(ref bool __result)
         {
             StackTrace stackTrace = new StackTrace();
+            MethodBase WorldLayer_PathsMethod = stackTrace.GetFrame(4).GetMethod();
+            MethodBase WorldLayer_RoadsMethod = stackTrace.GetFrame(2).GetMethod();
+            if (WorldLayer_PathsMethod.Name == "AddPathEndpoint" && WorldLayer_PathsMethod.DeclaringType.Name == "WorldLayer_Paths")
+            {
+                RoadsOfTheRim.DebugLog("Water covered called from WorldLayer_Paths.AddPathEndpoint PATCHED TO FALSE");
+                __result = false;
+            }
+            if (WorldLayer_RoadsMethod.Name == "MoveNext" && WorldLayer_RoadsMethod.DeclaringType.Name == "<regenerate>d__3")
+            {
+                RoadsOfTheRim.DebugLog("Water covered called from WorldLayer_Roads.Regenerate PATCHED TO FALSE");
+                __result = false;
+            }
+
+            /*
             StackFrame[] stackFrames = stackTrace.GetFrames();
             int i = 0;
             foreach (StackFrame stackFrame in stackFrames)
@@ -383,6 +387,7 @@ namespace RoadsOfTheRim
                     break;
                 }
             }
+            */
         }
    }
 

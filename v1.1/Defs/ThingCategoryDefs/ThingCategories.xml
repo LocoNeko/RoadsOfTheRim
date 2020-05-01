@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingCategoryDef>
+    <defName>RoadEquipment</defName>
+    <label>road equipment</label>
+    <parent>Root</parent>
+    <iconPath>UI/Icons/ThingCategories/RoadEquipment</iconPath>
+    <resourceReadoutRoot>true</resourceReadoutRoot>
+  </ThingCategoryDef>
+</Defs>
+  

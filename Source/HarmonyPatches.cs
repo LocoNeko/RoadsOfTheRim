@@ -345,6 +345,7 @@ namespace RoadsOfTheRim
 
     // When WorldLayer_Paths.AddPathEndPoint calls WaterCovered, it should return 1, not 0.5
     /*
+     * NOT EVEN SURE THIS IS NECESSARY
     [HarmonyPatch(typeof(WorldLayer_Paths))]
     [HarmonyPatch("AddPathEndpoint")]
     public static class Patch_WorldLayer_Paths_AddPathEndpoint

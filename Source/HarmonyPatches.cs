@@ -349,15 +349,10 @@ namespace RoadsOfTheRim
     public static class Patch_Game_LoadGame
     {
         [HarmonyPostfix]
-        public static void Postfix()
+        public static void Postfix(Game __instance)
         {
-            ListerThings lister = new ListerThings(ListerThingsUse.Global);
-            lister.AllThings.Find(t => t.def.defName == "RotR_ISR2G");
-            RoadsOfTheRim.DebugLog("Game loaded");
-            foreach (Thing aThing in lister.AllThings)
-            {
-                RoadsOfTheRim.DebugLog("Found ISR2G at "+aThing.Position.ToString());
-            }
+            List<Thing> listOfThing = __instance.CurrentMap.listerThings.AllThings.Where(x => x.def.defName == "RotR_ISR2G").ToList();
+            RoadsOfTheRim.DebugLog("Game loaded - Found "+listOfThing.Count()+" ISR2G");
         }
     }
 

@@ -371,7 +371,24 @@ namespace RoadsOfTheRim
             return codes.AsEnumerable();
         }
     }
+
     /*
+     * One idea is to call this on WorldLayer regeneratenow
+     * public IEnumerable<Whatever> MyPatchedGenerator() 
+    {
+    foreach (var orig in RimWorld.Whatever.Original())
+    {
+    if (someCondition) 
+    {
+      yield return SomethingElse();
+      continue;
+    }
+    yield return orig; // return original most of the times
+    }
+    }
+     */
+
+ /*
  * WaterCovered returns false whenever called from RimWorld.Planet.WorldLayer_Paths.AddPathEndpoint(), to allow roads to be shown in water
  * Turns out this is too costly
  */
@@ -415,21 +432,6 @@ namespace RoadsOfTheRim
   }
   */
 
-    /*
-     * One idea is to call this on WorldLayer regeneratenow
-     * public IEnumerable<Whatever> MyPatchedGenerator() 
-    {
-    foreach (var orig in RimWorld.Whatever.Original())
-    {
-    if (someCondition) 
-    {
-      yield return SomethingElse();
-      continue;
-    }
-    yield return orig; // return original most of the times
-    }
-    }
-     */
     /*
    [HarmonyPatch(typeof(WorldLayer_Roads))]
    [HarmonyPatch("Regenerate")]

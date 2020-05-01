@@ -98,7 +98,7 @@ namespace RoadsOfTheRim
             #if DEBUG
             if (message!=null)
             {
-                Log.Warning("[RotR] - " + message);
+                Log.Warning("[RotR] DEBUG - " + message);
             }
             if (Prefs.DevMode && e!=null)
             {

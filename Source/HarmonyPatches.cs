@@ -317,9 +317,7 @@ namespace RoadsOfTheRim
 
 
     [HarmonyPatch(typeof(CaravanUIUtility), "CreateCaravanTransferableWidgets")]
-    /*
-     * Remove Road equipment (TO DO : only ISR2G at the moment) from Item tab when forming caravans
-     */
+    //Remove Road equipment (TO DO : only ISR2G at the moment) from Item tab when forming caravans
     public static class Patch_CaravanUIUtility_CreateCaravanTransferableWidgets
     {
         [HarmonyPostfix]
@@ -335,7 +333,6 @@ namespace RoadsOfTheRim
     }
 
     // All Tiles can now have roads
-    /*
     [HarmonyPatch(typeof(Tile), "Roads", MethodType.Getter)]
     public static class Patch_Tile_Roads
     {
@@ -345,114 +342,109 @@ namespace RoadsOfTheRim
             __result = __instance.potentialRoads;
         }
     }
-    */
 
-    /*
-     * WaterCovered returns false whenever called from RimWorld.Planet.WorldLayer_Paths.AddPathEndpoint(), to allow roads to be shown in water
-     * Turns out this is too costly
-     */
-   [HarmonyPatch(typeof(Tile), "WaterCovered", MethodType.Getter)]
-   public static class Patch_Tile_WaterCovered
-   {
-        [HarmonyPostfix]
-        public static void Postfix(ref bool __result)
+    // When WorldLayer_Paths.AddPathEndPoint calls WaterCovered, it should return 1, not 0.5
+    [HarmonyPatch(typeof(WorldLayer_Paths))]
+    [HarmonyPatch("AddPathEndpoint")]
+    public static class Patch_WorldLayer_Paths_AddPathEndpoint
+    {
+        [HarmonyTranspiler]
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            StackTrace stackTrace = new StackTrace();
-            MethodBase WorldLayer_PathsMethod = stackTrace.GetFrame(4).GetMethod();
-            MethodBase WorldLayer_RoadsMethod = stackTrace.GetFrame(2).GetMethod();
-            if (WorldLayer_PathsMethod.Name == "AddPathEndpoint" && WorldLayer_PathsMethod.DeclaringType.Name == "WorldLayer_Paths")
+            RoadsOfTheRim.DebugLog("TRANSPILING");
+            int index = -1;
+            var codes = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < codes.Count; i++)
             {
-                RoadsOfTheRim.DebugLog("Water covered called from WorldLayer_Paths.AddPathEndpoint PATCHED TO FALSE");
-                __result = false;
-            }
-            if (WorldLayer_RoadsMethod.Name == "MoveNext" && WorldLayer_RoadsMethod.DeclaringType.Name == "<regenerate>d__3")
-            {
-                RoadsOfTheRim.DebugLog("Water covered called from WorldLayer_Roads.Regenerate PATCHED TO FALSE");
-                __result = false;
-            }
-
-            /*
-            StackFrame[] stackFrames = stackTrace.GetFrames();
-            int i = 0;
-            foreach (StackFrame stackFrame in stackFrames)
-            {
-                MethodBase m = stackFrame.GetMethod();
-                Type c = m.DeclaringType;
-                RoadsOfTheRim.DebugLog(i++ + "class "+c.Name+" ,method "+m.Name);
-                if ( (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint") ||
-                    ( c.FullName.Contains("RimWorld.Planet.WorldLayer_Roads") && c.Name.Contains("Regenerate")) )
+                //RoadsOfTheRim.DebugLog("Transpiler operand =" + codes[i].operand.ToStringSafe());
+                if (codes[i].operand is float && (float)codes[i].operand == 0.5)
                 {
-                    RoadsOfTheRim.DebugLog("Water covered PATCHED TO FALSE");
-                    __result = false;
+                    index = i;
                     break;
                 }
             }
-            */
-        }
-   }
-
-        // When WorldLayer_Paths.AddPathEndPoint calls WaterCovered, it should return 1, not 0.5
-        /*
-        [HarmonyPatch(typeof(WorldLayer_Paths))]
-        [HarmonyPatch("AddPathEndpoint")]
-        public static class Patch_WorldLayer_Paths_AddPathEndpoint
-        {
-            [HarmonyTranspiler]
-            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            if (index != -1)
             {
-                RoadsOfTheRim.DebugLog("RotR - TRANSPILING");
-                // Must change IL_0065: brtrue.s IL_006e to Noop
-                int index = -1;
-                var codes = new List<CodeInstruction>(instructions);
-                for (int i = 0; i < codes.Count; i++)
-                {
-                    //RoadsOfTheRim.DebugLog("Transpiler operand =" + codes[i].operand.ToStringSafe());
-                    if (codes[i].operand is float && (float)codes[i].operand == 0.5)
-                    {
-                        index = i;
-                        break;
-                    }
-                }
-                if (index != -1)
-                {
-                    codes[index].operand = 1f;
-                    RoadsOfTheRim.DebugLog("Transpiler found 0.5 in AddPathEndPoint: " + codes[index].ToString());
-                }
-                return codes.AsEnumerable();
+                codes[index].operand = 1f;
+                RoadsOfTheRim.DebugLog("Transpiler found 0.5 in AddPathEndPoint: " + codes[index].ToString());
             }
+            return codes.AsEnumerable();
         }
-        */
-
-        /*
-         * One idea is to call this on WorldLayer regeneratenow
-         * public IEnumerable<Whatever> MyPatchedGenerator() 
-        {
-        foreach (var orig in RimWorld.Whatever.Original())
-        {
-        if (someCondition) 
-        {
-          yield return SomethingElse();
-          continue;
-        }
-        yield return orig; // return original most of the times
-        }
-        }
-         */
-        /*
-       [HarmonyPatch(typeof(WorldLayer_Roads))]
-       [HarmonyPatch("Regenerate")]
-       public static class Patch_WorldLayer_Roads_Regenerate
+    }
+    /*
+ * WaterCovered returns false whenever called from RimWorld.Planet.WorldLayer_Paths.AddPathEndpoint(), to allow roads to be shown in water
+ * Turns out this is too costly
+ */
+    /*
+  [HarmonyPatch(typeof(Tile), "WaterCovered", MethodType.Getter)]
+  public static class Patch_Tile_WaterCovered
+  {
+       [HarmonyPostfix]
+       public static void Postfix(ref bool __result)
        {
-           [HarmonyTranspiler]
-           static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+           StackTrace stackTrace = new StackTrace();
+           MethodBase WorldLayer_PathsMethod = stackTrace.GetFrame(4).GetMethod();
+           MethodBase WorldLayer_RoadsMethod = stackTrace.GetFrame(2).GetMethod();
+           if (WorldLayer_PathsMethod.Name == "AddPathEndpoint" && WorldLayer_PathsMethod.DeclaringType.Name == "WorldLayer_Paths")
            {
-               var codes = new List<CodeInstruction>(instructions);
-               for (int i = 0; i < codes.Count; i++)
+               RoadsOfTheRim.DebugLog("Water covered called from WorldLayer_Paths.AddPathEndpoint PATCHED TO FALSE");
+               __result = false;
+           }
+           if (WorldLayer_RoadsMethod.Name == "MoveNext" && WorldLayer_RoadsMethod.DeclaringType.Name == "<regenerate>d__3")
+           {
+               RoadsOfTheRim.DebugLog("Water covered called from WorldLayer_Roads.Regenerate PATCHED TO FALSE");
+               __result = false;
+           }
+
+           StackFrame[] stackFrames = stackTrace.GetFrames();
+           int i = 0;
+           foreach (StackFrame stackFrame in stackFrames)
+           {
+               MethodBase m = stackFrame.GetMethod();
+               Type c = m.DeclaringType;
+               RoadsOfTheRim.DebugLog(i++ + "class "+c.Name+" ,method "+m.Name);
+               if ( (c.FullName == "RimWorld.Planet.WorldLayer_Paths" && m.Name == "AddPathEndpoint") ||
+                   ( c.FullName.Contains("RimWorld.Planet.WorldLayer_Roads") && c.Name.Contains("Regenerate")) )
                {
-                   RoadsOfTheRim.DebugLog("WorldLayer_Roads.Regenerate Transpiler code " + codes[i].ToString());
+                   RoadsOfTheRim.DebugLog("Water covered PATCHED TO FALSE");
+                   __result = false;
+                   break;
                }
-               return instructions;
            }
        }
-       */
+  }
+  */
+
+    /*
+     * One idea is to call this on WorldLayer regeneratenow
+     * public IEnumerable<Whatever> MyPatchedGenerator() 
+    {
+    foreach (var orig in RimWorld.Whatever.Original())
+    {
+    if (someCondition) 
+    {
+      yield return SomethingElse();
+      continue;
     }
+    yield return orig; // return original most of the times
+    }
+    }
+     */
+    /*
+   [HarmonyPatch(typeof(WorldLayer_Roads))]
+   [HarmonyPatch("Regenerate")]
+   public static class Patch_WorldLayer_Roads_Regenerate
+   {
+       [HarmonyTranspiler]
+       static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+       {
+           var codes = new List<CodeInstruction>(instructions);
+           for (int i = 0; i < codes.Count; i++)
+           {
+               RoadsOfTheRim.DebugLog("WorldLayer_Roads.Regenerate Transpiler code " + codes[i].ToString());
+           }
+           return instructions;
+       }
+   }
+   */
+}

@@ -385,26 +385,33 @@ namespace RoadsOfTheRim
         // I had to take into account the old defs of ISR2G that used to be buildings, and replace them with new ISR2G defs that are craftable items
         public void OldDefsCleanup ()
         {
+            int newISRG2 = 0;
+            int newAISRG2 = 0;
             Caravan caravan = this.GetCaravan();
             foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
             {
-                int level = 0;
                 if (aThing.GetInnerIfMinified().def.defName == "RotR_ISR2G")
                 {
-                    level = 1;
+                    newISRG2++;
+                    aThing.Destroy();
                 }
                 else if (aThing.GetInnerIfMinified().def.defName == "RotR_AISR2G")
                 {
-                    level = 2;
-                }
-                if (level > 0)
-                {
-                    string newThingDefName = (level == 1 ? "RotR_ISR2GNew" : "RotR_AISR2GNew");
-                    Thing newThing = ThingMaker.MakeThing(ThingDef.Named(newThingDefName));
-                    CaravanInventoryUtility.GiveThing(caravan , newThing);
+                    newAISRG2++;
                     aThing.Destroy();
-                    RoadsOfTheRim.DebugLog("Replacing a ISR2G level " + level + " in caravan " + caravan.ToString());
                 }
+            }
+            for (int i = newISRG2; i > 0; i--)
+            {
+                Thing newThing = ThingMaker.MakeThing(ThingDef.Named("RotR_ISR2GNew"));
+                CaravanInventoryUtility.GiveThing(caravan, newThing);
+                RoadsOfTheRim.DebugLog("Replacing an ISR2G in caravan " + caravan.ToString());
+            }
+            for (int j = newAISRG2; j > 0; j--)
+            {
+                Thing newThing = ThingMaker.MakeThing(ThingDef.Named("RotR_AISR2GNew"));
+                CaravanInventoryUtility.GiveThing(caravan, newThing);
+                RoadsOfTheRim.DebugLog("Replacing an AISR2G in caravan " + caravan.ToString());
             }
         }
     }

@@ -2,7 +2,7 @@
 <Defs>
 
   <ThingDef>
-	<defName>RotR_ISR2G</defName>
+	<defName>RotR_ISR2Gv2</defName>
 	<label>ISR2G</label>
 	<thingClass>ThingWithComps</thingClass>
 	<description>In Situ Road Ressource Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood and stone at the cost of 4 times the work.</description>
@@ -50,7 +50,7 @@
   </ThingDef>
 	
   <ThingDef>
-	<defName>RotR_AISR2G</defName>
+	<defName>RotR_AISR2Gv2</defName>
 	<label>AISR2G</label>
 	<thingClass>ThingWithComps</thingClass>
 	<description>Advanced In Situ Road Ressources Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood, stone , steel, Chemfuel , Plasteel and Uranium at the cost of twice the work.</description>
@@ -98,7 +98,6 @@
 		</skillRequirements>
     </recipeMaker>
   </ThingDef>
-	
 
 	<ThingDef ParentName="BuildingBase">
 		<defName>RotR_ISR2G</defName>
@@ -123,9 +122,6 @@
 		<fillPercent>0.40</fillPercent>
 		<tickerType>Normal</tickerType>
 		<minifiedDef>MinifiedThing</minifiedDef>
-		<thingCategories>
-			<li>BuildingsPower</li>
-		</thingCategories>
 		<statBases>
 			<MaxHitPoints>200</MaxHitPoints>
 			<WorkToBuild>8000</WorkToBuild>
@@ -134,18 +130,10 @@
 			<Beauty>-20</Beauty>
 		</statBases>
 		<size>(2,2)</size>
-		<costList>
-			<Steel>180</Steel>
-			<ComponentIndustrial>10</ComponentIndustrial>
-		</costList>
 		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
-		<designationCategory>Production</designationCategory>
 		<staticSunShadowHeight>0.2</staticSunShadowHeight>
 		<constructEffect>ConstructMetal</constructEffect>
 		<canOverlapZones>false</canOverlapZones>
-		<researchPrerequisites>
-			<li>ResearchProject_RotRISR2G</li>
-		</researchPrerequisites>
 	</ThingDef>
 	
 	<ThingDef ParentName="BuildingBase">

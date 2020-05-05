@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="Bridges.cs" />
     <Compile Include="CaravanArrivalAction_StartWorkingOnRoad.cs" />
+    <Compile Include="OldDefsCleanup.cs" />
     <Compile Include="WorldLayer_RoadsOnWater.cs" />
     <Compile Include="ConstructionMenu.cs" />
     <Compile Include="DefModExtension_RotR_RoadDef.cs" />

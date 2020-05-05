@@ -305,7 +305,7 @@ namespace RoadsOfTheRim
             List<TransferableOneWay> source = new List<TransferableOneWay>();
             foreach (TransferableOneWay tow in transferables)
             {
-                if (tow.Label == "ISR2G")
+                if (tow.ThingDef.IsWithinCategory(ThingCategoryDef.Named("RoadEquipment")))
                 {
                     source.Add(tow);
                     RoadsOfTheRim.DebugLog("Found an ISR2G");
@@ -317,7 +317,7 @@ namespace RoadsOfTheRim
 
 
     [HarmonyPatch(typeof(CaravanUIUtility), "CreateCaravanTransferableWidgets")]
-    //Remove Road equipment (TO DO : only ISR2G at the moment) from Item tab when forming caravans
+    //Remove Road equipment from Item tab when forming caravans
     public static class Patch_CaravanUIUtility_CreateCaravanTransferableWidgets
     {
         [HarmonyPostfix]
@@ -329,7 +329,7 @@ namespace RoadsOfTheRim
             {
                 RoadsOfTheRim.DebugLog("Thing category def =" + tow.AnyThing.def.category.ToString());
             }
-            modifiedTransferables = modifiedTransferables.Where(x => x.Label != "ISR2G").ToList();
+            modifiedTransferables = modifiedTransferables.Where(x => !x.ThingDef.IsWithinCategory(ThingCategoryDef.Named("RoadEquipment"))).ToList();
             int countAfter = modifiedTransferables.Count();
             RoadsOfTheRim.DebugLog("Item transfer widget items before = " + countBefore + ", AFter = " + countAfter);
             itemsTransfer = new TransferableOneWayWidget(modifiedTransferables, null, null, thingCountTip, drawMass: true, ignorePawnInventoryMass, includePawnsMassInMassUsage: false, availableMassGetter, 0f, ignoreSpawnedCorpsesGearAndInventoryMass, tile, drawMarketValue: true, drawEquippedWeapon: false, drawNutritionEatenPerDay: false, drawItemNutrition: true, drawForagedFoodPerDay: false, drawDaysUntilRot: true);

@@ -387,11 +387,11 @@ namespace RoadsOfTheRim
             foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(this.GetCaravan()))
             {
                 int level = 0;
-                if (aThing.def.defName == "RotR_ISR2G")
+                if (aThing.GetInnerIfMinified().def.defName == "RotR_ISR2G")
                 {
                     level = 1;
                 }
-                else if (aThing.def.defName == "RotR_AISR2G")
+                else if (aThing.GetInnerIfMinified().def.defName == "RotR_AISR2G")
                 {
                     level = 2;
                 }

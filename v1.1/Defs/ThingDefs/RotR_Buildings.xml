@@ -134,6 +134,11 @@
 		<staticSunShadowHeight>0.2</staticSunShadowHeight>
 		<constructEffect>ConstructMetal</constructEffect>
 		<canOverlapZones>false</canOverlapZones>
+		<comps>
+            <li>
+                <compClass>RoadsOfTheRim.OldDefsCleanupComp</compClass>
+            </li>
+        </comps>
 	</ThingDef>
 	
 	<ThingDef ParentName="BuildingBase">
@@ -184,6 +189,11 @@
 		<researchPrerequisites>
 			<li>ResearchProject_RotRAISR2G</li>
 		</researchPrerequisites>
+		<comps>
+            <li>
+                <compClass>RoadsOfTheRim.OldDefsCleanupComp</compClass>
+            </li>
+        </comps>
 	</ThingDef>
 
 </Defs>

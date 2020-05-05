@@ -5,17 +5,10 @@
 	<defName>RotR_NewISR2G</defName>
 	<label>New ISR2G</label>
 	<thingClass>ThingWithComps</thingClass>
-	<description>In Situ Road Ressources Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood and stone at the cost of 4 times the work.</description>
+	<description>In Situ Road Ressource Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood and stone at the cost of 4 times the work.</description>
 	<graphicData>
 		<texPath>Buildings/ISR2G</texPath>
-		<graphicClass>Graphic_Multi</graphicClass>
-		<drawSize>(2,2)</drawSize>
-		<damageData>
-			<rect>(0.1,0.1,1.8,1.8)</rect>
-		</damageData>
-		<shadowData>
-			<volume>(1.39,0.5,1.25)</volume>
-		</shadowData>
+		<graphicClass>Graphic_Single</graphicClass>
 	</graphicData>
     <category>Item</category>
 	<thingCategories>
@@ -30,7 +23,7 @@
     <selectable>true</selectable>
 	<statBases>
 		<MaxHitPoints>200</MaxHitPoints>
-		<WorkToBuild>8000</WorkToBuild>
+		<WorkToMake>8000</WorkToMake>
 		<Mass>50</Mass>
 		<Flammability>1.0</Flammability>
 		<Beauty>-20</Beauty>
@@ -56,6 +49,57 @@
     </recipeMaker>
   </ThingDef>
 	
+  <ThingDef>
+	<defName>RotR_NewAISR2G</defName>
+	<label>New AISR2G</label>
+	<thingClass>ThingWithComps</thingClass>
+	<description>Advanced In Situ Road Ressources Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood, stone , steel, Chemfuel , Plasteel and Uranium at the cost of twice the work.</description>
+	<graphicData>
+		<texPath>Buildings/AISR2G</texPath>
+		<graphicClass>Graphic_Single</graphicClass>
+	</graphicData>
+    <category>Item</category>
+	<thingCategories>
+		<li>RoadEquipment</li>
+    </thingCategories>
+    <drawGUIOverlay>true</drawGUIOverlay>
+    <altitudeLayer>Item</altitudeLayer>
+    <alwaysHaulable>true</alwaysHaulable>
+    <tickerType>Never</tickerType>
+    <useHitPoints>true</useHitPoints>
+    <pathCost>10</pathCost>
+    <selectable>true</selectable>
+	<statBases>
+		<MaxHitPoints>200</MaxHitPoints>
+		<WorkToMake>16000</WorkToMake>
+		<Mass>70</Mass>
+		<Flammability>1.0</Flammability>
+		<Beauty>-20</Beauty>
+	</statBases>
+    <techLevel>Spacer</techLevel>
+	<costList>
+		<Steel>290</Steel>
+		<ComponentIndustrial>5</ComponentIndustrial>
+		<Plasteel>290</Plasteel>
+		<ComponentSpacer>10</ComponentSpacer>
+	</costList>
+    <recipeMaker>
+		<workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+		<workSkill>Crafting</workSkill>
+		<effectWorking>Smith</effectWorking>
+		<soundWorking>Recipe_Smith</soundWorking>
+		<recipeUsers>
+			<li>TableMachining</li>
+		</recipeUsers>
+		<unfinishedThingDef>UnfinishedComponent</unfinishedThingDef>
+		<researchPrerequisite>ResearchProject_RotRAISR2G</researchPrerequisite>
+		<skillRequirements>
+			<Crafting>6</Crafting>
+		</skillRequirements>
+    </recipeMaker>
+  </ThingDef>
+	
+
 	<ThingDef ParentName="BuildingBase">
 		<defName>RotR_ISR2G</defName>
 		<label>ISR2G</label>

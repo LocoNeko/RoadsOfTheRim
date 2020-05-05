@@ -46,6 +46,7 @@ namespace RoadsOfTheRim
 					List<OutputDirection> list = new List<OutputDirection>();
 					if (tile.potentialRoads != null)
 					{
+						RoadsOfTheRim.DebugLog("Road on water on tile " + i);
 						bool allowSmoothTransition = true;
 						for (int j = 0; j < tile.potentialRoads.Count - 1; j++)
 						{

@@ -162,6 +162,7 @@ namespace RoadsOfTheRim
 
         public override void CompTick()
         {
+            OldDefsCleanup();
             if (Find.TickManager.TicksGame % 100 == 0)
             {
                 Caravan caravan = GetCaravan();
@@ -379,6 +380,27 @@ namespace RoadsOfTheRim
             Scribe_Values.Look<bool>(ref this.currentlyWorkingOnSite, "RoadsOfTheRim_Caravan_currentlyWorkingOnSite" , false , true);
             Scribe_Values.Look<bool>(ref this.workOnWakeUp, "RoadsOfTheRim_Caravan_workOnWakeUp", false, true);
             Scribe_References.Look<RoadConstructionSite>(ref this.site, "RoadsOfTheRim_Caravan_RoadConstructionSite");
+        }
+
+        public void OldDefsCleanup ()
+        {
+            foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(this.GetCaravan()))
+            {
+                int level = 0;
+                if (aThing.def.defName == "RotR_ISR2G")
+                {
+                    level = 1;
+                }
+                else if (aThing.def.defName == "RotR_AISR2G")
+                {
+                    level = 2;
+                }
+                if (level > 0)
+                {
+                    aThing.Destroy();
+                    RoadsOfTheRim.DebugLog("Destroying a ISR2G level " + level + " in caravan " + this.GetCaravan().ToString());
+                }
+            }
         }
     }
 }

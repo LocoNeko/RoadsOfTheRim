@@ -1,13 +1,18 @@
-﻿using Verse;
+﻿using RimWorld;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using UnityEngine;
+using Verse;
 
 namespace RoadsOfTheRim
 {
-    public class RotR_ISR2G : ThingDef
+    public class RotR_ISR2G : ThingWithComps
     {
-        public override void PostLoad()
+        public override void PostMake()
         {
-            RoadsOfTheRim.DebugLog("An old RotR_ISR2G was loaded");
-            base.PostLoad();
+            base.PostMake();
+            RoadsOfTheRim.DebugLog("Just made an ISR2G in " + this.Position.ToString());
         }
     }
 }

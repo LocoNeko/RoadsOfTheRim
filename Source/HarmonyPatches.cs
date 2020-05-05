@@ -325,6 +325,10 @@ namespace RoadsOfTheRim
         {
             List<TransferableOneWay> modifiedTransferables = transferables.Where((TransferableOneWay x) => x.ThingDef.category != ThingCategory.Pawn).ToList();
             int countBefore = transferables.Count();
+            foreach (TransferableOneWay tow in modifiedTransferables)
+            {
+                RoadsOfTheRim.DebugLog("Thing category def =" + tow.AnyThing.def.category.ToString());
+            }
             modifiedTransferables = modifiedTransferables.Where(x => x.Label != "ISR2G").ToList();
             int countAfter = modifiedTransferables.Count();
             RoadsOfTheRim.DebugLog("Item transfer widget items before = " + countBefore + ", AFter = " + countAfter);

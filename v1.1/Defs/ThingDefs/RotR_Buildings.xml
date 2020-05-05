@@ -2,8 +2,8 @@
 <Defs>
 
   <ThingDef>
-	<defName>RotR_NewISR2G</defName>
-	<label>New ISR2G</label>
+	<defName>RotR_ISR2G</defName>
+	<label>ISR2G</label>
 	<thingClass>ThingWithComps</thingClass>
 	<description>In Situ Road Ressource Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood and stone at the cost of 4 times the work.</description>
 	<graphicData>
@@ -50,8 +50,8 @@
   </ThingDef>
 	
   <ThingDef>
-	<defName>RotR_NewAISR2G</defName>
-	<label>New AISR2G</label>
+	<defName>RotR_AISR2G</defName>
+	<label>AISR2G</label>
 	<thingClass>ThingWithComps</thingClass>
 	<description>Advanced In Situ Road Ressources Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood, stone , steel, Chemfuel , Plasteel and Uranium at the cost of twice the work.</description>
 	<graphicData>

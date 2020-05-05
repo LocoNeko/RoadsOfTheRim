@@ -9,19 +9,19 @@ namespace RoadsOfTheRim
 {
     public class RotR_ISR2G : ThingWithComps
     {
-        public override void ExposeData()
+        public override void Tick()
         {
-            base.ExposeData();
-            RoadsOfTheRim.DebugLog("Just made an ISR2G in " + this.Position.ToString());
+            base.Tick();
+            RoadsOfTheRim.DebugLog("AN ISR2G just ticked at " + this.Position.ToString());
         }
     }
 
     public class RotR_AISR2G : ThingWithComps
     {
-        public override void ExposeData()
+        public override void Tick()
         {
-            base.ExposeData();
-            RoadsOfTheRim.DebugLog("Just made an AISR2G in " + this.Position.ToString());
+            base.Tick();
+            RoadsOfTheRim.DebugLog("AN ISR2G just ticked at " + this.Position.ToString());
         }
     }
 }

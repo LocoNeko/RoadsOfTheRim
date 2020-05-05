@@ -9,18 +9,18 @@ namespace RoadsOfTheRim
 {
     public class RotR_ISR2G : ThingWithComps
     {
-        public override void PostMake()
+        public override void ExposeData()
         {
-            base.PostMake();
+            base.ExposeData();
             RoadsOfTheRim.DebugLog("Just made an ISR2G in " + this.Position.ToString());
         }
     }
 
     public class RotR_AISR2G : ThingWithComps
     {
-        public override void PostMake()
+        public override void ExposeData()
         {
-            base.PostMake();
+            base.ExposeData();
             RoadsOfTheRim.DebugLog("Just made an AISR2G in " + this.Position.ToString());
         }
     }

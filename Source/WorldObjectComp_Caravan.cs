@@ -382,9 +382,11 @@ namespace RoadsOfTheRim
             Scribe_References.Look<RoadConstructionSite>(ref this.site, "RoadsOfTheRim_Caravan_RoadConstructionSite");
         }
 
+        // I had to take into account the old defs of ISR2G that used to be buildings, and replace them with new ISR2G defs that are craftable items
         public void OldDefsCleanup ()
         {
-            foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(this.GetCaravan()))
+            Caravan caravan = this.GetCaravan();
+            foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
             {
                 int level = 0;
                 if (aThing.GetInnerIfMinified().def.defName == "RotR_ISR2G")
@@ -397,8 +399,11 @@ namespace RoadsOfTheRim
                 }
                 if (level > 0)
                 {
+                    string newThingDefName = (level == 1 ? "RotR_ISR2GNew" : "RotR_AISR2GNew");
+                    Thing newThing = ThingMaker.MakeThing(ThingDef.Named(newThingDefName));
+                    CaravanInventoryUtility.GiveThing(caravan , newThing);
                     aThing.Destroy();
-                    RoadsOfTheRim.DebugLog("Destroying a ISR2G level " + level + " in caravan " + this.GetCaravan().ToString());
+                    RoadsOfTheRim.DebugLog("Replacing a ISR2G level " + level + " in caravan " + caravan.ToString());
                 }
             }
         }

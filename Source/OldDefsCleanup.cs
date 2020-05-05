@@ -7,7 +7,8 @@ using Verse;
 
 namespace RoadsOfTheRim
 {
-
+    // I had to take into account the old defs of ISR2G that used to be buildings, and replace them with new ISR2G defs that are craftable items
+    // So I use this comp and add it to the old Defs
     public class OldDefsCleanupComp : ThingComp
     {
         public override void CompTick()
@@ -24,8 +25,13 @@ namespace RoadsOfTheRim
             }
             if (level > 0)
             {
-                RoadsOfTheRim.DebugLog("Destroying a ISR2G level " + level + " at position "  + oldISR2G.Position.ToString());
+                string newThingDefName = (level == 1 ? "RotR_ISR2GNew" : "RotR_AISR2GNew");
+                Thing newThing = ThingMaker.MakeThing(ThingDef.Named(newThingDefName));
+                IntVec3 position = oldISR2G.Position;
+                Map map = oldISR2G.MapHeld;
+                RoadsOfTheRim.DebugLog("Replacing a ISR2G level " + level + " at position " + position.ToString());
                 oldISR2G.Destroy();
+                GenPlace.TryPlaceThing(newThing, position, map, ThingPlaceMode.Near);
             }
         }
     }

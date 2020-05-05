@@ -30,7 +30,7 @@
 	</statBases>
     <techLevel>Industrial</techLevel>
 	<costList>
-		<Steel>180</Steel>
+		<Steel>120</Steel>
 		<ComponentIndustrial>10</ComponentIndustrial>
 	</costList>
     <recipeMaker>
@@ -78,10 +78,10 @@
 	</statBases>
     <techLevel>Spacer</techLevel>
 	<costList>
-		<Steel>290</Steel>
-		<ComponentIndustrial>5</ComponentIndustrial>
-		<Plasteel>290</Plasteel>
-		<ComponentSpacer>10</ComponentSpacer>
+		<Steel>120</Steel>
+		<ComponentIndustrial>8</ComponentIndustrial>
+		<Plasteel>70</Plasteel>
+		<ComponentSpacer>5</ComponentSpacer>
 	</costList>
     <recipeMaker>
 		<workSpeedStat>GeneralLaborSpeed</workSpeedStat>

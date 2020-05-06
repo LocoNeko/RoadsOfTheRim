@@ -1,11 +1,7 @@
-﻿using HarmonyLib;
-using System.Xml;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using RimWorld;
 using Verse;
-using System.Reflection;
 using RimWorld.Planet;
 using Verse.Sound;
 using UnityEngine;
@@ -98,9 +94,9 @@ namespace RoadsOfTheRim
             #if DEBUG
             if (message!=null)
             {
-                Log.Warning("[RotR] - " + message);
+                Log.Warning("[RotR] DEBUG - " + message);
             }
-            if (Prefs.DevMode && e!=null)
+            if (e!=null)
             {
                 Log.Error(
                 "[RotR] Exception :\n" + e + "\n=====\n" +
@@ -123,6 +119,7 @@ namespace RoadsOfTheRim
                 WinterModifier = roadDef.GetModExtension<DefModExtension_RotR_RoadDef>().winterModifier ;
             }
             float BiomeCoef = (1 + (BiomeMovementDifficulty-1) * (1-BiomeModifier)) / BiomeMovementDifficulty ;
+            //RoadsOfTheRim.DebugLog("calculateRoadModifier: BiomeCoef=" +BiomeCoef+ ", BiomeMovementDifficulty="+ BiomeMovementDifficulty+ ", HillModifier"+ HillModifier+ ", HillinessOffset="+ HillinessOffset+ ", WinterModifier="+ WinterModifier+ ", WinterOffset="+ WinterOffset);
             return ((BiomeCoef*BiomeMovementDifficulty) + ((1-HillModifier)*HillinessOffset) + ((1-WinterModifier)*WinterOffset) ) / (BiomeMovementDifficulty + HillinessOffset + WinterOffset) ;
         }
 
@@ -155,7 +152,7 @@ namespace RoadsOfTheRim
                 return siteComp.finishWork(caravan);
             }
 
-            if (!(caravanComp.CaravanCurrentState() == CaravanState.ReadyToWork))
+            if (caravanComp.CaravanCurrentState() != CaravanState.ReadyToWork)
             {
                 RoadsOfTheRim.DebugLog("[RotR] DEBUG : doSomeWork() failed because the caravan can't work.");
                 return false;
@@ -354,11 +351,15 @@ namespace RoadsOfTheRim
             }
 
             // Disable on biomes that don't allow roads
+            // TO DO : did that ever belong here ? testing for each leg should be enough except if somehow a caravan is in an ocean (glitter road ?) building a lower tier road towards the shore ?
+            // In which case, problem is easy to resolve : limit the roads that can be chosen in the menu
+            /*
             BiomeDef biomeHere = Find.WorldGrid.tiles[caravan.Tile].biome ;
             if (!biomeHere.allowRoads)
             {
                 command_Action.Disable("RoadsOfTheRim_BiomePreventsConstruction".Translate(biomeHere.label));
             }
+            */
             return command_Action;
         }
 

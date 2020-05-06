@@ -1,6 +1,104 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
+
+  <ThingDef>
+	<defName>RotR_ISR2GNew</defName>
+	<label>ISR2G</label>
+	<thingClass>ThingWithComps</thingClass>
+	<description>In Situ Road Ressource Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood and stone at the cost of 4 times the work.</description>
+	<graphicData>
+		<texPath>Buildings/ISR2G</texPath>
+		<graphicClass>Graphic_Single</graphicClass>
+	</graphicData>
+    <category>Item</category>
+	<thingCategories>
+		<li>RoadEquipment</li>
+    </thingCategories>
+    <drawGUIOverlay>true</drawGUIOverlay>
+    <altitudeLayer>Item</altitudeLayer>
+    <alwaysHaulable>true</alwaysHaulable>
+    <tickerType>Never</tickerType>
+    <useHitPoints>true</useHitPoints>
+    <pathCost>10</pathCost>
+    <selectable>true</selectable>
+	<statBases>
+		<MaxHitPoints>200</MaxHitPoints>
+		<WorkToMake>8000</WorkToMake>
+		<Mass>50</Mass>
+		<Flammability>1.0</Flammability>
+		<Beauty>-20</Beauty>
+	</statBases>
+    <techLevel>Industrial</techLevel>
+	<costList>
+		<Steel>120</Steel>
+		<ComponentIndustrial>10</ComponentIndustrial>
+	</costList>
+    <recipeMaker>
+		<workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+		<workSkill>Crafting</workSkill>
+		<effectWorking>Smith</effectWorking>
+		<soundWorking>Recipe_Smith</soundWorking>
+		<recipeUsers>
+			<li>TableMachining</li>
+		</recipeUsers>
+		<unfinishedThingDef>UnfinishedComponent</unfinishedThingDef>
+		<researchPrerequisite>ResearchProject_RotRISR2G</researchPrerequisite>
+		<skillRequirements>
+			<Crafting>4</Crafting>
+		</skillRequirements>
+    </recipeMaker>
+  </ThingDef>
 	
+  <ThingDef>
+	<defName>RotR_AISR2GNew</defName>
+	<label>AISR2G</label>
+	<thingClass>ThingWithComps</thingClass>
+	<description>Advanced In Situ Road Ressources Gatherer. Uses local resources when building roads, completely eliminating the need to bring wood, stone , steel, Chemfuel , Plasteel and Uranium at the cost of twice the work.</description>
+	<graphicData>
+		<texPath>Buildings/AISR2G</texPath>
+		<graphicClass>Graphic_Single</graphicClass>
+	</graphicData>
+    <category>Item</category>
+	<thingCategories>
+		<li>RoadEquipment</li>
+    </thingCategories>
+    <drawGUIOverlay>true</drawGUIOverlay>
+    <altitudeLayer>Item</altitudeLayer>
+    <alwaysHaulable>true</alwaysHaulable>
+    <tickerType>Never</tickerType>
+    <useHitPoints>true</useHitPoints>
+    <pathCost>10</pathCost>
+    <selectable>true</selectable>
+	<statBases>
+		<MaxHitPoints>200</MaxHitPoints>
+		<WorkToMake>16000</WorkToMake>
+		<Mass>70</Mass>
+		<Flammability>1.0</Flammability>
+		<Beauty>-20</Beauty>
+	</statBases>
+    <techLevel>Spacer</techLevel>
+	<costList>
+		<Steel>120</Steel>
+		<ComponentIndustrial>8</ComponentIndustrial>
+		<Plasteel>70</Plasteel>
+		<ComponentSpacer>5</ComponentSpacer>
+	</costList>
+    <recipeMaker>
+		<workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+		<workSkill>Crafting</workSkill>
+		<effectWorking>Smith</effectWorking>
+		<soundWorking>Recipe_Smith</soundWorking>
+		<recipeUsers>
+			<li>TableMachining</li>
+		</recipeUsers>
+		<unfinishedThingDef>UnfinishedComponent</unfinishedThingDef>
+		<researchPrerequisite>ResearchProject_RotRAISR2G</researchPrerequisite>
+		<skillRequirements>
+			<Crafting>6</Crafting>
+		</skillRequirements>
+    </recipeMaker>
+  </ThingDef>
+
 	<ThingDef ParentName="BuildingBase">
 		<defName>RotR_ISR2G</defName>
 		<label>ISR2G</label>
@@ -35,18 +133,15 @@
 			<Beauty>-20</Beauty>
 		</statBases>
 		<size>(2,2)</size>
-		<costList>
-			<Steel>180</Steel>
-			<ComponentIndustrial>10</ComponentIndustrial>
-		</costList>
 		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
-		<designationCategory>Production</designationCategory>
 		<staticSunShadowHeight>0.2</staticSunShadowHeight>
 		<constructEffect>ConstructMetal</constructEffect>
 		<canOverlapZones>false</canOverlapZones>
-		<researchPrerequisites>
-			<li>ResearchProject_RotRISR2G</li>
-		</researchPrerequisites>
+		<comps>
+            <li>
+                <compClass>RoadsOfTheRim.OldDefsCleanupComp</compClass>
+            </li>
+        </comps>
 	</ThingDef>
 	
 	<ThingDef ParentName="BuildingBase">
@@ -97,6 +192,11 @@
 		<researchPrerequisites>
 			<li>ResearchProject_RotRAISR2G</li>
 		</researchPrerequisites>
+		<comps>
+            <li>
+                <compClass>RoadsOfTheRim.OldDefsCleanupComp</compClass>
+            </li>
+        </comps>
 	</ThingDef>
 
 </Defs>

@@ -54,6 +54,8 @@ namespace RoadsOfTheRim
 
         public static string[] allResourcesAndWork = new string[] { "Work", "WoodLog", "Stone", "Steel", "Chemfuel" , "Plasteel" , "Uranium" , "ComponentIndustrial" , "ComponentSpacer"};
 
+        public static string[] allResourcesWithoutModifiers = new string[] { "Uranium", "ComponentIndustrial", "ComponentSpacer" };
+
         public List<RotR_cost> costs = new List<RotR_cost>() ;
 
         public string GetCosts()
@@ -100,6 +102,28 @@ namespace RoadsOfTheRim
                     break;
             }
             return result;
+        }
+
+        public static bool BiomeAllowed(int tile , RoadDef roadDef , out BiomeDef biomeHere)
+        {
+            DefModExtension_RotR_RoadDef RoadDefMod = roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
+            biomeHere = Find.WorldGrid.tiles[tile].biome ;
+            if (RoadDefMod.canBuildOnWater && (biomeHere.defName == "Ocean" || biomeHere.defName == "Lake"))
+            {
+                return true ;
+            }
+            return biomeHere.allowRoads ;
+        }
+        
+        public static bool ImpassableAllowed(int tile, RoadDef roadDef)
+        {
+            DefModExtension_RotR_RoadDef RoadDefMod = roadDef.GetModExtension<DefModExtension_RotR_RoadDef>();
+            Hilliness hillinnessHere = Find.WorldGrid.tiles[tile].hilliness;
+            if (RoadDefMod.canBuildOnImpassable && hillinnessHere==Hilliness.Impassable)
+            {
+                return true;
+            }
+            return hillinnessHere != Hilliness.Impassable;
         }
     }
 }

@@ -1,6 +1,7 @@
 using System ;
 using System.Text;
 using System.Collections.Generic ;
+using System.Linq;
 using RimWorld ;
 using RimWorld.Planet;
 using Verse ;
@@ -83,18 +84,8 @@ namespace RoadsOfTheRim
             {
                 stringBuilder.Append("RoadsOfTheRim_siteInspectString".Translate(this.GetSite().roadDef.label, string.Format("{0:0.0}", this.GetSite().roadDef.movementCostMultiplier)));
 
-                // Show total cost modifiers : TODO - MOve that to a static function in WorldObjectComp_ConstructionSite which uses it for the site alreday
-                float elevationModifier = 0f;
-                float hillinessModifier = 0f;
-                float swampinessModifier = 0f;
-                float bridgeModifier = 0f;
-                WorldObjectComp_ConstructionSite.GetCostsModifiers(this.Tile, this.Next.Tile, ref elevationModifier, ref hillinessModifier, ref swampinessModifier, ref bridgeModifier);
-                RoadsOfTheRimSettings settings = LoadedModManager.GetMod<RoadsOfTheRim>().GetSettings<RoadsOfTheRimSettings>();
-                float totalCostModifier = (1 + elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier) * ((float)settings.BaseEffort / 10);
-                stringBuilder.Append("RoadsOfTheRim_ConstructionSiteDescription_CostModifiers".Translate(
-                    String.Format("{0:P0}", elevationModifier + hillinessModifier + swampinessModifier + bridgeModifier),
-                    String.Format("{0:P0}", elevationModifier), String.Format("{0:P0}", hillinessModifier), String.Format("{0:P0}", swampinessModifier), String.Format("{0:P0}", bridgeModifier)
-                ));
+                float totalCostModifier = 0f;
+                stringBuilder.Append(WorldObjectComp_ConstructionSite.CostModifersDescription(this.Tile , this.Next.Tile , ref totalCostModifier));
 
                 // Show costs
                 WorldObjectComp_ConstructionSite SiteComp = this.GetSite().GetComponent<WorldObjectComp_ConstructionSite>();
@@ -102,8 +93,11 @@ namespace RoadsOfTheRim
                 {
                     if (SiteComp.GetCost(resourceName) > 0)
                     {
+                        // The cost modifier doesn't affect some advanced resources, as defined in static DefModExtension_RotR_RoadDef.allResourcesWithoutModifiers
+                        // TO DO : COuld this be combined with WorldObjectComp_ConstructionSite.setCosts() ? shares a lot in common except rebates. Can we really calcualte rebate on a leg ?
+                        float costModifierForThisResource = ((DefModExtension_RotR_RoadDef.allResourcesWithoutModifiers.Contains(resourceName)) ? 1 : totalCostModifier);
                         stringBuilder.AppendLine();
-                        stringBuilder.Append((int)SiteComp.GetCost(resourceName) * totalCostModifier + " " + resourceName);
+                        stringBuilder.Append((int)SiteComp.GetCost(resourceName) * costModifierForThisResource + " " + resourceName);
                     }
                 }
             }
@@ -154,12 +148,17 @@ namespace RoadsOfTheRim
                 }
 
                 // There can be no ConstructionLeg on a biome that doesn't allow roads
-                BiomeDef biomeHere = Find.WorldGrid.tiles[tile].biome ;
-                if (!biomeHere.allowRoads)
+                if (!DefModExtension_RotR_RoadDef.BiomeAllowed(tile , site.roadDef , out BiomeDef biomeHere))
                 {
-                    Messages.Message("RoadsOfTheRim_BiomePreventsConstruction".Translate(biomeHere.label) , MessageTypeDefOf.RejectInput);
+                    Messages.Message("RoadsOfTheRim_BiomePreventsConstruction".Translate(site.roadDef.label , biomeHere.label) , MessageTypeDefOf.RejectInput);
                     Target(site);
                     return false ;
+                }
+                else if (!DefModExtension_RotR_RoadDef.ImpassableAllowed(tile , site.roadDef))
+                {
+                    Messages.Message("RoadsOfTheRim_BiomePreventsConstruction".Translate(site.roadDef.label, " impassable mountains"), MessageTypeDefOf.RejectInput);
+                    Target(site);
+                    return false;
                 }
 
                 RoadConstructionLeg newLeg = (RoadConstructionLeg)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionLeg", true));

@@ -236,7 +236,6 @@ namespace RoadsOfTheRim
                 }
             }
         }
-
         public void TryToSkipBetterRoads(Caravan caravan = null)
         {
             RoadConstructionLeg nextLeg = GetNextLeg() ;
@@ -271,7 +270,6 @@ namespace RoadsOfTheRim
             toTile = destination ;
         }
         */
-
         public string ResourcesAlreadyConsumed()
         {
             return this.GetComponent<WorldObjectComp_ConstructionSite>().ResourcesAlreadyConsumed() ;

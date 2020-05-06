@@ -139,12 +139,6 @@ namespace RoadsOfTheRim
             {
                 return CaravanState.Moving ;
             }
-            /* Remove as this should not prevent the caravan from working (Issue #38)
-            if (caravan.ImmobilizedByMass)
-            {
-                return CaravanState.ImmobilizedByMass ;
-            }
-            */
             if (caravan.AllOwnersDowned)
             {
                 return CaravanState.AllOwnersDowned ;
@@ -162,14 +156,16 @@ namespace RoadsOfTheRim
 
         public override void CompTick()
         {
+            OldDefsCleanup();
             if (Find.TickManager.TicksGame % 100 == 0)
             {
                 Caravan caravan = GetCaravan();
-                // Wake up the caravan if it was nightresting
-                if (this.workOnWakeUp && !caravan.NightResting)
+                // Wake up the caravan if it's ready to work
+                if (this.workOnWakeUp && this.CaravanCurrentState() == CaravanState.ReadyToWork)
                 {
                     this.workOnWakeUp = false;
                     this.currentlyWorkingOnSite = true;
+                    Messages.Message("RotR_CaravanWakesUp".Translate(caravan.Label, site.roadDef.label) , MessageTypeDefOf.NeutralEvent);
                 }
 
                 // Do some work & stop working if finished
@@ -201,24 +197,26 @@ namespace RoadsOfTheRim
                     this.workOnWakeUp = true;
                     if (CaravanCurrentState() == CaravanState.AllOwnersDowned)
                     {
-                        stoppedReason = "Everyone is down";
+                        stoppedReason = "RotR_EveryoneDown".Translate();
                     }
                     if (CaravanCurrentState() == CaravanState.AllOwnersHaveMentalBreak)
                     {
-                        stoppedReason = "Everyone is having a mental break";
+                        stoppedReason = "RotR_EveryoneCrazy".Translate();
                     }
+                    // I decided to remove this (Issue #38) so code should never reach here
                     if (CaravanCurrentState() == CaravanState.ImmobilizedByMass)
                     {
-                        stoppedReason = "Too heavy to move";
+                        stoppedReason = "RotR_TooHeavy".Translate();
                     }
                     if (CaravanCurrentState() == CaravanState.NightResting)
                     {
-                        stoppedReason = " resting at night. Work will resume in the morning.";
+                        stoppedReason = "RotR_RestingAtNight".Translate();
                     }
                     if (stoppedReason != "")
                     {
-                        Messages.Message("Caravan stopped working on site : " + stoppedReason, MessageTypeDefOf.RejectInput);
+                        Messages.Message("RotR_CaravanStopped".Translate(caravan.Label , site.roadDef.label) + stoppedReason, MessageTypeDefOf.RejectInput);
                     }
+
                     // This should not happen ?
                     else
                     {
@@ -354,15 +352,16 @@ namespace RoadsOfTheRim
             int result = 0 ;
             RoadsOfTheRimSettings settings = LoadedModManager.GetMod<RoadsOfTheRim>().GetSettings<RoadsOfTheRimSettings>();
             // Setting the caravan to use ISR2G or AISR2G if present and settings allow it
+            // TO DO : I can do better than hardcode
             if (settings.useISR2G)
             {
                 foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(this.GetCaravan()))
                 {
-                    if (result  < 1 && aThing.GetInnerIfMinified().def.defName == "RotR_ISR2G")
+                    if (result  < 1 && aThing.GetInnerIfMinified().def.defName == "RotR_ISR2GNew")
                     {
                         result = 1;
                     }
-                    if (result < 2 && aThing.GetInnerIfMinified().def.defName == "RotR_AISR2G")
+                    if (result < 2 && aThing.GetInnerIfMinified().def.defName == "RotR_AISR2GNew")
                     {
                         result = 2;
                         return result;
@@ -378,6 +377,39 @@ namespace RoadsOfTheRim
             Scribe_Values.Look<bool>(ref this.currentlyWorkingOnSite, "RoadsOfTheRim_Caravan_currentlyWorkingOnSite" , false , true);
             Scribe_Values.Look<bool>(ref this.workOnWakeUp, "RoadsOfTheRim_Caravan_workOnWakeUp", false, true);
             Scribe_References.Look<RoadConstructionSite>(ref this.site, "RoadsOfTheRim_Caravan_RoadConstructionSite");
+        }
+
+        // I had to take into account the old defs of ISR2G that used to be buildings, and replace them with new ISR2G defs that are craftable items
+        public void OldDefsCleanup ()
+        {
+            int newISRG2 = 0;
+            int newAISRG2 = 0;
+            Caravan caravan = this.GetCaravan();
+            foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(caravan))
+            {
+                if (aThing.GetInnerIfMinified().def.defName == "RotR_ISR2G")
+                {
+                    newISRG2++;
+                    aThing.Destroy();
+                }
+                else if (aThing.GetInnerIfMinified().def.defName == "RotR_AISR2G")
+                {
+                    newAISRG2++;
+                    aThing.Destroy();
+                }
+            }
+            for (int i = newISRG2; i > 0; i--)
+            {
+                Thing newThing = ThingMaker.MakeThing(ThingDef.Named("RotR_ISR2GNew"));
+                CaravanInventoryUtility.GiveThing(caravan, newThing);
+                RoadsOfTheRim.DebugLog("Replacing an ISR2G in caravan " + caravan.ToString());
+            }
+            for (int j = newAISRG2; j > 0; j--)
+            {
+                Thing newThing = ThingMaker.MakeThing(ThingDef.Named("RotR_AISR2GNew"));
+                CaravanInventoryUtility.GiveThing(caravan, newThing);
+                RoadsOfTheRim.DebugLog("Replacing an AISR2G in caravan " + caravan.ToString());
+            }
         }
     }
 }

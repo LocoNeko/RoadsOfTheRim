@@ -54,6 +54,7 @@
 	<RotR_TooHeavy>Too heavy to move</RotR_TooHeavy>
 	<RotR_RestingAtNight>resting at night. Work will resume in the morning.</RotR_RestingAtNight>
 	<RotR_CaravanStopped>{0} stopped building {1} : </RotR_CaravanStopped>
+	<RotR_CaravanWakesUp>{0} resumed building {1}</RotR_CaravanWakesUp>
 	<RoadsOfTheRimBuildWorkOnSiteCantWork>{0} unable to build road right now</RoadsOfTheRimBuildWorkOnSiteCantWork>
   <RoadsOfTheRim_BetterRoadFound>{0} found {1} while building {2} and is moving to the next leg</RoadsOfTheRim_BetterRoadFound>
   <RoadsOfTheRim_siteInspectString>Building {0} (movement difficulty {1});</RoadsOfTheRim_siteInspectString>

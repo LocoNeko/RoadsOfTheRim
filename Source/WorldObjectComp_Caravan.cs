@@ -165,6 +165,7 @@ namespace RoadsOfTheRim
                 {
                     this.workOnWakeUp = false;
                     this.currentlyWorkingOnSite = true;
+                    Messages.Message("RotR_CaravanWakesUp".Translate(caravan.Label, site.roadDef.label) , MessageTypeDefOf.NeutralEvent);
                 }
 
                 // Do some work & stop working if finished

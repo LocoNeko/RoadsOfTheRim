@@ -329,6 +329,20 @@ namespace RoadsOfTheRim
         }
     }
 
+    [HarmonyPatch(typeof(ThingFilter), "SetFromPreset")]
+    //Remove Road equipment from Item tab when forming caravans
+    public static class Patch_ThingFilter_SetFromPreset
+    {
+        [HarmonyPostfix]
+        public static void Postfix(ref ThingFilter __instance , StorageSettingsPreset preset)
+        {
+            if (preset == StorageSettingsPreset.DefaultStockpile)
+            {
+                __instance.SetAllow(ThingCategoryDef.Named("RoadEquipment"), allow: true);
+            }
+        }
+    }
+
     // All Tiles can now have roads
     [HarmonyPatch(typeof(Tile), "Roads", MethodType.Getter)]
     public static class Patch_Tile_Roads

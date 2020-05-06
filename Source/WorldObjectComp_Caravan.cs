@@ -139,12 +139,6 @@ namespace RoadsOfTheRim
             {
                 return CaravanState.Moving ;
             }
-            /* Remove as this should not prevent the caravan from working (Issue #38)
-            if (caravan.ImmobilizedByMass)
-            {
-                return CaravanState.ImmobilizedByMass ;
-            }
-            */
             if (caravan.AllOwnersDowned)
             {
                 return CaravanState.AllOwnersDowned ;
@@ -208,6 +202,7 @@ namespace RoadsOfTheRim
                     {
                         stoppedReason = "RotR_EveryoneCrazy".Translate();
                     }
+                    // I decided to remove this (Issue #38) so code should never reach here
                     if (CaravanCurrentState() == CaravanState.ImmobilizedByMass)
                     {
                         stoppedReason = "RotR_TooHeavy".Translate();

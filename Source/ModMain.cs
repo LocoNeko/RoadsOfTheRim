@@ -96,7 +96,7 @@ namespace RoadsOfTheRim
             {
                 Log.Warning("[RotR] DEBUG - " + message);
             }
-            if (Prefs.DevMode && e!=null)
+            if (e!=null)
             {
                 Log.Error(
                 "[RotR] Exception :\n" + e + "\n=====\n" +
@@ -152,7 +152,7 @@ namespace RoadsOfTheRim
                 return siteComp.finishWork(caravan);
             }
 
-            if (!(caravanComp.CaravanCurrentState() == CaravanState.ReadyToWork))
+            if (caravanComp.CaravanCurrentState() != CaravanState.ReadyToWork)
             {
                 RoadsOfTheRim.DebugLog("[RotR] DEBUG : doSomeWork() failed because the caravan can't work.");
                 return false;

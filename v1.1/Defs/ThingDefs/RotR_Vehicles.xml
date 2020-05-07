@@ -7,7 +7,7 @@
 		<thingClass>ThingWithComps</thingClass>
 		<description>Internal Combustion Engine powered vehicle, used to travel fast on the world map, though exclusively on roads</description>
 		<graphicData>
-			<texPath>Vechicles/ICEmodelA</texPath>
+			<texPath>Vehicles/ICEmodelA</texPath>
 			<graphicClass>Graphic_Multi</graphicClass>
 			<drawSize>(4,2)</drawSize>
 		</graphicData>

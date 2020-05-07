@@ -253,8 +253,9 @@ namespace RoadsOfTheRim
                         // The cost modifier doesn't affect some advanced resources, as defined in static DefModExtension_RotR_RoadDef.allResourcesWithoutModifiers
                         float costModifierForThisResource = ((DefModExtension_RotR_RoadDef.allResourcesWithoutModifiers.Contains(resourceName)) ? 1 : totalCostModifier );
                         rebate.TryGetValue(resourceName, out thisRebate);
-                        costs[resourceName] = (int)((roadDefExtension.GetCost(resourceName) - thisRebate) * costModifierForThisResource);
-                        left[resourceName] = costs[resourceName];
+                        // Minimum cost of anything that's needed is 1
+                        costs[resourceName] = Math.Max( (int)((roadDefExtension.GetCost(resourceName) - thisRebate) * costModifierForThisResource) , 1) ;
+                        left[resourceName] = Math.Max( costs[resourceName] , 1f) ;
                         if (thisRebate>0)
                         {
                             s.Add("RoadsOfTheRim_UpgradeRebateDetail".Translate((int)(thisRebate * costModifierForThisResource) , resourceName));

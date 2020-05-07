@@ -308,7 +308,7 @@ namespace RoadsOfTheRim
                 if (tow.ThingDef.IsWithinCategory(ThingCategoryDef.Named("RoadEquipment")))
                 {
                     source.Add(tow);
-                    RoadsOfTheRim.DebugLog("Found an ISR2G");
+                    RoadsOfTheRim.DebugLog("Found a road equipment");
                 }
             }
             widget.AddSection("RoadsOfTheRim_RoadEquipment".Translate(), source);
@@ -317,7 +317,7 @@ namespace RoadsOfTheRim
 
 
     [HarmonyPatch(typeof(CaravanUIUtility), "CreateCaravanTransferableWidgets")]
-    //Remove Road equipment from Item tab when forming caravans
+    //Remove Road equipments from Item tab to put them in pawns tab when forming caravans
     public static class Patch_CaravanUIUtility_CreateCaravanTransferableWidgets
     {
         [HarmonyPostfix]
@@ -330,7 +330,7 @@ namespace RoadsOfTheRim
     }
 
     [HarmonyPatch(typeof(ThingFilter), "SetFromPreset")]
-    //Remove Road equipment from Item tab when forming caravans
+    //Road equipment should be storable in a normal stockpile by default
     public static class Patch_ThingFilter_SetFromPreset
     {
         [HarmonyPostfix]

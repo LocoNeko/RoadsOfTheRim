@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+	<ThingDef>
+		<defName>RotR_ICEmodelA</defName>
+		<label>Vehicle ICE model A</label>
+		<thingClass>ThingWithComps</thingClass>
+		<description>Internal Combustion Engine powered vehicle, used to travel fast on the world map, though exclusively on roads</description>
+		<graphicData>
+			<texPath>Vechicles/ICEmodelA</texPath>
+			<graphicClass>Graphic_Multi</graphicClass>
+			<drawSize>(4,2)</drawSize>
+		</graphicData>
+		<category>Item</category>
+		<thingCategories>
+			<li>RoadEquipment</li>
+		</thingCategories>
+		<drawGUIOverlay>true</drawGUIOverlay>
+		<altitudeLayer>Item</altitudeLayer>
+		<alwaysHaulable>true</alwaysHaulable>
+		<tickerType>Never</tickerType>
+		<useHitPoints>true</useHitPoints>
+		<pathCost>10</pathCost>
+		<selectable>true</selectable>
+		<statBases>
+			<MaxHitPoints>400</MaxHitPoints>
+			<WorkToMake>10</WorkToMake>
+			<Mass>250</Mass>
+			<Flammability>1.0</Flammability>
+			<Beauty>-20</Beauty>
+		</statBases>
+		<techLevel>Industrial</techLevel>
+		<costList>
+			<Steel>1</Steel>
+		</costList>
+		<recipeMaker>
+			<workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+			<workSkill>Crafting</workSkill>
+			<effectWorking>Smith</effectWorking>
+			<soundWorking>Recipe_Smith</soundWorking>
+			<recipeUsers>
+				<li>TableMachining</li>
+			</recipeUsers>
+			<unfinishedThingDef>UnfinishedComponent</unfinishedThingDef>
+			<researchPrerequisite>ResearchProject_RotRISR2G</researchPrerequisite>
+			<skillRequirements>
+				<Crafting>4</Crafting>
+			</skillRequirements>
+		</recipeMaker>
+	</ThingDef>
+</Defs>

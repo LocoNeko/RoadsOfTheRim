@@ -17,8 +17,8 @@
 			<li>RoadEquipment</li>
 		</thingCategories>
 		<drawGUIOverlay>true</drawGUIOverlay>
-		<altitudeLayer>Item</altitudeLayer>
-		<alwaysHaulable>true</alwaysHaulable>
+		<altitudeLayer>Building</altitudeLayer>
+		<alwaysHaulable>false</alwaysHaulable>
 		<tickerType>Never</tickerType>
 		<useHitPoints>true</useHitPoints>
 		<pathCost>10</pathCost>
@@ -48,6 +48,6 @@
 				<Crafting>4</Crafting>
 			</skillRequirements>
 		</recipeMaker>
-		<uiIconScale>0.3</uiIconScale>
+		<uiIconScale>1</uiIconScale>
 	</ThingDef>
 </Defs>

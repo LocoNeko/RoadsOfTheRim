@@ -17,9 +17,14 @@
 			<li>RoadEquipment</li>
 		</thingCategories>
 		<drawGUIOverlay>true</drawGUIOverlay>
-		<altitudeLayer>Pawn</altitudeLayer>
+		<altitudeLayer>Building</altitudeLayer>
+		<passability>Impassable</passability>
+		<canOverlapZones>false</canOverlapZones>
 		<alwaysHaulable>false</alwaysHaulable>
 		<tickerType>Never</tickerType>
+		<placeWorkers>
+			<li>PlaceWorker_NotUnderRoof</li>
+		</placeWorkers>
 		<useHitPoints>true</useHitPoints>
 		<pathCost>10</pathCost>
 		<selectable>true</selectable>

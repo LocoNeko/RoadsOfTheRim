@@ -11,6 +11,7 @@
 			<graphicClass>Graphic_Multi</graphicClass>
 			<drawSize>(3,6)</drawSize>
 		</graphicData>
+		<size>(3,6)</size>
 		<category>Item</category>
 		<thingCategories>
 			<li>RoadEquipment</li>
@@ -47,5 +48,6 @@
 				<Crafting>4</Crafting>
 			</skillRequirements>
 		</recipeMaker>
+		<uiIconScale>0.3</uiIconScale>
 	</ThingDef>
 </Defs>

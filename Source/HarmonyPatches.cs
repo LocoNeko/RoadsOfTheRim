@@ -385,4 +385,31 @@ namespace RoadsOfTheRim
         }
     }
     */
+
+    /*
+     * ============================================================
+     * 
+     * Harmony Patches for Vehicles
+     * 
+     * ============================================================
+     */
+    [HarmonyPatch(typeof(CaravanFormingUtility), "AllReachableColonyItems")]
+    public static class Patch_CaravanFormingUtility_AllReachableColonyItems
+    {
+        [HarmonyPostfix]
+        public static void Postfix(ref List<Thing> __result , Map map)
+        {
+            List<Thing> allThings = map.listerThings.AllThings;
+            for (int i = 0; i < allThings.Count; i++)
+            {
+                Thing thing = allThings[i];
+                if (thing.def.defName == "RotR_ICEmodelA")
+                {
+                    __result.Add(thing);
+                }
+            }
+
+        }
+    }
+
 }

@@ -9,7 +9,7 @@
 		<graphicData>
 			<texPath>Vehicles/ICEmodelA</texPath>
 			<graphicClass>Graphic_Multi</graphicClass>
-			<drawSize>(2,4)</drawSize>
+			<drawSize>(3,6)</drawSize>
 		</graphicData>
 		<category>Item</category>
 		<thingCategories>

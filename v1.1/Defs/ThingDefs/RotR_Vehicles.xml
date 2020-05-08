@@ -17,7 +17,7 @@
 			<li>RoadEquipment</li>
 		</thingCategories>
 		<drawGUIOverlay>true</drawGUIOverlay>
-		<altitudeLayer>Building</altitudeLayer>
+		<altitudeLayer>Pawn</altitudeLayer>
 		<alwaysHaulable>false</alwaysHaulable>
 		<tickerType>Never</tickerType>
 		<useHitPoints>true</useHitPoints>

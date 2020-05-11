@@ -56,8 +56,8 @@
 		<uiIconScale>1</uiIconScale>
 		<comps>
 			<li Class="RoadsOfTheRim.ThingCompProperties_RotR_Vehicles">
-				<!--
 				<Seats>4</Seats>
+				<!--
 				<OffRoad>false</OffRoad>
 				<Speed>15.0</Speed>
 				-->

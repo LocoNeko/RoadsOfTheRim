@@ -415,8 +415,8 @@ namespace RoadsOfTheRim
     [HarmonyPatch(typeof(Caravan), "Material", MethodType.Getter)]
     public static class Patch_Caravan_Texture
     {
-        [HarmonyPrefix]
-        public static void Prefix(Caravan __instance , ref Material __result)
+        [HarmonyPostfix]
+        public static void Postfix(Caravan __instance , ref Material __result)
         {
             RoadsOfTheRim.DebugLog("Getting caravan Material");
             if (CaravanVehiclesUtility.TotalVehicleSpeed(__instance) >= 0)

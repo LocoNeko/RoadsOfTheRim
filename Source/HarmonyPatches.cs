@@ -448,7 +448,14 @@ namespace RoadsOfTheRim
         [HarmonyPrefix]
         public static bool Prefix(ref bool __result, Caravan_PathFollower __instance, int tile , ref Caravan ___caravan)
         {
-            Caravan c = ___caravan;
+            float speed = CaravanVehiclesUtility.TotalVehicleSpeed(___caravan);
+            // If the caravan is motorised, bypass IsPassable
+            if (speed > 0)
+            {
+                List<Tile.RoadLink> roads = Find.WorldGrid.tiles[tile].Roads;
+                __result = (roads != null);
+                return false;
+            }
             return true;
         }
     }

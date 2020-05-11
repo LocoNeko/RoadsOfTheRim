@@ -101,7 +101,6 @@ namespace RoadsOfTheRim
             {
                 // lazy way out : the caravan can, on occasions (mainly debug teleport, though...), not have a site linked to the comp
             }
-            __result = __result + " Seats="+CaravanVehiclesUtility.NumberOfSeats(__instance);
         }
 
     }
@@ -412,5 +411,19 @@ namespace RoadsOfTheRim
             }
         }
     }
+
+    [HarmonyPatch(typeof(Caravan), "texture", MethodType.Getter)]
+    public static class Patch_Caravan_Texture
+    {
+        [HarmonyPostfix]
+        public static void Postfix(Caravan __instance, ref Texture __result)
+        {
+            if (CaravanVehiclesUtility.TotalVehicleSpeed(__instance) >0)
+            {
+                RoadsOfTheRim.DebugLog("I should patch caravan texture");
+            }
+        }
+    }
+
 
 }

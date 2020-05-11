@@ -18,7 +18,7 @@ namespace RoadsOfTheRim
         public int Seats = 0;
         public bool OffRoad = false;
         public float Speed = 0f;
-        public int Fuel = 0;
+        public float Fuel = 1000f; // TO DO : Debug this back to 0 once happy
     }
 
     class ThingComp_RotR_Vehicles : ThingComp
@@ -35,7 +35,7 @@ namespace RoadsOfTheRim
         public int Seats => properties.Seats;
         public bool OffRoad => properties.OffRoad;
         public float Speed => properties.Speed;
-        public int Fuel => properties.Fuel;
+        public float Fuel => properties.Fuel;
 
         public override void CompTick()
         {

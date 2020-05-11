@@ -396,14 +396,16 @@ namespace RoadsOfTheRim
     [HarmonyPatch(typeof(CaravanFormingUtility), "AllReachableColonyItems")]
     public static class Patch_CaravanFormingUtility_AllReachableColonyItems
     {
+        // TO DO : Extend that to all vehicles
         [HarmonyPostfix]
         public static void Postfix(ref List<Thing> __result , Map map)
         {
+            // Put all Vehicles (Things with a ThingComp_RotR_Vehicles) in the list
             List<Thing> allThings = map.listerThings.AllThings;
             for (int i = 0; i < allThings.Count; i++)
             {
                 Thing thing = allThings[i];
-                if (thing.def.defName == "RotR_ICEmodelA")
+                if (ThingCompUtility.TryGetComp<ThingComp_RotR_Vehicles>(thing) != null)
                 {
                     __result.Add(thing);
                 }

@@ -54,5 +54,10 @@
 			</skillRequirements>
 		</recipeMaker>
 		<uiIconScale>1</uiIconScale>
+		<comps>
+			<li>
+				<compClass>RoadsOfTheRim.ThingComp_RotR_Vehicles</compClass>
+			</li>
+		</comps>
 	</ThingDef>
 </Defs>

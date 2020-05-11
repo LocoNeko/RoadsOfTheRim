@@ -39,7 +39,7 @@ namespace RoadsOfTheRim
 
         public override void CompTick()
         {
-            RoadsOfTheRim.DebugLog("Tick on a vehicle : "+parent.Label+" "+Seats+" seats, speed "+Speed+", "+(OffRoad?"":"not")+" offroad. Fuel : "+Fuel );
+            RoadsOfTheRim.DebugLog("Tick on a vehicle ("+parent.Label+") : "+Seats+" seats, speed "+Speed+", "+(OffRoad?"":"not")+" offroad. Fuel : "+Fuel );
         }
 
     }

@@ -101,6 +101,7 @@ namespace RoadsOfTheRim
             {
                 // lazy way out : the caravan can, on occasions (mainly debug teleport, though...), not have a site linked to the comp
             }
+            __result = __result + " Seats="+CaravanVehiclesUtility.NumberOfSeats(__instance));
         }
 
     }

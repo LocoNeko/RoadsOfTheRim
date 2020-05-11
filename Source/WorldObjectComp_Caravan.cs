@@ -410,7 +410,7 @@ namespace RoadsOfTheRim
          * =========================
          */
 
-        public List<Thing> ListOfVehicles()
+        public List<Thing> GetListOfVehicles()
         {
             List<Thing> result = new List<Thing>();
             foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(this.GetCaravan()))
@@ -435,6 +435,6 @@ namespace RoadsOfTheRim
             Scribe_Values.Look<bool>(ref this.workOnWakeUp, "RoadsOfTheRim_Caravan_workOnWakeUp", false, true);
             Scribe_References.Look<RoadConstructionSite>(ref this.site, "RoadsOfTheRim_Caravan_RoadConstructionSite");
         }
-
     }
+
 }

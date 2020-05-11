@@ -5,10 +5,6 @@ namespace RoadsOfTheRim
 {
     class ThingCompProperties_RotR_Vehicles : CompProperties
     {
-        public int Fuel = 0;
-        public int Seats = 0;
-        public bool OffRoad = false;
-        public float Speed = 0;
         public ThingCompProperties_RotR_Vehicles()
         {
             this.compClass = typeof(ThingCompProperties_RotR_Vehicles);
@@ -18,6 +14,11 @@ namespace RoadsOfTheRim
         {
             this.compClass = compClass;
         }
+
+        public int Fuel = 0;
+        public int Seats = 0;
+        public bool OffRoad = false;
+        public float Speed = 0;
     }
 
     class ThingComp_RotR_Vehicles : ThingComp

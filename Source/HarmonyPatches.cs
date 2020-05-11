@@ -416,15 +416,12 @@ namespace RoadsOfTheRim
     public static class Patch_Caravan_Texture
     {
         [HarmonyPrefix]
-        public static void Prefix(Caravan __instance, ref Material __result , ref Material ___cachedMat)
+        public static void Prefix(Caravan __instance, ref Material __result)
         {
-            if (___cachedMat==null)
+            RoadsOfTheRim.DebugLog("Getting caravan Material");
+            if (CaravanVehiclesUtility.TotalVehicleSpeed(__instance) > 0)
             {
-                RoadsOfTheRim.DebugLog("The caravan cached material is null");
-                if (CaravanVehiclesUtility.TotalVehicleSpeed(__instance) > 0)
-                {
-                    RoadsOfTheRim.DebugLog("I should patch caravan texture");
-                }
+                RoadsOfTheRim.DebugLog("I should patch caravan texture");
             }
         }
     }

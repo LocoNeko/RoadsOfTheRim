@@ -418,11 +418,9 @@ namespace RoadsOfTheRim
         [HarmonyPostfix]
         public static void Postfix(Caravan __instance , ref Material __result)
         {
-            RoadsOfTheRim.DebugLog("Getting caravan Material");
             if (CaravanVehiclesUtility.TotalVehicleSpeed(__instance) >= 0)
             {
                 Color PlayerCaravanColor = new Color(1f, 0.863f, 0.33f);
-                RoadsOfTheRim.DebugLog("Caravan texture pacthed");
                 __result = MaterialPool.MatFrom(color: (__instance.Faction == null) ? Color.white : ((!__instance.Faction.IsPlayer) ? __instance.Faction.Color : PlayerCaravanColor), texPath: "World/WorldObjects/MotorisedCaravan", shader: ShaderDatabase.WorldOverlayTransparentLit, renderQueue: WorldMaterials.DynamicObjectRenderQueue);
             }
         }

@@ -428,5 +428,22 @@ namespace RoadsOfTheRim
         }
     }
 
+    [HarmonyPatch(typeof(CaravanTicksPerMoveUtility), "GetTicksPerMove" , new Type[] { typeof(Caravan), typeof (StringBuilder)})]
+    public static class Patch_CaravanTicksPerMoveUtility_GetTicksPerMove
+    {
+        [HarmonyPrefix]
+        public static bool Prefix(ref int __result , Caravan caravan, StringBuilder explanation)
+        {
+            float speed = CaravanVehiclesUtility.TotalVehicleSpeed(caravan);
+            if (speed >= 0)
+            {
+                RoadsOfTheRim.DebugLog("Patching Caravan ticks per move");
+                __result = (int)speed;
+                return false;
+            }
+            return true; // To proceed to the original method, Prefix must return true
+        }
+    }
+
 
 }

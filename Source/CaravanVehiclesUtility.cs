@@ -50,6 +50,35 @@ namespace RoadsOfTheRim
             return result;
         }
 
+        public static bool IsOffroad(Caravan c)
+        {
+            WorldObjectComp_Caravan CaravanComp = c.GetComponent<WorldObjectComp_Caravan>();
+            if (CaravanComp != null)
+            {
+                List<Thing> ListOfVehicles = CaravanComp.GetListOfVehicles();
+                foreach (Thing vehicle in ListOfVehicles)
+                {
+                    ThingComp_RotR_Vehicles VehicleComp = ThingCompUtility.TryGetComp<ThingComp_RotR_Vehicles>(vehicle);
+                    if (VehicleComp != null)
+                    {
+                        if (VehicleComp.Fuel <= 0 || !VehicleComp.OffRoad)
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 
 }

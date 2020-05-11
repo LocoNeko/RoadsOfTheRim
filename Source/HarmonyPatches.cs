@@ -433,9 +433,8 @@ namespace RoadsOfTheRim
         public static bool Prefix(ref int __result , Caravan caravan, StringBuilder explanation)
         {
             float speed = CaravanVehiclesUtility.TotalVehicleSpeed(caravan);
-            if (speed >= 0)
+            if (speed > 0)
             {
-                RoadsOfTheRim.DebugLog("Patching Caravan ticks per move");
                 __result = (int)speed;
                 return false;
             }
@@ -443,5 +442,15 @@ namespace RoadsOfTheRim
         }
     }
 
+    [HarmonyPatch(typeof(Caravan_PathFollower), "IsPassable")]
+    public static class Patch_Caravan_PathFollower_IsPassable
+    {
+        [HarmonyPrefix]
+        public static bool Prefix(ref bool __result, Caravan_PathFollower __instance, int tile , ref Caravan ___caravan)
+        {
+            Caravan c = ___caravan;
+            return true;
+        }
+    }
 
 }

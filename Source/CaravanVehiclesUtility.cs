@@ -46,6 +46,10 @@ namespace RoadsOfTheRim
                         }
                     }
                 }
+                if (FueledSeats < c.pawns.Count)
+                {
+                    result = 0;
+                }
             }
             return result;
         }

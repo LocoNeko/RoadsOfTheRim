@@ -308,7 +308,6 @@ namespace RoadsOfTheRim
                 if (tow.ThingDef.IsWithinCategory(ThingCategoryDef.Named("RoadEquipment")))
                 {
                     source.Add(tow);
-                    RoadsOfTheRim.DebugLog("Found a road equipment");
                 }
             }
             widget.AddSection("RoadsOfTheRim_RoadEquipment".Translate(), source);

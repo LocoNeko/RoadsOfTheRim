@@ -21,7 +21,7 @@
 		<passability>Impassable</passability>
 		<canOverlapZones>false</canOverlapZones>
 		<alwaysHaulable>false</alwaysHaulable>
-		<tickerType>Never</tickerType>
+		<tickerType>Normal</tickerType>
 		<placeWorkers>
 			<li>PlaceWorker_NotUnderRoof</li>
 		</placeWorkers>
@@ -31,7 +31,7 @@
 		<statBases>
 			<MaxHitPoints>400</MaxHitPoints>
 			<WorkToMake>10</WorkToMake>
-			<Mass>250</Mass>
+			<Mass>1</Mass>
 			<Flammability>1.0</Flammability>
 			<Beauty>-20</Beauty>
 		</statBases>

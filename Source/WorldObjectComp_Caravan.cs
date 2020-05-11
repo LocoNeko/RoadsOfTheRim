@@ -89,7 +89,7 @@ namespace RoadsOfTheRim
         }
     }
 
-        public class WorldObjectComp_Caravan : WorldObjectComp
+    public class WorldObjectComp_Caravan : WorldObjectComp
     {
         public bool currentlyWorkingOnSite = false;
 
@@ -371,16 +371,8 @@ namespace RoadsOfTheRim
             return result;
         }
 
-        public override void PostExposeData()
-        {
-            base.PostExposeData();
-            Scribe_Values.Look<bool>(ref this.currentlyWorkingOnSite, "RoadsOfTheRim_Caravan_currentlyWorkingOnSite" , false , true);
-            Scribe_Values.Look<bool>(ref this.workOnWakeUp, "RoadsOfTheRim_Caravan_workOnWakeUp", false, true);
-            Scribe_References.Look<RoadConstructionSite>(ref this.site, "RoadsOfTheRim_Caravan_RoadConstructionSite");
-        }
-
         // I had to take into account the old defs of ISR2G that used to be buildings, and replace them with new ISR2G defs that are craftable items
-        public void OldDefsCleanup ()
+        public void OldDefsCleanup()
         {
             int newISRG2 = 0;
             int newAISRG2 = 0;
@@ -411,5 +403,38 @@ namespace RoadsOfTheRim
                 RoadsOfTheRim.DebugLog("Replacing an AISR2G in caravan " + caravan.ToString());
             }
         }
+
+        /*
+         * =========================
+         * Vehicle related
+         * =========================
+         */
+
+        public List<Thing> ListOfVehicles()
+        {
+            List<Thing> result = new List<Thing>();
+            foreach (Thing aThing in CaravanInventoryUtility.AllInventoryItems(this.GetCaravan()))
+            {
+                if (ThingCompUtility.TryGetComp<ThingComp_RotR_Vehicles>(aThing) != null)
+                {
+                    result.Add(aThing);
+                }
+            }
+            return result ;
+        }
+
+        /*
+         * =========================
+         * Eading & Writing (but no arithmetic)
+         * =========================
+         */
+        public override void PostExposeData()
+        {
+            base.PostExposeData();
+            Scribe_Values.Look<bool>(ref this.currentlyWorkingOnSite, "RoadsOfTheRim_Caravan_currentlyWorkingOnSite" , false , true);
+            Scribe_Values.Look<bool>(ref this.workOnWakeUp, "RoadsOfTheRim_Caravan_workOnWakeUp", false, true);
+            Scribe_References.Look<RoadConstructionSite>(ref this.site, "RoadsOfTheRim_Caravan_RoadConstructionSite");
+        }
+
     }
 }

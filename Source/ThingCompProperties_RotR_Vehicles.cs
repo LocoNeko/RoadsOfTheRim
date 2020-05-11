@@ -6,6 +6,9 @@ namespace RoadsOfTheRim
     class ThingCompProperties_RotR_Vehicles : CompProperties
     {
         public int Fuel = 0;
+        public int Seats = 0;
+        public bool OffRoad = false;
+        public float Speed = 0;
         public ThingCompProperties_RotR_Vehicles()
         {
             this.compClass = typeof(ThingCompProperties_RotR_Vehicles);
@@ -29,10 +32,13 @@ namespace RoadsOfTheRim
         }
 
         public int Fuel => properties.Fuel;
+        public int Seats => properties.Seats;
+        public bool OffRoad => properties.OffRoad;
+        public float Speed => properties.Speed;
 
         public override void CompTick()
         {
-            RoadsOfTheRim.DebugLog("Tick on a vehicle");
+            RoadsOfTheRim.DebugLog("Tick on a vehicle : "+parent.Label+" "+Seats+" seats, speed "+Speed+", "+(OffRoad?"":"not")+" offroad. Fuel : "+Fuel );
         }
 
     }

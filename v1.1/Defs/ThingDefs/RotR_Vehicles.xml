@@ -55,8 +55,10 @@
 		</recipeMaker>
 		<uiIconScale>1</uiIconScale>
 		<comps>
-			<li>
-				<compClass>RoadsOfTheRim.ThingComp_RotR_Vehicles</compClass>
+			<li Class="RoadsOfTheRim.ThingComp_RotR_Vehicles">
+				<Seats>4</Seats>
+				<OffRoad>false</OffRoad>
+				<Speed>15</Speed>
 			</li>
 		</comps>
 	</ThingDef>

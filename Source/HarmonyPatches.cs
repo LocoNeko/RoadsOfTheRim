@@ -409,7 +409,6 @@ namespace RoadsOfTheRim
                     __result.Add(thing);
                 }
             }
-
         }
     }
 

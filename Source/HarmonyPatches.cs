@@ -464,10 +464,10 @@ namespace RoadsOfTheRim
     public static class Patch_Caravan_PathFollower_CostToMove
     {
         [HarmonyPrefix]
-        public static bool Prefix(ref int __result, Caravan_PathFollower __instance, ref Caravan __caravan , int start , int end, int? ticksAbs)
+        public static bool Prefix(ref int __result, Caravan_PathFollower __instance, ref Caravan caravan , int start , int end, int? ticksAbs)
         {
-            float speed = CaravanVehiclesUtility.TotalVehicleSpeed(__caravan);
-            bool OffRoad = CaravanVehiclesUtility.IsOffroad(__caravan);
+            float speed = CaravanVehiclesUtility.TotalVehicleSpeed(caravan);
+            bool OffRoad = CaravanVehiclesUtility.IsOffroad(caravan);
             // If the caravan is motorised and not OffRoad, return crazy high values for Cost off roads
             if (speed > 0 && !OffRoad)
             {

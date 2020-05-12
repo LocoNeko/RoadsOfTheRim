@@ -490,15 +490,17 @@ namespace RoadsOfTheRim
         [HarmonyTranspiler]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions , ILGenerator ILGen)
         {
-            //ILGen.DeclareLocal(typeof(Int32));
+            MethodInfo IsOffRoad = AccessTools.Method(typeof(CaravanVehiclesUtility), "IsOffRoad");
+            ILGen.DeclareLocal(typeof(Int32));
             // Find caravan
             // If OffRoad -> do nothing
             // If not -> replace World.Impassable by impassable for motorised caravans
             var codes = new List<CodeInstruction>(instructions);
             
             List<CodeInstruction> newCodes = new List<CodeInstruction> {
-                new CodeInstruction (OpCodes.Ldc_I4_0),
-                new CodeInstruction (OpCodes.Stloc_S , 20)
+                new CodeInstruction (OpCodes.Ldarg_3), // Caravan
+                new CodeInstruction (OpCodes.Call , IsOffRoad), //call CaravanVehiclesUtility.IsOffRoad on Caravan
+                new CodeInstruction (OpCodes.Stloc_S , 20) // put it in local variable 20
             };
             codes.InsertRange(0, newCodes);
             return codes.AsEnumerable();

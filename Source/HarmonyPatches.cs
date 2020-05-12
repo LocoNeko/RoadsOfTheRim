@@ -460,7 +460,7 @@ namespace RoadsOfTheRim
         }
     }
 
-    [HarmonyPatch(typeof(Caravan_PathFollower), "CostToMove")]
+    [HarmonyPatch(typeof(Caravan_PathFollower), "CostToMove", new Type[] { typeof(Caravan), typeof(int), typeof(int), typeof(int?) })]
     public static class Patch_Caravan_PathFollower_CostToMove
     {
         [HarmonyPrefix]

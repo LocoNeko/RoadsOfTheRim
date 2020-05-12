@@ -510,13 +510,15 @@ namespace RoadsOfTheRim
 
             List<CodeInstruction> newCodes = new List<CodeInstruction> {
                 new CodeInstruction (OpCodes.Ldarg_3),
-                new CodeInstruction (OpCodes.Call , typeof(CaravanVehiclesUtility).GetMethod("IsOffRoad")),
+                new CodeInstruction (OpCodes.Call , typeof(CaravanVehiclesUtility).GetMethod("IsOffRoad" , BindingFlags.Public | BindingFlags.Static)),
                 new CodeInstruction (OpCodes.Stloc_S , 20)
             };
+            /*
             if (insertAtIndex!=-1)
             {
                 codes.InsertRange(insertAtIndex, newCodes);
             }
+            */
             return codes.AsEnumerable();
         }
     }

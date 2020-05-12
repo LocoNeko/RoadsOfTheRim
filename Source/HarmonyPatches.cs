@@ -494,15 +494,29 @@ namespace RoadsOfTheRim
             // If OffRoad -> do nothing
             // If not -> replace World.Impassable by impassable for motorised caravans
             var codes = new List<CodeInstruction>(instructions);
+            int insertAtIndex = -1;
+            for (int i = 0; i < codes.Count; i++)
+            {
+                if (codes[i].opcode == OpCodes.Call)
+                {
+                    string operand = codes[i].operand as String ;
+                    if (operand.Contains("get_World()"))
+                    {
+                        insertAtIndex = i+1;
+                        break;
+                    }
+                }
+            }
 
             List<CodeInstruction> newCodes = new List<CodeInstruction> {
                 new CodeInstruction (OpCodes.Ldarg_3),
                 new CodeInstruction (OpCodes.Call , typeof(CaravanVehiclesUtility).GetMethod("IsOffRoad")),
                 new CodeInstruction (OpCodes.Stloc_S , 20)
             };
-
-            codes.InsertRange(0, newCodes);
-
+            if (insertAtIndex!=-1)
+            {
+                codes.InsertRange(0, newCodes);
+            }
             return codes.AsEnumerable();
         }
     }

@@ -515,7 +515,7 @@ namespace RoadsOfTheRim
             };
             if (insertAtIndex!=-1)
             {
-                codes.InsertRange(0, newCodes);
+                codes.InsertRange(insertAtIndex, newCodes);
             }
             return codes.AsEnumerable();
         }

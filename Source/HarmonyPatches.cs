@@ -475,6 +475,7 @@ namespace RoadsOfTheRim
                 List<Tile.RoadLink> End_roads = Find.WorldGrid.tiles[end].Roads;
                 if (Start_roads == null || End_roads == null)
                 {
+                    RoadsOfTheRim.DebugLog("Cost to move adjusted to 30000");
                     __result = 30000;
                     return false;
                 }

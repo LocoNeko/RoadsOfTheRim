@@ -460,11 +460,11 @@ namespace RoadsOfTheRim
         }
     }
 
-    [HarmonyPatch(typeof(Caravan_PathFollower), "CostToMove", new Type[] { typeof(Caravan), typeof(int), typeof(int), typeof(int?) })]
+    [HarmonyPatch(typeof(Caravan_PathFollower), "CostToMove", new Type[] { typeof(Caravan), typeof(int), typeof(int), typeof(int) })]
     public static class Patch_Caravan_PathFollower_CostToMove
     {
         [HarmonyPrefix]
-        public static bool Prefix(ref int __result, Caravan_PathFollower __instance, ref Caravan __caravan , int start , int end)
+        public static bool Prefix(ref int __result, Caravan_PathFollower __instance, ref Caravan __caravan , int start , int end, int? ticksAbs)
         {
             float speed = CaravanVehiclesUtility.TotalVehicleSpeed(__caravan);
             bool OffRoad = CaravanVehiclesUtility.IsOffroad(__caravan);

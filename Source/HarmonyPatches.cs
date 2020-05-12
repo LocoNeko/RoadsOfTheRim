@@ -490,15 +490,20 @@ namespace RoadsOfTheRim
         [HarmonyTranspiler]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
+            // Find caravan
+            // If OffRoad -> do nothing
+            // If not -> replace World.Impassable by impassable for motorised caravans
             var codes = new List<CodeInstruction>(instructions);
-            for (int i = 0; i < codes.Count; i++)
-            {
-                if (codes[i].opcode == OpCodes.Ldarg_3)
-                {
-                    RoadsOfTheRim.DebugLog("Transpiler WorldPathFinder.FindPath found argument 3 = "+ codes[i].operand.ToStringSafe());
-                    break;
-                }
-            }
+
+            List<CodeInstruction> newCodes = new List<CodeInstruction> {
+                new CodeInstruction (OpCodes.Ldarg_3),
+                new CodeInstruction (OpCodes.Stelem_Ref),
+                new CodeInstruction (OpCodes.Call , typeof(CaravanVehiclesUtility).GetMethod("IsOffRoad")),
+                new CodeInstruction (OpCodes.Stloc_S , 20) ,
+            };
+
+            codes.InsertRange(0, newCodes);
+
             return codes.AsEnumerable();
         }
     }

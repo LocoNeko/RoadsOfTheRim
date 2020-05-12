@@ -33,13 +33,13 @@ namespace RoadsOfTheRim
                 foreach (Thing vehicle in ListOfVehicles)
                 {
                     ThingComp_RotR_Vehicles VehicleComp = ThingCompUtility.TryGetComp<ThingComp_RotR_Vehicles>(vehicle);
-                    if (VehicleComp !=null)
+                    if (VehicleComp != null)
                     {
                         // If the vehicle has fuel, add its seats to the total number of fueled seats and adjust speed if it's the slowest vehicle
-                        if (VehicleComp.Fuel>0)
+                        if (VehicleComp.Fuel > 0)
                         {
                             FueledSeats += VehicleComp.Seats;
-                            if (result==0 || VehicleComp.Speed<result)
+                            if (result == 0 || VehicleComp.Speed < result)
                             {
                                 result = VehicleComp.Speed;
                             }
@@ -54,6 +54,7 @@ namespace RoadsOfTheRim
             return result;
         }
 
+        // If caravan has vehicles but they're not fueled or not off road, return false. Return true in all other cases (caravan has no vehicles, or they're fueled and offroad)
         public static bool IsOffroad(Caravan c)
         {
             WorldObjectComp_Caravan CaravanComp = c.GetComponent<WorldObjectComp_Caravan>();
@@ -83,6 +84,17 @@ namespace RoadsOfTheRim
             return true;
         }
 
+        public static bool Impassable(bool IsOffRoad , int tile)
+        {
+            if (!IsOffRoad)
+            {
+                List<Tile.RoadLink> roads = Find.WorldGrid.tiles[tile].Roads;
+                if (roads == null)
+                {
+                    return true;
+                }
+            }
+            return Find.World.Impassable(tile);
+        }
     }
-
 }

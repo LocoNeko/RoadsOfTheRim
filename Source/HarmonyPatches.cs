@@ -488,37 +488,19 @@ namespace RoadsOfTheRim
     public static class Patch_WorldPathFinder_FindPath
     {
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions , ILGenerator ILGen)
         {
+            ILGen.DeclareLocal(typeof(Int32));
             // Find caravan
             // If OffRoad -> do nothing
             // If not -> replace World.Impassable by impassable for motorised caravans
             var codes = new List<CodeInstruction>(instructions);
-            int insertAtIndex = -1;
-            for (int i = 0; i < codes.Count; i++)
-            {
-                if (codes[i].opcode == OpCodes.Call)
-                {
-                    string operand = codes[i].operand as String ;
-                    if (operand.Contains("get_World()"))
-                    {
-                        insertAtIndex = i+1;
-                        break;
-                    }
-                }
-            }
-
+            
             List<CodeInstruction> newCodes = new List<CodeInstruction> {
-                new CodeInstruction (OpCodes.Ldarg_3),
-                new CodeInstruction (OpCodes.Call , typeof(CaravanVehiclesUtility).GetMethod("IsOffRoad" , BindingFlags.Public | BindingFlags.Static)),
+                new CodeInstruction (OpCodes.Ldc_I4_0),
                 new CodeInstruction (OpCodes.Stloc_S , 20)
             };
-            /*
-            if (insertAtIndex!=-1)
-            {
-                codes.InsertRange(insertAtIndex, newCodes);
-            }
-            */
+            codes.InsertRange(0, newCodes);
             return codes.AsEnumerable();
         }
     }

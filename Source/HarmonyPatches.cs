@@ -11,6 +11,7 @@ using System;
 using System.Diagnostics;
 using UnityEngine;
 using System.Runtime.CompilerServices;
+using System.Security.Principal;
 
 namespace RoadsOfTheRim
 {
@@ -503,6 +504,19 @@ namespace RoadsOfTheRim
                 new CodeInstruction (OpCodes.Stloc_S , 20) // put it in local variable 20
             };
             codes.InsertRange(0, newCodes);
+
+            // Find World.Impassable and replace it with CaravanVehiclesUtility.Impassable
+            int index = -1;
+            for (int i = 0; i < codes.Count; i++)
+            {
+                string s = codes[i].operand as string;
+                if (s.Contains("Impassable"))
+                {
+                    index = i;
+                    RoadsOfTheRim.DebugLog("Transpiling WorldPathFinder, found Impassable at index "+i);
+                    break;
+                }
+            }
             return codes.AsEnumerable();
         }
     }

@@ -483,4 +483,24 @@ namespace RoadsOfTheRim
             return true;
         }
     }
+
+    [HarmonyPatch(typeof(WorldPathFinder), "FindPath")]
+    public static class Patch_WorldPathFinder_FindPath
+    {
+        [HarmonyTranspiler]
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var codes = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < codes.Count; i++)
+            {
+                if (codes[i].opcode == OpCodes.Ldarg_3)
+                {
+                    RoadsOfTheRim.DebugLog("Transpiler WorldPathFinder.FindPath found argument 3 = "+ codes[i].operand.ToStringSafe());
+                    break;
+                }
+            }
+            return codes.AsEnumerable();
+        }
+    }
+
 }

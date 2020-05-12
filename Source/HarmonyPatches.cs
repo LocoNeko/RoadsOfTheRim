@@ -496,8 +496,9 @@ namespace RoadsOfTheRim
             var codes = new List<CodeInstruction>(instructions);
 
             List<CodeInstruction> newCodes = new List<CodeInstruction> {
-                new CodeInstruction (OpCodes.Ldarg_3),
-                new CodeInstruction (OpCodes.Stelem_Ref),
+                new CodeInstruction(OpCodes.Nop) ,
+//                new CodeInstruction (OpCodes.Ldarg_3),
+//                new CodeInstruction (OpCodes.Stelem_Ref),
 //                new CodeInstruction (OpCodes.Call , typeof(CaravanVehiclesUtility).GetMethod("IsOffRoad")),
 //                new CodeInstruction (OpCodes.Stloc_S , 20)
             };

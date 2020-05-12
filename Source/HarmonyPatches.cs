@@ -265,12 +265,12 @@ namespace RoadsOfTheRim
                     }
                     else
                     {
-                        RoadsOfTheRim.DebugLog("[RotR] - CalculatedMovementDifficultyAt Patch - Tile out of bounds");
+                        RoadsOfTheRim.DebugLog("CalculatedMovementDifficultyAt Patch - Tile out of bounds");
                     }
                 }
                 catch (Exception e)
                 {
-                    RoadsOfTheRim.DebugLog("[RotR] - CalculatedMovementDifficultyAt Patch - Catastrophic failure", e);
+                    RoadsOfTheRim.DebugLog("CalculatedMovementDifficultyAt Patch - Catastrophic failure", e);
                     return;
                 }
             }
@@ -333,7 +333,7 @@ namespace RoadsOfTheRim
     public static class Patch_ThingFilter_SetFromPreset
     {
         [HarmonyPostfix]
-        public static void Postfix(ref ThingFilter __instance , StorageSettingsPreset preset)
+        public static void Postfix(ref ThingFilter __instance, StorageSettingsPreset preset)
         {
             if (preset == StorageSettingsPreset.DefaultStockpile)
             {
@@ -397,7 +397,7 @@ namespace RoadsOfTheRim
     {
         // TO DO : Extend that to all vehicles
         [HarmonyPostfix]
-        public static void Postfix(ref List<Thing> __result , Map map)
+        public static void Postfix(ref List<Thing> __result, Map map)
         {
             // Put all Vehicles (Things with a ThingComp_RotR_Vehicles) in the list
             List<Thing> allThings = map.listerThings.AllThings;
@@ -416,7 +416,7 @@ namespace RoadsOfTheRim
     public static class Patch_Caravan_Texture
     {
         [HarmonyPostfix]
-        public static void Postfix(Caravan __instance , ref Material __result)
+        public static void Postfix(Caravan __instance, ref Material __result)
         {
             if (CaravanVehiclesUtility.TotalVehicleSpeed(__instance) >= 0)
             {
@@ -426,11 +426,11 @@ namespace RoadsOfTheRim
         }
     }
 
-    [HarmonyPatch(typeof(CaravanTicksPerMoveUtility), "GetTicksPerMove" , new Type[] { typeof(Caravan), typeof (StringBuilder)})]
+    [HarmonyPatch(typeof(CaravanTicksPerMoveUtility), "GetTicksPerMove", new Type[] { typeof(Caravan), typeof(StringBuilder) })]
     public static class Patch_CaravanTicksPerMoveUtility_GetTicksPerMove
     {
         [HarmonyPrefix]
-        public static bool Prefix(ref int __result , Caravan caravan, StringBuilder explanation)
+        public static bool Prefix(ref int __result, Caravan caravan, StringBuilder explanation)
         {
             float speed = CaravanVehiclesUtility.TotalVehicleSpeed(caravan);
             if (speed > 0)
@@ -446,7 +446,7 @@ namespace RoadsOfTheRim
     public static class Patch_Caravan_PathFollower_IsPassable
     {
         [HarmonyPrefix]
-        public static bool Prefix(ref bool __result, Caravan_PathFollower __instance, int tile , ref Caravan ___caravan)
+        public static bool Prefix(ref bool __result, Caravan_PathFollower __instance, int tile, ref Caravan ___caravan)
         {
             float speed = CaravanVehiclesUtility.TotalVehicleSpeed(___caravan);
             // If the caravan is motorised, bypass IsPassable
@@ -460,4 +460,26 @@ namespace RoadsOfTheRim
         }
     }
 
+    [HarmonyPatch(typeof(Caravan_PathFollower), "CostToMove")]
+    public static class Patch_Caravan_PathFollower_CostToMove
+    {
+        [HarmonyPrefix]
+        public static bool Prefix(ref int __result, Caravan_PathFollower __instance, ref Caravan __caravan , int start , int end)
+        {
+            float speed = CaravanVehiclesUtility.TotalVehicleSpeed(__caravan);
+            bool OffRoad = CaravanVehiclesUtility.IsOffroad(__caravan);
+            // If the caravan is motorised and not OffRoad, return crazy high values for Cost off roads
+            if (speed > 0 && !OffRoad)
+            {
+                List<Tile.RoadLink> Start_roads = Find.WorldGrid.tiles[start].Roads;
+                List<Tile.RoadLink> End_roads = Find.WorldGrid.tiles[end].Roads;
+                if (Start_roads == null || End_roads == null)
+                {
+                    __result = 30000;
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
 }

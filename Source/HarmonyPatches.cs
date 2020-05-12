@@ -510,12 +510,7 @@ namespace RoadsOfTheRim
             for (int i = 0; i < codes.Count; i++)
             {
                 string s = codes[i].operand as string;
-                if (s.Contains("Impassable"))
-                {
-                    index = i;
-                    RoadsOfTheRim.DebugLog("Transpiling WorldPathFinder, found Impassable at index "+i);
-                    break;
-                }
+                RoadsOfTheRim.DebugLog("transpiling: "+s);
             }
             return codes.AsEnumerable();
         }

@@ -467,7 +467,7 @@ namespace RoadsOfTheRim
         public static bool Prefix(ref int __result, Caravan_PathFollower __instance, ref Caravan caravan , int start , int end, int? ticksAbs)
         {
             float speed = CaravanVehiclesUtility.TotalVehicleSpeed(caravan);
-            bool OffRoad = CaravanVehiclesUtility.IsOffroad(caravan);
+            bool OffRoad = CaravanVehiclesUtility.IsOffRoad(caravan);
             // If the caravan is motorised and not OffRoad, return crazy high values for Cost off roads
             if (speed > 0 && !OffRoad)
             {
@@ -491,7 +491,7 @@ namespace RoadsOfTheRim
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions , ILGenerator ILGen)
         {
             MethodInfo IsOffRoad = AccessTools.Method(typeof(CaravanVehiclesUtility), "IsOffRoad");
-            ILGen.DeclareLocal(typeof(Int32));
+            ILGen.DeclareLocal(typeof(bool));
             // Find caravan
             // If OffRoad -> do nothing
             // If not -> replace World.Impassable by impassable for motorised caravans

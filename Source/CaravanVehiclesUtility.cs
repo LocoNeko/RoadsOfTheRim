@@ -55,7 +55,7 @@ namespace RoadsOfTheRim
         }
 
         // If caravan has vehicles but they're not fueled or not off road, return false. Return true in all other cases (caravan has no vehicles, or they're fueled and offroad)
-        public static bool IsOffroad(Caravan c)
+        public static bool IsOffRoad(Caravan c)
         {
             WorldObjectComp_Caravan CaravanComp = c.GetComponent<WorldObjectComp_Caravan>();
             if (CaravanComp != null)

@@ -490,7 +490,7 @@ namespace RoadsOfTheRim
         [HarmonyTranspiler]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions , ILGenerator ILGen)
         {
-            ILGen.DeclareLocal(typeof(Int32));
+            //ILGen.DeclareLocal(typeof(Int32));
             // Find caravan
             // If OffRoad -> do nothing
             // If not -> replace World.Impassable by impassable for motorised caravans

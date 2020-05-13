@@ -93,6 +93,7 @@ namespace RoadsOfTheRim
                 {
                     return true;
                 }
+                return false;
             }
             return Find.World.Impassable(tile);
         }

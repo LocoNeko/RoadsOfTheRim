@@ -509,7 +509,7 @@ namespace RoadsOfTheRim
             int index = -1;
             for (int i = 0; i < codes.Count; i++)
             {
-                string s = codes[i].operand as string;
+                string s = codes[i].ToString() ;
                 RoadsOfTheRim.DebugLog("Transpiling : "+s);
                 if (s!=null && s.Contains("Impassable"))
                 {

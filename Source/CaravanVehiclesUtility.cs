@@ -86,6 +86,7 @@ namespace RoadsOfTheRim
 
         public static bool Impassable(int tile , bool IsOffRoad)
         {
+            RoadsOfTheRim.DebugLog("Calling impassable for Tile " + tile);
             if (!IsOffRoad)
             {
                 List<Tile.RoadLink> roads = Find.WorldGrid.tiles[tile].Roads;

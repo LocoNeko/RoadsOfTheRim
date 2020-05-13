@@ -91,6 +91,7 @@ namespace RoadsOfTheRim
                 List<Tile.RoadLink> roads = Find.WorldGrid.tiles[tile].Roads;
                 if (roads == null)
                 {
+                    RoadsOfTheRim.DebugLog("Tile "+tile+" is impassable as caravan is not offroad");
                     return true;
                 }
                 return false;

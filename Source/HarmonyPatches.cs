@@ -520,8 +520,8 @@ namespace RoadsOfTheRim
             if (index!=-1)
             {
                 MethodInfo Impassable = AccessTools.Method(typeof(CaravanVehiclesUtility), "Impassable");
-                codes[index] = new CodeInstruction(OpCodes.Ldloc_S, 20); // Load IsOffRoad
-                codes.Insert(index + 1, new CodeInstruction(OpCodes.Call , Impassable)); // Call CaravanVehiclesUtility.Impassable on (tile , IsOffRoad)
+                codes[index] = new CodeInstruction(OpCodes.Ldloc_S , 20); // Load IsOffRoad
+                codes.Insert(index, new CodeInstruction(OpCodes.Call , Impassable)); // Call CaravanVehiclesUtility.Impassable on (tile , IsOffRoad)
             }
             return codes.AsEnumerable();
         }

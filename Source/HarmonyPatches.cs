@@ -498,14 +498,12 @@ namespace RoadsOfTheRim
             // If OffRoad -> do nothing
             // If not -> replace World.Impassable by impassable for motorised caravans
             var codes = new List<CodeInstruction>(instructions);
-            /*
             List<CodeInstruction> newCodes = new List<CodeInstruction> {
                 new CodeInstruction (OpCodes.Ldarg_3), // Caravan
                 new CodeInstruction (OpCodes.Call , IsOffRoad), //call CaravanVehiclesUtility.IsOffRoad on Caravan
                 new CodeInstruction (OpCodes.Stloc_S , 20) // put it in local variable 20
             };
             codes.InsertRange(0, newCodes);
-            */
 
             // Find World.Impassable and replace it with CaravanVehiclesUtility.Impassable
             int index = -1;
@@ -518,14 +516,19 @@ namespace RoadsOfTheRim
                     break;
                 }
             }
-            /*
+            RoadsOfTheRim.DebugLog("========== BEFORE transpiling ==========");
+            for (int i = index - 5; i < index + 5; i++)
+            {
+                string s = codes[i].ToString();
+                RoadsOfTheRim.DebugLog("Transpiled : " + s);
+            }
             if (index!=-1)
             {
                 MethodInfo Impassable = AccessTools.Method(typeof(CaravanVehiclesUtility), "Impassable");
                 codes[index] = new CodeInstruction(OpCodes.Ldloc_S , 20); // Load IsOffRoad
                 codes.Insert(index+1, new CodeInstruction(OpCodes.Call , Impassable)); // Call CaravanVehiclesUtility.Impassable on (tile , IsOffRoad)
             }
-            */
+            RoadsOfTheRim.DebugLog("========== AFTER transpiling ==========");
             for (int i = index-5; i < index+5; i++)
             {
                 string s = codes[i].ToString();

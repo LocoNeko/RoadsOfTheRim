@@ -571,13 +571,13 @@ namespace RoadsOfTheRim
         }
     }
 
-    [HarmonyPatch(typeof(TransferableUIUtility), "DoCountAdjustInterface")]
-    public static class Patch_TransferableUIUtility_DoCountAdjustInterface
+    [HarmonyPatch(typeof(Transferable), "AdjustTo")]
+    public static class Patch_Test
     {
         [HarmonyPrefix]
-        public static bool Prefix(Rect rect, Transferable trad, int index, int min, int max, bool flash, List<TransferableCountToTransferStoppingPoint> extraStoppingPoints, bool readOnly)
+        public static bool Prefix(Transferable __instance , int destination)
         {
-            RoadsOfTheRim.DebugLog("Count adjusted for trad "+trad.Label+" index="+index+" min="+min+" max="+max);
+            RoadsOfTheRim.DebugLog("Count adjusted for transferable "+__instance.Label+" => "+destination);
             return true;
         }
     }

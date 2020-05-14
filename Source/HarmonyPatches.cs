@@ -526,14 +526,14 @@ namespace RoadsOfTheRim
             {
                 MethodInfo Impassable = AccessTools.Method(typeof(CaravanVehiclesUtility), "Impassable");
                 codes[index] = new CodeInstruction(OpCodes.Ldloc_S , 20); // Load IsOffRoad
-                codes.Insert(index+1, new CodeInstruction(OpCodes.Callvirt , Impassable)); // Call CaravanVehiclesUtility.Impassable on (tile , IsOffRoad)
+                codes.Insert(index+1, new CodeInstruction(OpCodes.Call , Impassable)); // Call CaravanVehiclesUtility.Impassable on (tile , IsOffRoad)
                 /*
                 MethodInfo Impassable = AccessTools.Method(typeof(World), "Impassable");
                 codes[index] = new CodeInstruction(OpCodes.Callvirt , Impassable) ; 
                 */
             }
             RoadsOfTheRim.DebugLog("========== AFTER transpiling ==========");
-            for (int i = index-5; i < index+5; i++)
+            for (int i = index-5; i < codes.Count; i++)
             {
                 string s = codes[i].ToString();
                 RoadsOfTheRim.DebugLog("Transpiled : " + s);

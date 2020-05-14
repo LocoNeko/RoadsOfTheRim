@@ -520,7 +520,7 @@ namespace RoadsOfTheRim
             if (index!=-1)
             {
                 MethodInfo Impassable = AccessTools.Method(typeof(CaravanVehiclesUtility), "Impassable");
-                codes[index-2] = new CodeInstruction(OpCodes.Ldloc_S , 14); // Load IsOffRoad
+                codes[index-2] = new CodeInstruction(OpCodes.Ldloc_S , 14); // Load tile
                 codes[index-1] = new CodeInstruction(OpCodes.Ldloc_S, 20); // Load IsOffRoad
                 codes[index] = new CodeInstruction(OpCodes.Call, Impassable); // Call CaravanVehiclesUtility.Impassable on (tile , IsOffRoad)
                 
@@ -539,17 +539,33 @@ namespace RoadsOfTheRim
         [HarmonyPrefix]
         public static bool Prefix(ref float __result, List<TransferableOneWay> transferables, StringBuilder explanation)
         {
+            int TotalVehicleCapacity = 0;
+            StringBuilder VehicleExplanation = new StringBuilder();
             for (int i = 0; i < transferables.Count; i++)
             {
                 if (transferables[i].HasAnyThing)
                 {
-                    RoadsOfTheRim.DebugLog("ANyTHing : " + transferables[i].AnyThing.Label);
                     ThingComp_RotR_Vehicles VehicleComp = ThingCompUtility.TryGetComp<ThingComp_RotR_Vehicles>(transferables[i].AnyThing);
                     if (VehicleComp !=null)
                     {
-                        RoadsOfTheRim.DebugLog("Found "+ transferables[i].AnyThing.Label+" Capacity: "+VehicleComp.Capacity);
+                        if (VehicleComp.Fuel>0)
+                        {
+                            TotalVehicleCapacity += VehicleComp.Capacity;
+                            VehicleExplanation.Append(transferables[i].AnyThing + ": "+VehicleComp.Capacity);
+                        }
+                        else
+                        {
+                            TotalVehicleCapacity = 0;
+                            break;
+                        }
                     }
                 }
+            }
+            if (TotalVehicleCapacity>0)
+            {
+                explanation.Append(VehicleExplanation);
+                __result = (float)TotalVehicleCapacity;
+                return false;
             }
             return true;
         }

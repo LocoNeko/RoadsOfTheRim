@@ -37,10 +37,12 @@ namespace RoadsOfTheRim
         public float Speed => properties.Speed;
         public float Fuel => properties.Fuel;
 
+        /*
         public override void CompTick()
         {
             RoadsOfTheRim.DebugLog("Tick on a vehicle ("+parent.Label+") : "+Seats+" seats, speed "+Speed+", "+(OffRoad?"":"not")+" offroad. Fuel : "+Fuel );
         }
+        */
 
     }
 

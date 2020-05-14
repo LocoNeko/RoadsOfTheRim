@@ -537,7 +537,7 @@ namespace RoadsOfTheRim
     public static class Patch_CollectionsMassCalculator_CapacityTransferables
     {
         [HarmonyPrefix]
-        public static bool Prefix(ref bool __result, List<TransferableOneWay> transferables, StringBuilder explanation)
+        public static bool Prefix(ref float __result, List<TransferableOneWay> transferables, StringBuilder explanation)
         {
             for (int i = 0; i < transferables.Count; i++)
             {

@@ -89,6 +89,9 @@ namespace RoadsOfTheRim
             try
             {
                 WorldObjectComp_Caravan CaravanComp = __instance.GetComponent<WorldObjectComp_Caravan>();
+                bool isoffroad = CaravanVehiclesUtility.IsOffRoad(__instance);
+                int tile = __instance.Tile;
+                RoadsOfTheRim.DebugLog("debugging CaravanVehiclesUtility.Impassable for "+__instance.Label+" offroad = "+isoffroad+" tile "+tile+" : "+CaravanVehiclesUtility.Impassable(tile , isoffroad));
                 if (CaravanComp != null && CaravanComp.currentlyWorkingOnSite)
                 {
                     StringBuilder stringBuilder = new StringBuilder();

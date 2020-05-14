@@ -57,29 +57,32 @@ namespace RoadsOfTheRim
         // If caravan has vehicles but they're not fueled or not off road, return false. Return true in all other cases (caravan has no vehicles, or they're fueled and offroad)
         public static bool IsOffRoad(Caravan c)
         {
-            WorldObjectComp_Caravan CaravanComp = c.GetComponent<WorldObjectComp_Caravan>();
-            if (CaravanComp != null)
+            if (c!=null)
             {
-                List<Thing> ListOfVehicles = CaravanComp.GetListOfVehicles();
-                foreach (Thing vehicle in ListOfVehicles)
+                WorldObjectComp_Caravan CaravanComp = c.GetComponent<WorldObjectComp_Caravan>();
+                if (CaravanComp != null)
                 {
-                    ThingComp_RotR_Vehicles VehicleComp = ThingCompUtility.TryGetComp<ThingComp_RotR_Vehicles>(vehicle);
-                    if (VehicleComp != null)
+                    List<Thing> ListOfVehicles = CaravanComp.GetListOfVehicles();
+                    foreach (Thing vehicle in ListOfVehicles)
                     {
-                        if (VehicleComp.Fuel <= 0 || !VehicleComp.OffRoad)
+                        ThingComp_RotR_Vehicles VehicleComp = ThingCompUtility.TryGetComp<ThingComp_RotR_Vehicles>(vehicle);
+                        if (VehicleComp != null)
+                        {
+                            if (VehicleComp.Fuel <= 0 || !VehicleComp.OffRoad)
+                            {
+                                return false;
+                            }
+                        }
+                        else
                         {
                             return false;
                         }
                     }
-                    else
-                    {
-                        return false;
-                    }
                 }
-            }
-            else
-            {
-                return false;
+                else
+                {
+                    return false;
+                }
             }
             return true;
         }

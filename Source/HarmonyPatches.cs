@@ -543,7 +543,7 @@ namespace RoadsOfTheRim
             StringBuilder VehicleExplanation = new StringBuilder();
             for (int i = 0; i < transferables.Count; i++)
             {
-                if (transferables[i].HasAnyThing)
+                if (transferables[i].HasAnyThing && transferables[i].CountToTransfer>0)
                 {
                     ThingComp_RotR_Vehicles VehicleComp = ThingCompUtility.TryGetComp<ThingComp_RotR_Vehicles>(transferables[i].AnyThing);
                     if (VehicleComp !=null)
@@ -567,17 +567,6 @@ namespace RoadsOfTheRim
                 __result = (float)TotalVehicleCapacity;
                 return false;
             }
-            return true;
-        }
-    }
-
-    [HarmonyPatch(typeof(Transferable), "AdjustTo")]
-    public static class Patch_Test
-    {
-        [HarmonyPrefix]
-        public static bool Prefix(Transferable __instance , int destination)
-        {
-            RoadsOfTheRim.DebugLog("Count adjusted for transferable "+__instance.Label+" => "+destination);
             return true;
         }
     }

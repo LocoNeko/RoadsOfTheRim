@@ -89,7 +89,6 @@ namespace RoadsOfTheRim
             try
             {
                 WorldObjectComp_Caravan CaravanComp = __instance.GetComponent<WorldObjectComp_Caravan>();
-                bool isoffroad = CaravanVehiclesUtility.IsOffRoad(__instance);
                 int tile = __instance.Tile;
                 if (CaravanComp != null && CaravanComp.currentlyWorkingOnSite)
                 {
@@ -414,6 +413,7 @@ namespace RoadsOfTheRim
         }
     }
 
+    /* that was an attempt at changing the caravan icon when motorised
     [HarmonyPatch(typeof(Caravan), "Material", MethodType.Getter)]
     public static class Patch_Caravan_Texture
     {
@@ -427,6 +427,7 @@ namespace RoadsOfTheRim
             }
         }
     }
+    */
 
     [HarmonyPatch(typeof(CaravanTicksPerMoveUtility), "GetTicksPerMove", new Type[] { typeof(Caravan), typeof(StringBuilder) })]
     public static class Patch_CaravanTicksPerMoveUtility_GetTicksPerMove
@@ -534,6 +535,28 @@ namespace RoadsOfTheRim
                 RoadsOfTheRim.DebugLog("Transpiled : " + s);
             }
             return codes.AsEnumerable();
+        }
+    }
+
+    // Change capacity calculation when vehicles are present
+    [HarmonyPatch(typeof(CollectionsMassCalculator), "CapacityTransferables")]
+    public static class Patch_CollectionsMassCalculator_CapacityTransferables
+    {
+        [HarmonyPrefix]
+        public static bool Prefix(ref bool __result, List<TransferableOneWay> transferables, StringBuilder explanation)
+        {
+            for (int i = 0; i < transferables.Count; i++)
+            {
+                if (transferables[i].HasAnyThing)
+                {
+                    ThingComp_RotR_Vehicles VehicleComp = ThingCompUtility.TryGetComp<ThingComp_RotR_Vehicles>(transferables[i].AnyThing);
+                    if (VehicleComp !=null)
+                    {
+                        RoadsOfTheRim.DebugLog("Found "+ transferables[i].AnyThing.Label+" Capacity: "+VehicleComp.Capacity);
+                    }
+                }
+            }
+            return true;
         }
     }
 

@@ -17,6 +17,7 @@ namespace RoadsOfTheRim
 
         public int Seats = 0;
         public bool OffRoad = false;
+        public int Capacity = 0;
         public float Speed = 0f;
         public float Fuel = 1000f; // TO DO : Debug this back to 0 once happy
     }
@@ -34,6 +35,7 @@ namespace RoadsOfTheRim
 
         public int Seats => properties.Seats;
         public bool OffRoad => properties.OffRoad;
+        public int Capacity => properties.Capacity;
         public float Speed => properties.Speed;
         public float Fuel => properties.Fuel;
 

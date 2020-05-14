@@ -58,7 +58,8 @@
 			<li Class="RoadsOfTheRim.ThingCompProperties_RotR_Vehicles">
 				<Seats>4</Seats>
 				<OffRoad>false</OffRoad>
-				<Speed>150.0</Speed>
+				<Capacity>250</Capacity>
+				<Speed>70.0</Speed>
 			</li>
 		</comps>
 	</ThingDef>

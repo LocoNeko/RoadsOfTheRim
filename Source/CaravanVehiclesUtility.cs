@@ -10,13 +10,16 @@ namespace RoadsOfTheRim
         public static int NumberOfSeats(Caravan c)
         {
             int result = 0;
-            WorldObjectComp_Caravan CaravanComp = c.GetComponent<WorldObjectComp_Caravan>();
-            if (CaravanComp != null)
+            if (c!=null)
             {
-                List<Thing> ListOfVehicles = CaravanComp.GetListOfVehicles();
-                foreach (Thing vehicle in ListOfVehicles)
+                WorldObjectComp_Caravan CaravanComp = c.GetComponent<WorldObjectComp_Caravan>();
+                if (CaravanComp != null)
                 {
-                    result += ThingCompUtility.TryGetComp<ThingComp_RotR_Vehicles>(vehicle).Seats;
+                    List<Thing> ListOfVehicles = CaravanComp.GetListOfVehicles();
+                    foreach (Thing vehicle in ListOfVehicles)
+                    {
+                        result += ThingCompUtility.TryGetComp<ThingComp_RotR_Vehicles>(vehicle).Seats;
+                    }
                 }
             }
             return result;
@@ -25,30 +28,33 @@ namespace RoadsOfTheRim
         public static float TotalVehicleSpeed(Caravan c)
         {
             float result = 0f;
-            WorldObjectComp_Caravan CaravanComp = c.GetComponent<WorldObjectComp_Caravan>();
-            if (CaravanComp != null)
+            if (c!=null)
             {
-                int FueledSeats = 0;
-                List<Thing> ListOfVehicles = CaravanComp.GetListOfVehicles();
-                foreach (Thing vehicle in ListOfVehicles)
+                WorldObjectComp_Caravan CaravanComp = c.GetComponent<WorldObjectComp_Caravan>();
+                if (CaravanComp != null)
                 {
-                    ThingComp_RotR_Vehicles VehicleComp = ThingCompUtility.TryGetComp<ThingComp_RotR_Vehicles>(vehicle);
-                    if (VehicleComp != null)
+                    int FueledSeats = 0;
+                    List<Thing> ListOfVehicles = CaravanComp.GetListOfVehicles();
+                    foreach (Thing vehicle in ListOfVehicles)
                     {
-                        // If the vehicle has fuel, add its seats to the total number of fueled seats and adjust speed if it's the slowest vehicle
-                        if (VehicleComp.Fuel > 0)
+                        ThingComp_RotR_Vehicles VehicleComp = ThingCompUtility.TryGetComp<ThingComp_RotR_Vehicles>(vehicle);
+                        if (VehicleComp != null)
                         {
-                            FueledSeats += VehicleComp.Seats;
-                            if (result == 0 || VehicleComp.Speed < result)
+                            // If the vehicle has fuel, add its seats to the total number of fueled seats and adjust speed if it's the slowest vehicle
+                            if (VehicleComp.Fuel > 0)
                             {
-                                result = VehicleComp.Speed;
+                                FueledSeats += VehicleComp.Seats;
+                                if (result == 0 || VehicleComp.Speed < result)
+                                {
+                                    result = VehicleComp.Speed;
+                                }
                             }
                         }
                     }
-                }
-                if (FueledSeats < c.pawns.Count)
-                {
-                    result = 0;
+                    if (FueledSeats < c.pawns.Count)
+                    {
+                        result = 0;
+                    }
                 }
             }
             return result;

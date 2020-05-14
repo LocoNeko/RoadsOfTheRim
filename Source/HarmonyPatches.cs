@@ -91,7 +91,6 @@ namespace RoadsOfTheRim
                 WorldObjectComp_Caravan CaravanComp = __instance.GetComponent<WorldObjectComp_Caravan>();
                 bool isoffroad = CaravanVehiclesUtility.IsOffRoad(__instance);
                 int tile = __instance.Tile;
-                RoadsOfTheRim.DebugLog("debugging CaravanVehiclesUtility.Impassable for "+__instance.Label+" offroad = "+isoffroad+" tile "+tile+" : "+CaravanVehiclesUtility.Impassable(tile , isoffroad));
                 if (CaravanComp != null && CaravanComp.currentlyWorkingOnSite)
                 {
                     StringBuilder stringBuilder = new StringBuilder();
@@ -289,7 +288,6 @@ namespace RoadsOfTheRim
         {
             if (RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting != null)
             {
-                //RoadsOfTheRim.DebugLog("StopTargeting");
                 RoadsOfTheRim.FinaliseConstructionSite(RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting);
                 RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting = null;
             }
@@ -513,7 +511,6 @@ namespace RoadsOfTheRim
             for (int i = 0; i < codes.Count; i++)
             {
                 string s = codes[i].ToString() ;
-                RoadsOfTheRim.DebugLog("Transpiling : "+s);
                 if (s!=null && s.Contains("Impassable"))
                 {
                     index = i;
@@ -527,6 +524,11 @@ namespace RoadsOfTheRim
                 codes[index] = new CodeInstruction(OpCodes.Ldloc_S , 20); // Load IsOffRoad
                 RoadsOfTheRim.DebugLog("INSERTING CALL");
                 codes.Insert(index, new CodeInstruction(OpCodes.Call , Impassable)); // Call CaravanVehiclesUtility.Impassable on (tile , IsOffRoad)
+            }
+            for (int i = index-2; i < index+2; i++)
+            {
+                string s = codes[i].ToString();
+                RoadsOfTheRim.DebugLog("Transpiling : " + s);
             }
             return codes.AsEnumerable();
         }

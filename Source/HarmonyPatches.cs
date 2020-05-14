@@ -520,15 +520,13 @@ namespace RoadsOfTheRim
             if (index!=-1)
             {
                 MethodInfo Impassable = AccessTools.Method(typeof(CaravanVehiclesUtility), "Impassable");
-                RoadsOfTheRim.DebugLog("INSERTING LDLOC 20");
                 codes[index] = new CodeInstruction(OpCodes.Ldloc_S , 20); // Load IsOffRoad
-                RoadsOfTheRim.DebugLog("INSERTING CALL");
                 codes.Insert(index+1, new CodeInstruction(OpCodes.Call , Impassable)); // Call CaravanVehiclesUtility.Impassable on (tile , IsOffRoad)
             }
-            for (int i = index-2; i < index+2; i++)
+            for (int i = index-5; i < index+5; i++)
             {
                 string s = codes[i].ToString();
-                RoadsOfTheRim.DebugLog("Transpiling : " + s);
+                RoadsOfTheRim.DebugLog("Transpiled : " + s);
             }
             return codes.AsEnumerable();
         }

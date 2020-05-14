@@ -522,6 +522,7 @@ namespace RoadsOfTheRim
                 string s = codes[i].ToString();
                 RoadsOfTheRim.DebugLog("Transpiled : " + s);
             }
+            /*
             if (index!=-1)
             {
                 MethodInfo Impassable = AccessTools.Method(typeof(CaravanVehiclesUtility), "Impassable");
@@ -534,6 +535,7 @@ namespace RoadsOfTheRim
                 string s = codes[i].ToString();
                 RoadsOfTheRim.DebugLog("Transpiled : " + s);
             }
+            */
             return codes.AsEnumerable();
         }
     }

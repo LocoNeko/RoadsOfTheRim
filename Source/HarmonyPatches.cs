@@ -493,7 +493,7 @@ namespace RoadsOfTheRim
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions , ILGenerator ILGen)
         {
             MethodInfo IsOffRoad = AccessTools.Method(typeof(CaravanVehiclesUtility), "IsOffRoad");
-            ILGen.DeclareLocal(typeof(bool));
+            ILGen.DeclareLocal(typeof(UInt16));
             // Find caravan
             // If OffRoad -> do nothing
             // If not -> replace World.Impassable by impassable for motorised caravans
@@ -524,13 +524,13 @@ namespace RoadsOfTheRim
             }
             if (index!=-1)
             {
-                /*
                 MethodInfo Impassable = AccessTools.Method(typeof(CaravanVehiclesUtility), "Impassable");
                 codes[index] = new CodeInstruction(OpCodes.Ldloc_S , 20); // Load IsOffRoad
                 codes.Insert(index+1, new CodeInstruction(OpCodes.Callvirt , Impassable)); // Call CaravanVehiclesUtility.Impassable on (tile , IsOffRoad)
-                */
+                /*
                 MethodInfo Impassable = AccessTools.Method(typeof(World), "Impassable");
                 codes[index] = new CodeInstruction(OpCodes.Callvirt , Impassable) ; 
+                */
             }
             RoadsOfTheRim.DebugLog("========== AFTER transpiling ==========");
             for (int i = index-5; i < index+5; i++)

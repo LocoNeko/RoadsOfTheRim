@@ -84,7 +84,7 @@ namespace RoadsOfTheRim
             return true;
         }
 
-        public static bool Impassable(int tile , bool IsOffRoad)
+        public static bool Impassable(bool IsOffRoad , int tile)
         {
             if (!IsOffRoad)
             {

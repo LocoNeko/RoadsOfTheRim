@@ -571,4 +571,14 @@ namespace RoadsOfTheRim
         }
     }
 
+    [HarmonyPatch(typeof(TransferableUIUtility), "DoCountAdjustInterface")]
+    public static class Patch_TransferableUIUtility_DoCountAdjustInterface
+    {
+        [HarmonyPrefix]
+        public static bool Prefix(Rect rect, Transferable trad, int index, int min, int max, bool flash, List<TransferableCountToTransferStoppingPoint> extraStoppingPoints, bool readOnly)
+        {
+            RoadsOfTheRim.DebugLog("Count adjusted for trad "+trad.Label+" index="+index+" min="+min+" max="+max);
+            return true;
+        }
+    }
 }

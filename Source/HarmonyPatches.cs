@@ -516,18 +516,17 @@ namespace RoadsOfTheRim
                     break;
                 }
             }
-            /*
             if (index!=-1)
             {
                 MethodInfo Impassable = AccessTools.Method(typeof(CaravanVehiclesUtility), "Impassable");
-                codes[index] = new CodeInstruction(OpCodes.Ldloc_S , 20); // Load IsOffRoad
-                codes.Insert(index+1, new CodeInstruction(OpCodes.Call , Impassable)); // Call CaravanVehiclesUtility.Impassable on (tile , IsOffRoad)
+                codes[index-2] = new CodeInstruction(OpCodes.Ldloc_S , 14); // Load IsOffRoad
+                codes[index-1] = new CodeInstruction(OpCodes.Ldloc_S, 20); // Load IsOffRoad
+                codes[index] = new CodeInstruction(OpCodes.Call, Impassable); // Call CaravanVehiclesUtility.Impassable on (tile , IsOffRoad)
                 
                 //MethodInfo Impassable = AccessTools.Method(typeof(World), "Impassable");
                 //codes[index] = new CodeInstruction(OpCodes.Callvirt , Impassable) ; 
                 
             }
-            */
             RoadsOfTheRim.DebugLog("========== AFTER transpiling ==========");
             for (int i = index-5; i < codes.Count; i++)
             {

@@ -523,7 +523,7 @@ namespace RoadsOfTheRim
                 RoadsOfTheRim.DebugLog("INSERTING LDLOC 20");
                 codes[index] = new CodeInstruction(OpCodes.Ldloc_S , 20); // Load IsOffRoad
                 RoadsOfTheRim.DebugLog("INSERTING CALL");
-                codes.Insert(index, new CodeInstruction(OpCodes.Call , Impassable)); // Call CaravanVehiclesUtility.Impassable on (tile , IsOffRoad)
+                codes.Insert(index+1, new CodeInstruction(OpCodes.Call , Impassable)); // Call CaravanVehiclesUtility.Impassable on (tile , IsOffRoad)
             }
             for (int i = index-2; i < index+2; i++)
             {

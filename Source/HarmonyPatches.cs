@@ -528,12 +528,6 @@ namespace RoadsOfTheRim
                 //codes[index] = new CodeInstruction(OpCodes.Callvirt , Impassable) ; 
                 
             }
-            RoadsOfTheRim.DebugLog("========== AFTER transpiling ==========");
-            for (int i = index-5; i < codes.Count; i++)
-            {
-                string s = codes[i].ToString();
-                RoadsOfTheRim.DebugLog("Transpiled : " + s);
-            }
             return codes.AsEnumerable();
         }
     }
@@ -549,6 +543,7 @@ namespace RoadsOfTheRim
             {
                 if (transferables[i].HasAnyThing)
                 {
+                    RoadsOfTheRim.DebugLog("ANyTHing : " + transferables[i].AnyThing.Label);
                     ThingComp_RotR_Vehicles VehicleComp = ThingCompUtility.TryGetComp<ThingComp_RotR_Vehicles>(transferables[i].AnyThing);
                     if (VehicleComp !=null)
                     {

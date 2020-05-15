@@ -39,6 +39,14 @@ namespace RoadsOfTheRim
         public float Speed => properties.Speed;
         public float Fuel => properties.Fuel;
 
+        public override bool AllowStackWith(Thing other)
+        {
+            if (other.def.category == ThingCategory.Building)
+            {
+                return false;
+            }
+            return base.AllowStackWith(other);
+        }
         /*
         public override void CompTick()
         {

@@ -519,20 +519,29 @@ namespace RoadsOfTheRim
             }
             if (index!=-1)
             {
+                /* BEFORE :
+                 * IL_0307: ldloc.1 (World)
+			     * IL_0308: ldloc.s 14 (tile)
+			     * IL_030a: callvirt instance bool RimWorld.Planet.World::Impassable(int32)
+			     * IL_030f: brtrue IL_0457
+                 */
                 MethodInfo Impassable = AccessTools.Method(typeof(CaravanVehiclesUtility), "Impassable");
                 codes[index-2] = new CodeInstruction(OpCodes.Ldloc_S , 14); // Load tile
                 codes[index-1] = new CodeInstruction(OpCodes.Ldloc_S, 20); // Load IsOffRoad
                 codes[index] = new CodeInstruction(OpCodes.Call, Impassable); // Call CaravanVehiclesUtility.Impassable on (tile , IsOffRoad)
-                
-                //MethodInfo Impassable = AccessTools.Method(typeof(World), "Impassable");
-                //codes[index] = new CodeInstruction(OpCodes.Callvirt , Impassable) ; 
-                
+                /* AFTER :
+                 * IL_0307: ldloc.s 14 (tile)
+ 			     * IL_0308: ldloc.s 20 (IsOffRoad)
+			     * IL_030a: call bool RoadsOfTheRim.CaravanVehiclesUtility::Impassable(int32 , bool)
+			     * IL_030f: brtrue IL_0457
+                 */
             }
             return codes.AsEnumerable();
         }
     }
 
     // Change capacity calculation when vehicles are present
+    /*
     [HarmonyPatch(typeof(CollectionsMassCalculator), "CapacityTransferables")]
     public static class Patch_CollectionsMassCalculator_CapacityTransferables
     {
@@ -570,4 +579,5 @@ namespace RoadsOfTheRim
             return true;
         }
     }
+    */
 }

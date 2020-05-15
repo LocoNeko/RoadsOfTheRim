@@ -41,7 +41,7 @@ namespace RoadsOfTheRim
 
         public override bool AllowStackWith(Thing other)
         {
-            if (other.def.category == ThingCategory.Building)
+            if (other.def.category == ThingCategory.Building || other.def.category == ThingCategory.Item)
             {
                 return false;
             }

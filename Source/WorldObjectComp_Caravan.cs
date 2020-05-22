@@ -341,7 +341,7 @@ namespace RoadsOfTheRim
             {
                 if (pawn.IsFreeColonist && pawn.health.State == PawnHealthState.Mobile && !pawn.RaceProps.packAnimal)
                 {
-                    pawn.skills.Learn(SkillDefOf.Construction, ratio, false);
+                    pawn.skills.Learn(SkillDefOf.Construction, 3f*ratio, false);
                     //RoadsOfTheRim.DebugLog(pawn.Name+" learned " + ratio + " Xp = "+pawn.skills.GetSkill(SkillDefOf.Construction).XpTotalEarned);
                 }
             }

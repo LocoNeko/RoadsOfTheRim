@@ -57,7 +57,7 @@
 
 	<ResearchProjectDef>
 		<defName>ResearchProject_RotRAISR2G</defName>
-		<label>ISR2G</label>
+		<label>AISR2G</label>
 		<description>Allows construction of the Advanced In Situ Road Ressource Gatherer (AISR2G). Uses local resources when building roads, completely eliminating the need to bring wood, stone , steel, Chemfuel , Plasteel and Uranium at the cost of twice the work.</description>
 		<baseCost>4000</baseCost>
 		<techLevel>Spacer</techLevel>
@@ -66,7 +66,7 @@
 			<li>ResearchProject_RotRAsphaltRoad</li>
 		</prerequisites>
 		<tab>LocoNekoMods</tab>
-		<researchViewX>2</researchViewX>
+		<researchViewX>3</researchViewX>
 		<researchViewY>1</researchViewY>
 	</ResearchProjectDef>
 

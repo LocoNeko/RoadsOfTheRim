@@ -93,6 +93,33 @@ namespace RoadsOfTheRim
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.Append(__result);
                     stringBuilder.AppendLine();
+                    // remove "waiting"
+                    int waitingIndex = stringBuilder.ToString().IndexOf("CaravanWaiting".Translate());
+                    if (waitingIndex>=0)
+                    {
+                        stringBuilder.Remove(waitingIndex, "CaravanWaiting".Translate().Length);
+                    }
+                    // remove "resting (using x bedrolls)"
+                    int usedBedCount = __instance.beds.GetUsedBedCount();
+                    if (usedBedCount==1)
+                    {
+                        // remove singular version
+                        int bedrollIndex = stringBuilder.ToString().IndexOf((string)"UsingBedroll".Translate());
+                        if (bedrollIndex>=0)
+                        {
+                            stringBuilder.Remove(bedrollIndex, ((string)"UsingBedroll".Translate()).Length);
+                        }
+                    }
+                    else
+                    {
+                        // remove plural version
+                        int bedrollsIndex = stringBuilder.ToString().IndexOf((string)"UsingBedrolls".Translate(usedBedCount));
+                        if (bedrollsIndex >= 0)
+                        {
+                            stringBuilder.Remove(bedrollsIndex, ((string)"UsingBedrolls".Translate(usedBedCount)).Length);
+                        }
+                    }
+                    // Appending "working on road"
                     stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName(), string.Format("{0:0.00}", CaravanComp.amountOfWork())));
                     __result = stringBuilder.ToString();
                 }

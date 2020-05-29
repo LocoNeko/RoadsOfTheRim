@@ -79,6 +79,7 @@ namespace RoadsOfTheRim
         }
     }
 
+    // TO DO : Ideally, this should be a transpiler. But should I bother ? The code below does the job
     [HarmonyPatch(typeof(Caravan), "GetInspectString")]
     public static class Patch_Caravan_GetInspectString
     {
@@ -98,6 +99,7 @@ namespace RoadsOfTheRim
                     if (waitingIndex>=0)
                     {
                         stringBuilder.Remove(waitingIndex, "CaravanWaiting".Translate().Length);
+                        stringBuilder.Replace("\n", "", 0, 1);
                     }
                     // remove "resting (using x bedrolls)"
                     int usedBedCount = __instance.beds.GetUsedBedCount();
@@ -108,6 +110,8 @@ namespace RoadsOfTheRim
                         if (bedrollIndex>=0)
                         {
                             stringBuilder.Remove(bedrollIndex, ((string)"UsingBedroll".Translate()).Length);
+                            stringBuilder.Remove(bedrollIndex, ((string)"CaravanResting".Translate() + "()").Length);
+                            stringBuilder.Replace("\n", "", 0, 1);
                         }
                     }
                     else
@@ -117,6 +121,8 @@ namespace RoadsOfTheRim
                         if (bedrollsIndex >= 0)
                         {
                             stringBuilder.Remove(bedrollsIndex, ((string)"UsingBedrolls".Translate(usedBedCount)).Length);
+                            stringBuilder.Remove(bedrollsIndex, ((string)"CaravanResting".Translate() + "()").Length);
+                            stringBuilder.Replace("\n", "", 0, 1);
                         }
                     }
                     // Appending "working on road"

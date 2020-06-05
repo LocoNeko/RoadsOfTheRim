@@ -123,11 +123,12 @@ namespace RoadsOfTheRim
                         if (restingIndex >= 0)
                         {
                             stringBuilder.Remove(restingIndex, "CaravanResting".Translate().Length);
+                            stringBuilder.Replace(Environment.NewLine, "", 0, 1);
                         }
                     }
                     // Appending "working on road"
                     stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName(), string.Format("{0:0.00}", CaravanComp.amountOfWork())));
-                    __result = GenText.Flatten(stringBuilder.ToString());
+                    __result = stringBuilder.ToString();
                 }
             }
             catch

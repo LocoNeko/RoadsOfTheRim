@@ -101,29 +101,27 @@ namespace RoadsOfTheRim
                         stringBuilder.Remove(waitingIndex, "CaravanWaiting".Translate().Length);
                     }
                     // remove "resting (using x bedrolls)"
-                    /*
                     int usedBedCount = __instance.beds.GetUsedBedCount();
                     if (usedBedCount==1)
                     {
                         // remove singular version
-                        int bedrollIndex = stringBuilder.ToString().IndexOf("UsingBedroll".Translate());
+                        string stringToFind = " (" + (string)"UsingBedroll".Translate() + ")";
+                        int bedrollIndex = stringBuilder.ToString().IndexOf(stringToFind);
                         if (bedrollIndex>=0)
                         {
-                            stringBuilder.Remove(bedrollIndex, ("UsingBedroll".Translate()).Length);
-                            stringBuilder.Remove(bedrollIndex, ("CaravanResting".Translate() + " ()").Length);
+                            stringBuilder.Remove(bedrollIndex, stringToFind.Length);
                         }
                     }
                     else
                     {
                         // remove plural version
-                        int bedrollsIndex = stringBuilder.ToString().IndexOf("UsingBedrolls".Translate(usedBedCount));
+                        string stringToFind = " (" + (string)"UsingBedrolls".Translate(usedBedCount) + ")";
+                        int bedrollsIndex = stringBuilder.ToString().IndexOf(stringToFind);
                         if (bedrollsIndex >= 0)
                         {
-                            stringBuilder.Remove(bedrollsIndex, ("UsingBedrolls".Translate(usedBedCount)).Length);
-                            stringBuilder.Remove(bedrollsIndex, ("CaravanResting".Translate() + " ()").Length);
+                            stringBuilder.Remove(bedrollsIndex, stringToFind.Length);
                         }
                     }
-                    */
                     // Appending "working on road"
                     stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName(), string.Format("{0:0.00}", CaravanComp.amountOfWork())));
                     __result = GenText.Flatten(stringBuilder.ToString());

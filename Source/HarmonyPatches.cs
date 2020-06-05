@@ -95,12 +95,11 @@ namespace RoadsOfTheRim
                     stringBuilder.Append(__result);
                     stringBuilder.AppendLine();
                     // remove "waiting"
-                    RoadsOfTheRim.DebugLog("Caravan inspect string : remove waiting");
                     int waitingIndex = stringBuilder.ToString().IndexOf("CaravanWaiting".Translate());
                     if (waitingIndex>=0)
                     {
                         stringBuilder.Remove(waitingIndex, "CaravanWaiting".Translate().Length);
-                        stringBuilder.Replace("\n", "", 0, 1);
+                        //stringBuilder.Replace("\n", "", 0, 1);
                     }
                     // remove "resting (using x bedrolls)"
                     int usedBedCount = __instance.beds.GetUsedBedCount();
@@ -112,7 +111,7 @@ namespace RoadsOfTheRim
                         {
                             stringBuilder.Remove(bedrollIndex, ((string)"UsingBedroll".Translate()).Length);
                             stringBuilder.Remove(bedrollIndex, ((string)"CaravanResting".Translate() + "()").Length);
-                            stringBuilder.Replace("\n", "", 0, 1);
+                            //stringBuilder.Replace("\n", "", 0, 1);
                         }
                     }
                     else
@@ -121,10 +120,9 @@ namespace RoadsOfTheRim
                         int bedrollsIndex = stringBuilder.ToString().IndexOf((string)"UsingBedrolls".Translate(usedBedCount));
                         if (bedrollsIndex >= 0)
                         {
-                            RoadsOfTheRim.DebugLog("Caravan inspect string : found 'using multiple bedrolls'");
                             stringBuilder.Remove(bedrollsIndex, ((string)"UsingBedrolls".Translate(usedBedCount)).Length);
                             stringBuilder.Remove(bedrollsIndex, ((string)"CaravanResting".Translate() + "()").Length);
-                            stringBuilder.Replace("\n", "", 0, 1);
+                            //stringBuilder.Replace("\n", "", 0, 1);
                         }
                     }
                     // Appending "working on road"

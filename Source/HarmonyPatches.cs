@@ -99,7 +99,7 @@ namespace RoadsOfTheRim
                     if (waitingIndex>=0)
                     {
                         stringBuilder.Remove(waitingIndex, "CaravanWaiting".Translate().Length);
-                        //stringBuilder.Replace("\n", "", 0, 1);
+                        stringBuilder.Replace("\n", "", 0, 1);
                     }
                     /*
                     // remove "resting (using x bedrolls)"

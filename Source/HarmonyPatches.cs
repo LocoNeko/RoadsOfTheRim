@@ -93,7 +93,6 @@ namespace RoadsOfTheRim
                 {
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.Append(__result);
-                    stringBuilder.AppendLine();
                     // remove "waiting"
                     int waitingIndex = stringBuilder.ToString().IndexOf("CaravanWaiting".Translate());
                     if (waitingIndex>=0)
@@ -123,10 +122,12 @@ namespace RoadsOfTheRim
                         if (restingIndex >= 0)
                         {
                             stringBuilder.Remove(restingIndex, "CaravanResting".Translate().Length);
-                            stringBuilder.Replace(Environment.NewLine, "", 0, 1);
                         }
                     }
                     // Appending "working on road"
+                    stringBuilder.Replace("\n", "");
+                    stringBuilder.Replace("\r", "");
+                    stringBuilder.AppendLine();
                     stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName(), string.Format("{0:0.00}", CaravanComp.amountOfWork())));
                     __result = stringBuilder.ToString();
                 }

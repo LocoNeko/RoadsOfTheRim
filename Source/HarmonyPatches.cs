@@ -99,6 +99,7 @@ namespace RoadsOfTheRim
                     int waitingIndex = stringBuilder.ToString().IndexOf("CaravanWaiting".Translate());
                     if (waitingIndex>=0)
                     {
+                        RoadsOfTheRim.DebugLog("Caravan inspect string : found 'waiting'");
                         stringBuilder.Remove(waitingIndex, "CaravanWaiting".Translate().Length);
                         stringBuilder.Replace("\n", "", 0, 1);
                     }
@@ -110,6 +111,7 @@ namespace RoadsOfTheRim
                         int bedrollIndex = stringBuilder.ToString().IndexOf((string)"UsingBedroll".Translate());
                         if (bedrollIndex>=0)
                         {
+                            RoadsOfTheRim.DebugLog("Caravan inspect string : found 'using 1 bedroll'");
                             stringBuilder.Remove(bedrollIndex, ((string)"UsingBedroll".Translate()).Length);
                             stringBuilder.Remove(bedrollIndex, ((string)"CaravanResting".Translate() + "()").Length);
                             stringBuilder.Replace("\n", "", 0, 1);
@@ -121,6 +123,7 @@ namespace RoadsOfTheRim
                         int bedrollsIndex = stringBuilder.ToString().IndexOf((string)"UsingBedrolls".Translate(usedBedCount));
                         if (bedrollsIndex >= 0)
                         {
+                            RoadsOfTheRim.DebugLog("Caravan inspect string : found 'using multiple bedrolls'");
                             stringBuilder.Remove(bedrollsIndex, ((string)"UsingBedrolls".Translate(usedBedCount)).Length);
                             stringBuilder.Remove(bedrollsIndex, ((string)"CaravanResting".Translate() + "()").Length);
                             stringBuilder.Replace("\n", "", 0, 1);

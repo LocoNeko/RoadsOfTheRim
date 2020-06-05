@@ -101,7 +101,6 @@ namespace RoadsOfTheRim
                     {
                         stringBuilder.Remove(waitingIndex, "CaravanWaiting".Translate().Length);
                         stringBuilder.Replace("\n", "", 0, 1);
-                        RoadsOfTheRim.DebugLog("Caravan inspect string : found 'waiting' string is now "+stringBuilder.ToString());
                     }
                     // remove "resting (using x bedrolls)"
                     int usedBedCount = __instance.beds.GetUsedBedCount();
@@ -111,7 +110,6 @@ namespace RoadsOfTheRim
                         int bedrollIndex = stringBuilder.ToString().IndexOf((string)"UsingBedroll".Translate());
                         if (bedrollIndex>=0)
                         {
-                            RoadsOfTheRim.DebugLog("Caravan inspect string : found 'using 1 bedroll'");
                             stringBuilder.Remove(bedrollIndex, ((string)"UsingBedroll".Translate()).Length);
                             stringBuilder.Remove(bedrollIndex, ((string)"CaravanResting".Translate() + "()").Length);
                             stringBuilder.Replace("\n", "", 0, 1);
@@ -131,6 +129,7 @@ namespace RoadsOfTheRim
                     }
                     // Appending "working on road"
                     stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName(), string.Format("{0:0.00}", CaravanComp.amountOfWork())));
+                    RoadsOfTheRim.DebugLog("STRING BUILDER IS NOW : "+stringBuilder.ToString());
                     __result = stringBuilder.ToString();
                 }
             }

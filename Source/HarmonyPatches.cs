@@ -94,7 +94,6 @@ namespace RoadsOfTheRim
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.Append(__result);
                     stringBuilder.AppendLine();
-                    /*
                     // remove "waiting"
                     int waitingIndex = stringBuilder.ToString().IndexOf("CaravanWaiting".Translate());
                     if (waitingIndex>=0)
@@ -102,6 +101,7 @@ namespace RoadsOfTheRim
                         stringBuilder.Remove(waitingIndex, "CaravanWaiting".Translate().Length);
                         //stringBuilder.Replace("\n", "", 0, 1);
                     }
+                    /*
                     // remove "resting (using x bedrolls)"
                     int usedBedCount = __instance.beds.GetUsedBedCount();
                     if (usedBedCount==1)

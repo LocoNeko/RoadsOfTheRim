@@ -95,6 +95,7 @@ namespace RoadsOfTheRim
                     stringBuilder.Append(__result);
                     stringBuilder.AppendLine();
                     // remove "waiting"
+                    RoadsOfTheRim.DebugLog("Caravan inspect string : remove waiting");
                     int waitingIndex = stringBuilder.ToString().IndexOf("CaravanWaiting".Translate());
                     if (waitingIndex>=0)
                     {

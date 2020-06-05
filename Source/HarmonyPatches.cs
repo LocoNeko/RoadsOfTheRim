@@ -99,9 +99,9 @@ namespace RoadsOfTheRim
                     int waitingIndex = stringBuilder.ToString().IndexOf("CaravanWaiting".Translate());
                     if (waitingIndex>=0)
                     {
-                        RoadsOfTheRim.DebugLog("Caravan inspect string : found 'waiting'");
                         stringBuilder.Remove(waitingIndex, "CaravanWaiting".Translate().Length);
                         stringBuilder.Replace("\n", "", 0, 1);
+                        RoadsOfTheRim.DebugLog("Caravan inspect string : found 'waiting' string is now "+stringBuilder.ToString());
                     }
                     // remove "resting (using x bedrolls)"
                     int usedBedCount = __instance.beds.GetUsedBedCount();

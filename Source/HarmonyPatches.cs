@@ -101,27 +101,28 @@ namespace RoadsOfTheRim
                         stringBuilder.Remove(waitingIndex, "CaravanWaiting".Translate().Length);
                     }
                     // remove "resting (using x bedrolls)"
-                    int usedBedCount = __instance.beds.GetUsedBedCount();
+                    int usedBedCount = __instance.beds.GetUsedBedCount() ;
+                    int bedrollIndex = 0;
+                    string stringToFind = "";
                     if (usedBedCount==1)
                     {
                         // remove singular version
-                        string stringToFind = " (" + (string)"UsingBedroll".Translate() + ")";
-                        int bedrollIndex = stringBuilder.ToString().IndexOf(stringToFind);
-                        if (bedrollIndex>=0)
-                        {
-                            stringBuilder.Remove(bedrollIndex, stringToFind.Length);
-                            stringBuilder.Remove(bedrollIndex, "CaravanResting".Translate().Length);
-                        }
+                        stringToFind = " (" + (string)"UsingBedroll".Translate() + ")";
+                        bedrollIndex = stringBuilder.ToString().IndexOf(stringToFind);
                     }
                     else
                     {
                         // remove plural version
-                        string stringToFind = " (" + (string)"UsingBedrolls".Translate(usedBedCount) + ")";
-                        int bedrollsIndex = stringBuilder.ToString().IndexOf(stringToFind);
-                        if (bedrollsIndex >= 0)
+                        stringToFind = " (" + (string)"UsingBedrolls".Translate(usedBedCount) + ")";
+                        bedrollIndex = stringBuilder.ToString().IndexOf(stringToFind);
+                    }
+                    if (bedrollIndex >= 0)
+                    {
+                        stringBuilder.Remove(bedrollIndex, stringToFind.Length);
+                        int restingIndex = stringBuilder.ToString().IndexOf("CaravanResting".Translate());
+                        if (restingIndex >= 0)
                         {
-                            stringBuilder.Remove(bedrollsIndex, stringToFind.Length);
-                            stringBuilder.Remove(bedrollsIndex, "CaravanResting".Translate().Length);
+                            stringBuilder.Remove(restingIndex, "CaravanResting".Translate().Length);
                         }
                     }
                     // Appending "working on road"

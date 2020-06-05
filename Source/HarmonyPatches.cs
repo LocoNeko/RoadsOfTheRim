@@ -99,8 +99,6 @@ namespace RoadsOfTheRim
                     if (waitingIndex>=0)
                     {
                         stringBuilder.Remove(waitingIndex, "CaravanWaiting".Translate().Length);
-                        stringBuilder.Replace("\n", "", 0, 1);
-                        stringBuilder.Replace("\r", "", 0, 1);
                     }
                     /*
                     // remove "resting (using x bedrolls)"
@@ -131,7 +129,7 @@ namespace RoadsOfTheRim
                     RoadsOfTheRim.DebugLog("STRING BUILDER IS NOW : "+stringBuilder.ToString());
                     */
                     stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName(), string.Format("{0:0.00}", CaravanComp.amountOfWork())));
-                    __result = stringBuilder.ToString();
+                    __result = GenText.Flatten(stringBuilder.ToString());
                 }
             }
             catch

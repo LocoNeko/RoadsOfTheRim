@@ -110,6 +110,7 @@ namespace RoadsOfTheRim
                         if (bedrollIndex>=0)
                         {
                             stringBuilder.Remove(bedrollIndex, stringToFind.Length);
+                            stringBuilder.Remove(bedrollIndex, "CaravanResting".Translate().Length);
                         }
                     }
                     else
@@ -120,6 +121,7 @@ namespace RoadsOfTheRim
                         if (bedrollsIndex >= 0)
                         {
                             stringBuilder.Remove(bedrollsIndex, stringToFind.Length);
+                            stringBuilder.Remove(bedrollsIndex, "CaravanResting".Translate().Length);
                         }
                     }
                     // Appending "working on road"

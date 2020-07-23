@@ -80,6 +80,7 @@ namespace RoadsOfTheRim
         }
     }
 
+    // TO DO : Ideally, this should be a transpiler. But should I bother ? The code below does the job
     [HarmonyPatch(typeof(Caravan), "GetInspectString")]
     public static class Patch_Caravan_GetInspectString
     {
@@ -94,6 +95,40 @@ namespace RoadsOfTheRim
                 {
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.Append(__result);
+                    // remove "waiting"
+                    int waitingIndex = stringBuilder.ToString().IndexOf("CaravanWaiting".Translate());
+                    if (waitingIndex>=0)
+                    {
+                        stringBuilder.Remove(waitingIndex, "CaravanWaiting".Translate().Length);
+                    }
+                    // remove "resting (using x bedrolls)"
+                    int usedBedCount = __instance.beds.GetUsedBedCount() ;
+                    int bedrollIndex = 0;
+                    string stringToFind = "";
+                    if (usedBedCount==1)
+                    {
+                        // remove singular version
+                        stringToFind = " (" + (string)"UsingBedroll".Translate() + ")";
+                        bedrollIndex = stringBuilder.ToString().IndexOf(stringToFind);
+                    }
+                    else
+                    {
+                        // remove plural version
+                        stringToFind = " (" + (string)"UsingBedrolls".Translate(usedBedCount) + ")";
+                        bedrollIndex = stringBuilder.ToString().IndexOf(stringToFind);
+                    }
+                    if (bedrollIndex >= 0)
+                    {
+                        stringBuilder.Remove(bedrollIndex, stringToFind.Length);
+                        int restingIndex = stringBuilder.ToString().IndexOf("CaravanResting".Translate());
+                        if (restingIndex >= 0)
+                        {
+                            stringBuilder.Remove(restingIndex, "CaravanResting".Translate().Length);
+                        }
+                    }
+                    // Appending "working on road"
+                    stringBuilder.Replace("\n", "");
+                    stringBuilder.Replace("\r", "");
                     stringBuilder.AppendLine();
                     stringBuilder.Append("RoadsOfTheRim_CaravanInspectStringWorkingOn".Translate(CaravanComp.getSite().fullName(), string.Format("{0:0.00}", CaravanComp.amountOfWork())));
                     __result = stringBuilder.ToString();

@@ -60,8 +60,7 @@ namespace RoadsOfTheRim
                         /*
                          * Quick and dirty hack because classes in the Bridge.cs file do not handle all cases properly. Terrain needs to be set again over water & MarshyTerrain as below.
                          */
-                        try
-                        {
+                            /*
                             if (map.terrainGrid.UnderTerrainAt(current).IsWater)
                             {
                                 if (terrainDefHere == TerrainDefOf.GlitterRoad)
@@ -93,11 +92,7 @@ namespace RoadsOfTheRim
                                     map.terrainGrid.SetTerrain(current, TerrainDefOf.StoneRecent);
                                 }
                             }
-                        }
-                        catch (Exception e)
-                        {
-                            RoadsOfTheRim.DebugLog("Exception setting terrain in cell "+current.ToString(), e);
-                        }
+                            */
                     }
                 }
             }

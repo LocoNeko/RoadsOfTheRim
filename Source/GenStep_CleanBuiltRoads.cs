@@ -59,37 +59,44 @@ namespace RoadsOfTheRim
 
                         /*
                          * Quick and dirty hack because classes in the Bridge.cs file do not handle all cases properly. Terrain needs to be set again over water & MarshyTerrain as below.
-                         */                   
-                        if (map.terrainGrid.UnderTerrainAt(current).IsWater)
+                         */
+                        try
                         {
-                            if (terrainDefHere == TerrainDefOf.GlitterRoad)
+                            if (map.terrainGrid.UnderTerrainAt(current).IsWater)
                             {
-                                map.terrainGrid.SetTerrain(current, TerrainDefOf.GlitterRoad);
+                                if (terrainDefHere == TerrainDefOf.GlitterRoad)
+                                {
+                                    map.terrainGrid.SetTerrain(current, TerrainDefOf.GlitterRoad);
+                                }
+                                if (terrainDefHere == TerrainDefOf.AsphaltRecent)
+                                {
+                                    map.terrainGrid.SetTerrain(current, TerrainDefOf.ConcreteBridge);
+                                }
+                                if (terrainDefHere == TerrainDefOf.StoneRecent)
+                                {
+                                    map.terrainGrid.SetTerrain(current, TerrainDefOf.ConcreteBridge);
+                                }
                             }
-                            if (terrainDefHere == TerrainDefOf.AsphaltRecent)
+
+                            if (map.terrainGrid.UnderTerrainAt(current) == TerrainDefOf.MarshyTerrain)
                             {
-                                map.terrainGrid.SetTerrain(current, TerrainDefOf.ConcreteBridge);
-                            }
-                            if (terrainDefHere == TerrainDefOf.StoneRecent)
-                            {
-                                map.terrainGrid.SetTerrain(current, TerrainDefOf.ConcreteBridge);
+                                if (terrainDefHere == TerrainDefOf.GlitterRoad)
+                                {
+                                    map.terrainGrid.SetTerrain(current, TerrainDefOf.GlitterRoad);
+                                }
+                                if (terrainDefHere == TerrainDefOf.AsphaltRecent)
+                                {
+                                    map.terrainGrid.SetTerrain(current, TerrainDefOf.AsphaltRecent);
+                                }
+                                if (terrainDefHere == TerrainDefOf.StoneRecent)
+                                {
+                                    map.terrainGrid.SetTerrain(current, TerrainDefOf.StoneRecent);
+                                }
                             }
                         }
-
-                        if (map.terrainGrid.UnderTerrainAt(current) == TerrainDefOf.MarshyTerrain)
+                        catch (Exception e)
                         {
-                            if (terrainDefHere == TerrainDefOf.GlitterRoad)
-                            {
-                                map.terrainGrid.SetTerrain(current, TerrainDefOf.GlitterRoad);
-                            }
-                            if (terrainDefHere == TerrainDefOf.AsphaltRecent)
-                            {
-                                map.terrainGrid.SetTerrain(current, TerrainDefOf.AsphaltRecent);
-                            }
-                            if (terrainDefHere == TerrainDefOf.StoneRecent)
-                            {
-                                map.terrainGrid.SetTerrain(current, TerrainDefOf.StoneRecent);
-                            }
+                            RoadsOfTheRim.DebugLog("Exception setting terrain in cell "+current.ToString(), e);
                         }
                     }
                 }

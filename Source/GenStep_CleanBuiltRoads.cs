@@ -1,6 +1,7 @@
 using System.Collections.Generic ;
 using RimWorld ;
 using Verse;
+using System;
 
 namespace RoadsOfTheRim
 {
@@ -37,8 +38,15 @@ namespace RoadsOfTheRim
 
                     if (thingList.Count > 0)
                     {
-                        //RoadsOfTheRim.DebugLog("Placed " + thingList.Count + " things on top of " + terrainDefHere.label);
-                        MoveThings(map, current);
+                        try
+                        {
+                            //RoadsOfTheRim.DebugLog("Placed " + thingList.Count + " things on top of " + terrainDefHere.label);
+                            MoveThings(map, current);
+                        }
+                        catch (Exception e)
+                        {
+                            RoadsOfTheRim.DebugLog("Exception when moving things.", e);
+                        }
                     }
 
                     /*

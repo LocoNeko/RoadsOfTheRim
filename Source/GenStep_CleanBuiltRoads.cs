@@ -31,9 +31,10 @@ namespace RoadsOfTheRim
                 foreach (IntVec3 current in map.AllCells)
 			    {
                     List<Thing> thingList = current.GetThingList(map);
-                    RoadsOfTheRim.DebugLog((thingList is null) ? "current thinglist is null" : "current thingList is not null");
-                    RoadsOfTheRim.DebugLog("Things in cell" + thingList.Count);
+                    if (thingList is null) { RoadsOfTheRim.DebugLog("current thinglist is null"); }
+                    if (thingList.Count > 0) { RoadsOfTheRim.DebugLog("Things in cell" + thingList.Count); };
                     TerrainDef terrainDefHere = terrainGrid.TerrainAt(current) ;
+                    if (terrainDefHere is null) { RoadsOfTheRim.DebugLog("terrainDefHere is null"); }
                     if (isBuiltRoad(terrainDefHere))
                     {
                         map.roofGrid.SetRoof(current, null) ; // remove any roof

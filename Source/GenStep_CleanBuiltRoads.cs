@@ -26,9 +26,13 @@ namespace RoadsOfTheRim
             try
             {
                 TerrainGrid terrainGrid = map.terrainGrid;
+                RoadsOfTheRim.DebugLog((terrainGrid is null) ? "terrainGrid is null" : "terrainGrid is not null");
+                RoadsOfTheRim.DebugLog("Cells in map: "+map.AllCells.EnumerableCount());
                 foreach (IntVec3 current in map.AllCells)
 			    {
                     List<Thing> thingList = current.GetThingList(map);
+                    RoadsOfTheRim.DebugLog((thingList is null) ? "current thinglist is null" : "current thingList is not null");
+                    RoadsOfTheRim.DebugLog("Things in cell" + thingList.Count);
                     TerrainDef terrainDefHere = terrainGrid.TerrainAt(current) ;
                     if (isBuiltRoad(terrainDefHere))
                     {

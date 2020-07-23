@@ -23,10 +23,6 @@ namespace RoadsOfTheRim
 		public override void Generate(Map map, GenStepParams parms)
 		{
             //RoadsOfTheRim.DebugLog("Cleaning up roads if I can");
-            if (map is null)
-            {
-                RoadsOfTheRim.DebugLog("Map is null");
-            }
             try
             {
                 TerrainGrid terrainGrid = map.terrainGrid;
@@ -45,7 +41,15 @@ namespace RoadsOfTheRim
                         if (thingList.Count > 0)
                         {
                             //RoadsOfTheRim.DebugLog("Placed " + thingList.Count + " things on top of " + terrainDefHere.label);
-                            MoveThings(map, current);
+                            try
+                            {
+                                MoveThings(map, current);
+                            }
+                            catch (Exception e)
+                            {
+                                RoadsOfTheRim.DebugLog("Exception when moving things.", e);
+                            }
+
                         }
 
                         /*
@@ -87,7 +91,7 @@ namespace RoadsOfTheRim
             }
             catch (Exception e)
             {
-                RoadsOfTheRim.DebugLog("Exception when moving things.", e);
+                RoadsOfTheRim.DebugLog("Exception during map generation.", e);
             }
         }
 

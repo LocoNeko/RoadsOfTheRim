@@ -23,67 +23,71 @@ namespace RoadsOfTheRim
 		public override void Generate(Map map, GenStepParams parms)
 		{
             //RoadsOfTheRim.DebugLog("Cleaning up roads if I can");
-            TerrainGrid terrainGrid = map.terrainGrid;
-            foreach (IntVec3 current in map.AllCells)
-			{
-                List<Thing> thingList = current.GetThingList(map);
-                TerrainDef terrainDefHere = terrainGrid.TerrainAt(current) ;
-                if (isBuiltRoad(terrainDefHere))
-                {
-                    map.roofGrid.SetRoof(current, null) ; // remove any roof
-                    if (map.fogGrid.IsFogged(current))
+            if (map is null)
+            {
+                RoadsOfTheRim.DebugLog("Map is null");
+            }
+            try
+            {
+                TerrainGrid terrainGrid = map.terrainGrid;
+                foreach (IntVec3 current in map.AllCells)
+			    {
+                    List<Thing> thingList = current.GetThingList(map);
+                    TerrainDef terrainDefHere = terrainGrid.TerrainAt(current) ;
+                    if (isBuiltRoad(terrainDefHere))
                     {
-                        map.fogGrid.Unfog(current); // no fog on road
-                    }
+                        map.roofGrid.SetRoof(current, null) ; // remove any roof
+                        if (map.fogGrid.IsFogged(current))
+                        {
+                            map.fogGrid.Unfog(current); // no fog on road
+                        }
 
-                    if (thingList.Count > 0)
-                    {
-                        try
+                        if (thingList.Count > 0)
                         {
                             //RoadsOfTheRim.DebugLog("Placed " + thingList.Count + " things on top of " + terrainDefHere.label);
                             MoveThings(map, current);
                         }
-                        catch (Exception e)
-                        {
-                            RoadsOfTheRim.DebugLog("Exception when moving things.", e);
-                        }
-                    }
 
-                    /*
-                     * Quick and dirty hack because classes in the Bridge.cs file do not handle all cases properly. Terrain needs to be set again over water & MarshyTerrain as below.
-                     */                   
-                    if (map.terrainGrid.UnderTerrainAt(current).IsWater)
-                    {
-                        if (terrainDefHere == TerrainDefOf.GlitterRoad)
+                        /*
+                         * Quick and dirty hack because classes in the Bridge.cs file do not handle all cases properly. Terrain needs to be set again over water & MarshyTerrain as below.
+                         */                   
+                        if (map.terrainGrid.UnderTerrainAt(current).IsWater)
                         {
-                            map.terrainGrid.SetTerrain(current, TerrainDefOf.GlitterRoad);
+                            if (terrainDefHere == TerrainDefOf.GlitterRoad)
+                            {
+                                map.terrainGrid.SetTerrain(current, TerrainDefOf.GlitterRoad);
+                            }
+                            if (terrainDefHere == TerrainDefOf.AsphaltRecent)
+                            {
+                                map.terrainGrid.SetTerrain(current, TerrainDefOf.ConcreteBridge);
+                            }
+                            if (terrainDefHere == TerrainDefOf.StoneRecent)
+                            {
+                                map.terrainGrid.SetTerrain(current, TerrainDefOf.ConcreteBridge);
+                            }
                         }
-                        if (terrainDefHere == TerrainDefOf.AsphaltRecent)
-                        {
-                            map.terrainGrid.SetTerrain(current, TerrainDefOf.ConcreteBridge);
-                        }
-                        if (terrainDefHere == TerrainDefOf.StoneRecent)
-                        {
-                            map.terrainGrid.SetTerrain(current, TerrainDefOf.ConcreteBridge);
-                        }
-                    }
 
-                    if (map.terrainGrid.UnderTerrainAt(current) == TerrainDefOf.MarshyTerrain)
-                    {
-                        if (terrainDefHere == TerrainDefOf.GlitterRoad)
+                        if (map.terrainGrid.UnderTerrainAt(current) == TerrainDefOf.MarshyTerrain)
                         {
-                            map.terrainGrid.SetTerrain(current, TerrainDefOf.GlitterRoad);
-                        }
-                        if (terrainDefHere == TerrainDefOf.AsphaltRecent)
-                        {
-                            map.terrainGrid.SetTerrain(current, TerrainDefOf.AsphaltRecent);
-                        }
-                        if (terrainDefHere == TerrainDefOf.StoneRecent)
-                        {
-                            map.terrainGrid.SetTerrain(current, TerrainDefOf.StoneRecent);
+                            if (terrainDefHere == TerrainDefOf.GlitterRoad)
+                            {
+                                map.terrainGrid.SetTerrain(current, TerrainDefOf.GlitterRoad);
+                            }
+                            if (terrainDefHere == TerrainDefOf.AsphaltRecent)
+                            {
+                                map.terrainGrid.SetTerrain(current, TerrainDefOf.AsphaltRecent);
+                            }
+                            if (terrainDefHere == TerrainDefOf.StoneRecent)
+                            {
+                                map.terrainGrid.SetTerrain(current, TerrainDefOf.StoneRecent);
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                RoadsOfTheRim.DebugLog("Exception when moving things.", e);
             }
         }
 

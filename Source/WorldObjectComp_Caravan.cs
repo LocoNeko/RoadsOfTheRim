@@ -31,7 +31,11 @@ namespace RoadsOfTheRim
 
         public static float ConstructionValue(Pawn p)
         {
-            return (p.GetStatValue(StatDefOf.ConstructionSpeed) * p.GetStatValue(StatDefOf.ConstructSuccessChance));
+            return (
+                (StatDefOf.ConstructionSpeed.Worker.IsDisabledFor(p) || StatDefOf.ConstructSuccessChance.Worker.IsDisabledFor(p)) ?
+                0 :
+                (p.GetStatValue(StatDefOf.ConstructionSpeed) * p.GetStatValue(StatDefOf.ConstructSuccessChance))
+            );
         }
 
         public static int ConstructionLevel(Pawn p)

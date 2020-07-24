@@ -80,8 +80,18 @@ namespace RoadsOfTheRim
         }
     }
 
-    // TO DO : Ideally, this should be a transpiler. But should I bother ? The code below does the job
-    [HarmonyPatch(typeof(Caravan), "GetInspectString")]
+    [HarmonyPatch(typeof(WorldSelector), "HandleWorldClicks")]
+    public static class Patch_WorldSelector_HandleWorldClicks
+    {
+        [HarmonyPostfix]
+        public static void Postfix(WorldSelector __instance)
+        {
+            RoadsOfTheRim.DebugLog("World clicked");
+        }
+    }
+
+            // TO DO : Ideally, this should be a transpiler. But should I bother ? The code below does the job
+            [HarmonyPatch(typeof(Caravan), "GetInspectString")]
     public static class Patch_Caravan_GetInspectString
     {
         [HarmonyPostfix]

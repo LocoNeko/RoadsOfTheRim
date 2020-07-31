@@ -5,13 +5,14 @@ using Verse;
 namespace RoadsOfTheRim
 {
 
+	[StaticConstructorOnStartup]
 	public static class BuildRoadWidget
 	{
 		private const float Padding = 10f;
 
 		private const float Size = 64f;
 
-		private static readonly Texture2D CompassTex = ContentFinder<Texture2D>.Get("UI/Command/AddConstructionSite");
+		private static readonly Texture2D BuildRoadTex = ContentFinder<Texture2D>.Get("UI/Command/AddConstructionSite");
 
 		public static void BuildRoadOnGUI(ref float curBaseY)
 		{
@@ -21,7 +22,7 @@ namespace RoadsOfTheRim
 
 		private static void BuildRoadOnGUI(Vector2 center)
 		{
-			Widgets.DrawTextureRotated(center, CompassTex, 0f);
+			Widgets.DrawTextureRotated(center, BuildRoadTex, 0f);
 			Rect rect = new Rect(center.x - 32f, center.y - 32f, 64f, 64f);
 			TooltipHandler.TipRegionByKey(rect, "RotR_BuildRoadTooltip");
 		}

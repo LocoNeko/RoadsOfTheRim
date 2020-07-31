@@ -103,8 +103,7 @@ namespace RoadsOfTheRim
             {
                 return;
             }
-            float curBaseY = (float)UI.screenHeight - 4f;
-            WorldBuildRoad.BuildRoadOnGUI(ref curBaseY);
+            WorldBuildRoad.BuildRoadOnGUI();
         }
     }
 

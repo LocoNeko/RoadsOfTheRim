@@ -347,10 +347,13 @@ namespace RoadsOfTheRim
         [HarmonyPrefix]
         public static void Prefix()
         {
-            if (RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting != null)
+            if (RoadsOfTheRim.RoadBuildingState.PickingSiteTile)
             {
-                RoadsOfTheRim.FinaliseConstructionSite(RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting);
-                RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting = null;
+                if (RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting != null)
+                {
+                    RoadsOfTheRim.FinaliseConstructionSite(RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting);
+                    RoadsOfTheRim.RoadBuildingState.CurrentlyTargeting = null;
+                }
             }
         }
     }

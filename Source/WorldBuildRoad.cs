@@ -40,8 +40,8 @@ namespace RoadsOfTheRim
         {
 			RoadsOfTheRim.DebugLog("Clicked on tile "+tile+". I should now show the road construction menu.");
 			WorldComponent_RoadBuildingState roadBuildingState = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState;
-			roadBuildingState.PickingSiteTile = false;
 			Find.WorldTargeter.StopTargeting();
+			roadBuildingState.PickingSiteTile = false;
 
 			// ALl of that below already exist in ModMain. Re-use code where possible !
 			RoadConstructionSite constructionSite = (RoadConstructionSite)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true));

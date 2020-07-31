@@ -80,19 +80,32 @@ namespace RoadsOfTheRim
         }
     }
 
+    // Add a Build road button on the GUI, just above the route planner
     [HarmonyPatch(typeof(WorldRoutePlanner), "DoRoutePlannerButton")]
     public static class Patch_WorldRoutePlanner_DoRoutePlannerButton
     {
         [HarmonyPostfix]
         public static void Postfix(WorldRoutePlanner __instance, ref float curBaseY)
         {
-            curBaseY -= 33f;
             BuildRoadWidget.BuildRoadOnGUI(ref curBaseY);
         }
     }
 
-            // TO DO : Ideally, this should be a transpiler. But should I bother ? The code below does the job
-            [HarmonyPatch(typeof(Caravan), "GetInspectString")]
+    [HarmonyPatch(typeof(WorldInterface), "WorldInterfaceOnGUI")]
+    public static class Patch_WorldInterface_WorldInterfaceOnGUI
+    {
+        [HarmonyPostfix]
+        public static void Postfix(WorldInterface __instance)
+        {
+            if (WorldRendererUtility.WorldRenderedNow)
+            {
+                RoadsOfTheRim.DebugLog("Should do something about BuildRoadWidget");
+            }
+        }
+    }
+
+    // TO DO : Ideally, this should be a transpiler. But should I bother ? The code below does the job
+    [HarmonyPatch(typeof(Caravan), "GetInspectString")]
     public static class Patch_Caravan_GetInspectString
     {
         [HarmonyPostfix]

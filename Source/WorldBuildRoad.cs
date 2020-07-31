@@ -13,11 +13,12 @@ namespace RoadsOfTheRim
 
 		public static void BuildRoadOnGUI()
 		{
-			Vector2 center= new Vector2((float)UI.screenWidth - 32f, 32f) ;
-			Rect rect = new Rect(center, new Vector2(BuildRoadTex.width, BuildRoadTex.height));
+			//Vector2 center= new Vector2((float)UI.screenWidth - 64f, 32f) ;
+			Rect rect = new Rect(new Vector2(32f , 32f) , new Vector2(BuildRoadTex.width, BuildRoadTex.height));
 			if (Widgets.ButtonImage(rect , BuildRoadTex))
             {
-				RoadsOfTheRim.DebugLog("Event on WorldBuildRoad");
+				WorldComponent_RoadBuildingState f = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState;
+				RoadsOfTheRim.DebugLog("Event on WorldBuildRoad. RoadBuildingState component is set to "+f.CurrentlyTargeting);
 			}
 			TooltipHandler.TipRegionByKey(rect, "RotR_BuildRoadTooltip");
 		}

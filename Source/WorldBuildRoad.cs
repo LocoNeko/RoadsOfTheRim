@@ -1,6 +1,7 @@
 ﻿using RimWorld.Planet;
 using UnityEngine;
 using Verse;
+using RimWorld;
 
 namespace RoadsOfTheRim
 {
@@ -40,6 +41,26 @@ namespace RoadsOfTheRim
 			RoadsOfTheRim.DebugLog("Clicked on tile "+tile+". I should now show the road construction menu.");
 			WorldComponent_RoadBuildingState roadBuildingState = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState;
 			roadBuildingState.PickingSiteTile = false;
+			Find.WorldTargeter.StopTargeting();
+
+			// ALl of that below already exist in ModMain. Re-use code where possible !
+			RoadConstructionSite constructionSite = (RoadConstructionSite)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("RoadConstructionSite", true));
+			constructionSite.Tile = tile;
+			Find.WorldObjects.Add(constructionSite);
+
+			ConstructionMenu menu = new ConstructionMenu(constructionSite, null , tile);
+
+			if (menu.CountBuildableRoads() == 0)
+			{
+				Find.WorldObjects.Remove(constructionSite);
+				Messages.Message("RoadsOfTheRim_NoBetterRoadCouldBeBuilt".Translate(), MessageTypeDefOf.RejectInput);
+			}
+			else
+			{
+				menu.closeOnClickedOutside = true;
+				menu.forcePause = true;
+				Find.WindowStack.Add(menu);
+			}
 			return false;
         }
 	}

@@ -33,6 +33,7 @@ namespace RoadsOfTheRim
     {
         private readonly RoadConstructionSite site;
         private readonly Caravan caravan;
+        private readonly int? tile;
         private readonly List<RoadDef> buildableRoads;
         public override Vector2 InitialSize => new Vector2(676+128, 544+128);
 
@@ -42,13 +43,13 @@ namespace RoadsOfTheRim
         // private Rect resizeLaterRect ;
 
 
-        public ConstructionMenu(RoadConstructionSite site , Caravan caravan)
+        public ConstructionMenu(RoadConstructionSite site , Caravan caravan=null , int? tile=null)
         {
             this.site = site ;
-            this.caravan = caravan ;
+            this.caravan = caravan;
+            this.tile = tile;
             buildableRoads = new List<RoadDef>() ;
             // TO DO : COunt number of buildable roads, set the resize later rect based on that
-            
         }
 
         public int CountBuildableRoads()

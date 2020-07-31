@@ -18,9 +18,24 @@ namespace RoadsOfTheRim
 			if (Widgets.ButtonImage(rect , BuildRoadTex))
             {
 				WorldComponent_RoadBuildingState f = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState;
-				RoadsOfTheRim.DebugLog("Event on WorldBuildRoad. RoadBuildingState component is set to "+f.CurrentlyTargeting);
+				RoadsOfTheRim.DebugLog("Event on WorldBuildRoad");
+				Find.WorldTargeter.BeginTargeting(delegate (GlobalTargetInfo target)
+					{
+						return WorldBuildRoadActionOnTile(target.Tile);
+					},
+					true, RotR_StaticConstructorOnStartup.ConstructionLeg_MouseAttachment , false, null ,
+					delegate (GlobalTargetInfo target)
+					{
+						return "RoadsOfTheRim_BuildToHere".Translate();
+				});
 			}
 			TooltipHandler.TipRegionByKey(rect, "RotR_BuildRoadTooltip");
 		}
+
+		public static bool WorldBuildRoadActionOnTile(int Tile)
+        {
+			RoadsOfTheRim.DebugLog("Clicked on tile "+Find.WorldGrid.tiles[Tile].ToString());
+			return false;
+        }
 	}
 }

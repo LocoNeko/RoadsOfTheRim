@@ -46,6 +46,7 @@
   <RoadsOfTheRim_NoBetterRoadCouldBeBuilt>No better road could be built</RoadsOfTheRim_NoBetterRoadCouldBeBuilt>
   <RoadsOfTheRim_MustPickNeighbouringTile>Must choose a neighbouring tile</RoadsOfTheRim_MustPickNeighbouringTile>
   <RoadsOfTheRim_SameRoadAlreadyExists>A similar road already exists between those two tiles</RoadsOfTheRim_SameRoadAlreadyExists>
+  <RotR_BuildFromHere>Build road from here</RotR_BuildFromHere>
   <RoadsOfTheRim_BuildToHere>Build road to here</RoadsOfTheRim_BuildToHere>
   <RoadsOfTheRimStopWorkingOnSite>Stop</RoadsOfTheRimStopWorkingOnSite>
   <RoadsOfTheRimStopWorkingOnSiteDescription>Stop working on construction site</RoadsOfTheRimStopWorkingOnSiteDescription>

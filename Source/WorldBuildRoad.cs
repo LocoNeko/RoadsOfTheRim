@@ -17,24 +17,29 @@ namespace RoadsOfTheRim
 			Rect rect = new Rect(new Vector2(32f , 32f) , new Vector2(BuildRoadTex.width, BuildRoadTex.height));
 			if (Widgets.ButtonImage(rect , BuildRoadTex))
             {
-				WorldComponent_RoadBuildingState f = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState;
-				RoadsOfTheRim.DebugLog("Event on WorldBuildRoad");
-				Find.WorldTargeter.BeginTargeting(delegate (GlobalTargetInfo target)
+				WorldComponent_RoadBuildingState roadBuildingState = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState;
+				// target only if : not currnetly targeting, not already picking site
+				if (!roadBuildingState.PickingSiteTile && roadBuildingState.CurrentlyTargeting==null)
+                {
+					Find.WorldTargeter.BeginTargeting(delegate (GlobalTargetInfo target)
 					{
 						return WorldBuildRoadActionOnTile(target.Tile);
 					},
-					true, RotR_StaticConstructorOnStartup.ConstructionLeg_MouseAttachment , false, null ,
-					delegate (GlobalTargetInfo target)
-					{
-						return "RoadsOfTheRim_BuildToHere".Translate();
-				});
+						true, RotR_StaticConstructorOnStartup.ConstructionLeg_MouseAttachment, false, null,
+						delegate (GlobalTargetInfo target)
+						{
+							return "RotR_BuildFromHere".Translate();
+						});
+				}
 			}
 			TooltipHandler.TipRegionByKey(rect, "RotR_BuildRoadTooltip");
 		}
 
-		public static bool WorldBuildRoadActionOnTile(int Tile)
+		public static bool WorldBuildRoadActionOnTile(int tile)
         {
-			RoadsOfTheRim.DebugLog("Clicked on tile "+Find.WorldGrid.tiles[Tile].ToString());
+			RoadsOfTheRim.DebugLog("Clicked on tile "+tile+". I should now show the road construction menu.");
+			WorldComponent_RoadBuildingState roadBuildingState = Find.World.GetComponent(typeof(WorldComponent_RoadBuildingState)) as WorldComponent_RoadBuildingState;
+			roadBuildingState.PickingSiteTile = false;
 			return false;
         }
 	}

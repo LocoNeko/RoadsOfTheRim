@@ -6,10 +6,12 @@ namespace RoadsOfTheRim
     {
         private RoadConstructionSite currentlyTargeting;
         private Caravan caravan;
+        private bool pickingSiteTile;
 
         public WorldComponent_RoadBuildingState(World world) : base(world)
         {
             currentlyTargeting = null ;
+            pickingSiteTile = false ;
         }
 
         public RoadConstructionSite CurrentlyTargeting
@@ -33,6 +35,18 @@ namespace RoadsOfTheRim
             set
             {
                 this.caravan = value;
+            }
+        }
+
+        public bool PickingSiteTile
+        {
+            get
+            {
+                return this.pickingSiteTile;
+            }
+            set
+            {
+                this.pickingSiteTile = value;
             }
         }
 

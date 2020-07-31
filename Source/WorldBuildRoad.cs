@@ -18,13 +18,12 @@ namespace RoadsOfTheRim
 
 		private static void BuildRoadOnGUI(Vector2 center)
 		{
-			Widgets.DrawTextureRotated(center, BuildRoadTex, 0f);
-			Rect rect = new Rect(center.x - 32f, center.y - 32f, 64f, 64f);
-			TooltipHandler.TipRegionByKey(rect, "RotR_BuildRoadTooltip");
-			if (Event.current.type == EventType.KeyDown)
-			{
+			Rect rect = new Rect(center, new Vector2(BuildRoadTex.width, BuildRoadTex.height));
+			if (Widgets.ButtonImage(rect , BuildRoadTex))
+            {
 				RoadsOfTheRim.DebugLog("Event on WorldBuildRoad");
 			}
+			TooltipHandler.TipRegionByKey(rect, "RotR_BuildRoadTooltip");
 		}
 	}
 }

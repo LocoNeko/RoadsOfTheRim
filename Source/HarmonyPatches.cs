@@ -80,13 +80,15 @@ namespace RoadsOfTheRim
         }
     }
 
-    [HarmonyPatch(typeof(WorldSelector), "HandleWorldClicks")]
-    public static class Patch_WorldSelector_HandleWorldClicks
+    [HarmonyPatch(typeof(WorldGlobalControls), "WorldGlobalControlsOnGUI")]
+    public static class Patch_WorldGlobalControls_WorldGlobalControlsOnGUI
     {
         [HarmonyPostfix]
-        public static void Postfix(WorldSelector __instance)
+        public static void Postfix(WorldGlobalControls __instance)
         {
-            RoadsOfTheRim.DebugLog("World clicked");
+            RoadsOfTheRim.DebugLog("TO DO : Add road site to World Global controls");
+            float curBaseY = (float)UI.screenHeight - 154f;
+            BuildRoadWidget.BuildRoadOnGUI(ref curBaseY);
         }
     }
 

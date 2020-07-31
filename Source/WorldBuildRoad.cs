@@ -6,13 +6,9 @@ namespace RoadsOfTheRim
 {
 
 	[StaticConstructorOnStartup]
-	public static class BuildRoadWidget
+	public static class WorldBuildRoad
 	{
-		private const float Padding = 10f;
-
-		private const float Size = 64f;
-
-		private static readonly Texture2D BuildRoadTex = ContentFinder<Texture2D>.Get("UI/Commands/BuildroadTooltip");
+		public static readonly Texture2D BuildRoadTex = ContentFinder<Texture2D>.Get("UI/Commands/BuildroadTooltip");
 
 		public static void BuildRoadOnGUI(ref float curBaseY)
 		{
@@ -25,6 +21,10 @@ namespace RoadsOfTheRim
 			Widgets.DrawTextureRotated(center, BuildRoadTex, 0f);
 			Rect rect = new Rect(center.x - 32f, center.y - 32f, 64f, 64f);
 			TooltipHandler.TipRegionByKey(rect, "RotR_BuildRoadTooltip");
+			if (Event.current.type == EventType.KeyDown)
+			{
+				RoadsOfTheRim.DebugLog("Event on WorldBuildRoad");
+			}
 		}
 	}
 }

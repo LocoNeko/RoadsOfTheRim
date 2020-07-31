@@ -81,26 +81,30 @@ namespace RoadsOfTheRim
     }
 
     // Add a Build road button on the GUI, just above the route planner
+    /*
     [HarmonyPatch(typeof(WorldRoutePlanner), "DoRoutePlannerButton")]
     public static class Patch_WorldRoutePlanner_DoRoutePlannerButton
     {
         [HarmonyPostfix]
         public static void Postfix(WorldRoutePlanner __instance, ref float curBaseY)
         {
-            BuildRoadWidget.BuildRoadOnGUI(ref curBaseY);
+            WorldBuildRoad.BuildRoadOnGUI(ref curBaseY) ;
         }
     }
+    */
 
-    [HarmonyPatch(typeof(WorldInterface), "WorldInterfaceOnGUI")]
-    public static class Patch_WorldInterface_WorldInterfaceOnGUI
+    [HarmonyPatch(typeof(WorldGlobalControls), "WorldGlobalControlsOnGUI")]
+    public static class Patch_WorldGlobalControls_WorldGlobalControlsOnGUI
     {
         [HarmonyPostfix]
-        public static void Postfix(WorldInterface __instance)
+        public static void Postfix(WorldGlobalControls __instance)
         {
-            if (WorldRendererUtility.WorldRenderedNow)
+            if (Event.current.type == EventType.Layout)
             {
-                RoadsOfTheRim.DebugLog("Should do something about BuildRoadWidget");
+                return;
             }
+            float curBaseY = (float)UI.screenHeight - 4f;
+            WorldBuildRoad.BuildRoadOnGUI(ref curBaseY);
         }
     }
 

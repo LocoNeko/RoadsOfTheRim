@@ -68,7 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bridges.cs" />
-    <Compile Include="BuildRoadWidget.cs" />
+    <Compile Include="WorldBuildRoad.cs" />
     <Compile Include="CaravanArrivalAction_StartWorkingOnRoad.cs" />
     <Compile Include="CaravanVehiclesUtility.cs" />
     <Compile Include="ThingCompProperties_RotR_Vehicles.cs" />

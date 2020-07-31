@@ -12,7 +12,7 @@ namespace RoadsOfTheRim
 
 		private const float Size = 64f;
 
-		private static readonly Texture2D BuildRoadTex = ContentFinder<Texture2D>.Get("UI/Command/AddConstructionSite");
+		private static readonly Texture2D BuildRoadTex = ContentFinder<Texture2D>.Get("UI/Commands/AddConstructionSite");
 
 		public static void BuildRoadOnGUI(ref float curBaseY)
 		{
